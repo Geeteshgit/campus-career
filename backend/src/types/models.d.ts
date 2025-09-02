@@ -1,4 +1,4 @@
-import mongoose, { Document, ObjectId, Schema } from "mongoose";
+import mongoose, { Document } from "mongoose";
 
 export interface IUser extends Document {
   name: {
@@ -8,7 +8,7 @@ export interface IUser extends Document {
   email: string;
   password: string;
   role: "superadmin" | "institutionadmin" | "student";
-  institution?: Schema.Types.ObjectId;
+  institution?: mongoose.Schema.Types.ObjectId;
   resume?: string;
   skills?: string[];
   academicRecord?: {
