@@ -1,12 +1,15 @@
 import express, { Request, Response } from "express";
+import { env } from "./config/env.js";
+import { connectToDB } from "./config/db.js";
 
 const app = express();
-const PORT: number = 3000;
+connectToDB();
+
 
 app.get("/", (req: Request, res: Response) => {
     return res.send("Server running");
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on port: ${PORT}`);
+app.listen(env.PORT, () => {
+    console.log(`Server running on port: ${env.PORT}`);
 });
