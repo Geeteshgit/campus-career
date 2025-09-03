@@ -1,0 +1,22 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - 5000:5000
+    env_file:
+      - ./backend.env
+    volumes:
+      - ./backend/src:/app/src
+    command: tsx src/server.ts
+  
+  mongo:
+    image: mongo:latest
+    environments:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
+
