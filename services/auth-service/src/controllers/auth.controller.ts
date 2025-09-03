@@ -7,7 +7,7 @@ import { IUser } from "../types/models.js";
 export const registerUser = async (req: Request, res: Response) => {
     try {
         const { name, email, password, role, institution } = req.body;
-        if(!name || !email || !password || !role || !institution) {
+        if(!name || !email || !password) {
             return res.status(400).json({ message: "Missing required fields" });
         }
         const existingUser = await User.findOne({ email });

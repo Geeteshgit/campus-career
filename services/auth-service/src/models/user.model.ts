@@ -27,12 +27,11 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     role: {
       type: String,
-      enum: ["superadmin", "institutionadmin", "student"],
+      enum: ["super_admin", "institution_admin", "student"],
       default: "student",
     },
-    institutionName: {
+    institution: {
       type: String,
-      required: [true, "Institution name is required"],
     },
     resume: {
       type: String,

@@ -4,8 +4,8 @@ export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
-  role: "superadmin" | "institutionadmin" | "student";
-  institutionName?: string;
+  role: "super_admin" | "institution_admin" | "student";
+  institution?: string;
   resume?: string;
   skills?: string[];
   academicRecord?: {
