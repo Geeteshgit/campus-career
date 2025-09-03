@@ -1,21 +1,15 @@
 import mongoose from "mongoose";
 import { IUser } from "../types/models.js";
-import bcrypt from "bcrypt";
+import { hashPassword } from "../utils/password.js";
 
 const userSchema = new mongoose.Schema<IUser>(
   {
     name: {
-      firstName: {
-        type: String,
-        trim: true,
-        required: [true, "First Name is required"],
-        minLength: [2, "First name must be atleast 2 characters"],
-        maxLength: [50, "First name must not exceed 50 characters"],
-      },
-      lastName: {
-        type: String,
-        trim: true,
-      },
+      type: String,
+      trim: true,
+      required: [true, "Name is required"],
+      minLength: [2, "Name must be atleast 2 characters"],
+      maxLength: [50, "Name must not exceed 50 characters"],
     },
     email: {
       type: String,
@@ -36,9 +30,9 @@ const userSchema = new mongoose.Schema<IUser>(
       enum: ["superadmin", "institutionadmin", "student"],
       default: "student",
     },
-    institution: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Institution",
+    institutionName: {
+      type: String,
+      required: [true, "Institution name is required"],
     },
     resume: {
       type: String,
@@ -72,21 +66,12 @@ const userSchema = new mongoose.Schema<IUser>(
 userSchema.pre("save", async function(next) {
   try {
     if (!this.isModified("password")) return next();
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
+    this.password = await hashPassword(this.password);
     next();
   } catch (err) {
     console.error("Error Hashing Password: ", err);
     next(err as Error);
   }
 });
-
-userSchema.methods.comparePassword = async function(candidatePassword: string) {
-  try {
-    return await bcrypt.compare(candidatePassword, this.password);
-  } catch (err) {
-    console.error("Error Comparing Password: ", err);
-  }
-}
 
 export const User = mongoose.model<IUser>("User", userSchema);

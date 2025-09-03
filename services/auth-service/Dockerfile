@@ -11,4 +11,4 @@ COPY ./src ./src
 
 EXPOSE 5000
 
-CMD ["tsx", "src/server.ts"]
+CMD ["npm", "run", "dev"]
