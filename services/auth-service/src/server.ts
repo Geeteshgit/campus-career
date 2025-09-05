@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
 
 app.get("/api", (req: Request, res: Response) => {
-    return res.send("Auth Server running");
+    return res.send("Auth Server Running");
 });
 
 app.listen(env.PORT, () => {
