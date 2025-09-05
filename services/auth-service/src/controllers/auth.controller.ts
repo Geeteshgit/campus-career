@@ -3,6 +3,8 @@ import { AuthUser } from "../models/auth.model.js";
 import { comparePassword } from "../utils/password.js";
 import { generateToken } from "../utils/jwt.js";
 import { IAuthUser } from "../types/models.js";
+import { env } from "../config/env.js";
+import axios from "axios";
 
 export const registerUser = async (req: Request, res: Response) => {
     try {
@@ -23,6 +25,10 @@ export const registerUser = async (req: Request, res: Response) => {
 
         await user.save();
         const token: string = generateToken(user);
+
+        await axios.post(`${env.USER_SERVICE_URL}/new`, {
+            userId: user._id,
+        });
 
         return res.status(201).json({ 
             message: "User registered successfully",
