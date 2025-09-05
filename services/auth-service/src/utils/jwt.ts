@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { env } from "../config/env.js";
-import { IUser } from "../types/models.js";
+import { IAuthUser } from "../types/models.js";
 
 export interface TokenPayload {
     id: string;
@@ -8,7 +8,7 @@ export interface TokenPayload {
     role: string;
 }
 
-export const generateToken = (user: IUser) => {
+export const generateToken = (user: IAuthUser) => {
     return jwt.sign({ 
         id: user._id,
         email: user.email,

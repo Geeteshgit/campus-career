@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { User } from "../models/user.model.js";
+import { AuthUser } from "../models/auth.model.js";
 import { comparePassword } from "../utils/password.js";
 import { generateToken } from "../utils/jwt.js";
-import { IUser } from "../types/models.js";
+import { IAuthUser } from "../types/models.js";
 
 export const registerUser = async (req: Request, res: Response) => {
     try {
@@ -10,10 +10,10 @@ export const registerUser = async (req: Request, res: Response) => {
         if(!name || !email || !password) {
             return res.status(400).json({ message: "Missing required fields" });
         }
-        const existingUser = await User.findOne({ email });
+        const existingUser = await AuthUser.findOne({ email });
         if(existingUser) return res.status(409).json({ message: "User already exists" });
 
-        const user: IUser = new User({
+        const user: IAuthUser = new AuthUser({
             name,
             email,
             password,
@@ -47,7 +47,7 @@ export const loginUser = async (req: Request, res: Response) => {
         if(!email || !password) {
             return res.status(400).json({ message: "Missing required fields" });
         }
-        const user: IUser = await User.findOne({ email }).select("+password");
+        const user: IAuthUser = await AuthUser.findOne({ email }).select("+password");
         if(!user) return res.status(401).json({ message: "Invalid Credentials" });
 
         const isMatch: boolean = await comparePassword(password, user.password);

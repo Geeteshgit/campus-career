@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import { IUser } from "../types/models.js";
+import { IAuthUser } from "../types/models.js";
 import { hashPassword } from "../utils/password.js";
 
-const userSchema = new mongoose.Schema<IUser>(
+const authUserSchema = new mongoose.Schema<IAuthUser>(
   {
     name: {
       type: String,
@@ -33,36 +33,13 @@ const userSchema = new mongoose.Schema<IUser>(
     institution: {
       type: String,
     },
-    resume: {
-      type: String,
-    },
-    skills: {
-      type: [String],
-      default: [],
-    },
-    academicRecord: {
-      cgpa: {
-        type: Number,
-        min: [0, "CGPA cannot be negative"],
-        max: [10, "CGPA cannot exceed 10"],
-      },
-      year: {
-        type: Number,
-        min: [1, "Year must be greater than or equal to 1"],
-        max: [10, "Year must be less than or equal to 10"],
-      },
-      branch: {
-        type: String,
-        trim: true,
-      },
-    },
   },
   {
     timestamps: true,
   }
 );
 
-userSchema.pre("save", async function(next) {
+authUserSchema.pre("save", async function(next) {
   try {
     if (!this.isModified("password")) return next();
     this.password = await hashPassword(this.password);
@@ -73,4 +50,4 @@ userSchema.pre("save", async function(next) {
   }
 });
 
-export const User = mongoose.model<IUser>("User", userSchema);
+export const AuthUser = mongoose.model<IAuthUser>("User", authUserSchema);
