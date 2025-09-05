@@ -16,5 +16,5 @@ app.get("/api", (req: Request, res: Response) => {
 });
 
 app.listen(env.PORT, () => {
-    console.log(`Server running on port: ${env.PORT}`);
+    console.log(`Auth Server running on port: ${env.PORT}`);
 });
