@@ -50,4 +50,4 @@ authUserSchema.pre("save", async function(next) {
   }
 });
 
-export const AuthUser = mongoose.model<IAuthUser>("User", authUserSchema);
+export const AuthUser = mongoose.model<IAuthUser>("AuthUser", authUserSchema);
