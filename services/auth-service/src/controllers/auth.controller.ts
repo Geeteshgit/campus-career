@@ -26,7 +26,7 @@ export const registerUser = async (req: Request, res: Response) => {
         await user.save();
         const token: string = generateToken(user);
 
-        await axios.post(`${env.USER_SERVICE_URL}/new`, {
+        await axios.post(`${env.USER_SERVICE_URL}/api/users/new`, {
             userId: user._id,
         });
 
