@@ -1,6 +1,9 @@
 import express, { Request, Response } from "express";
 import { env } from "./config/env.js";
-import userRoutes from "./routes/user.route.js"
+import userRoutes from "./routes/user.route.js";
+import studentRoutes from "./routes/student.route.js";
+import institutionAdminRoutes from "./routes/institutionAdmin.route.js";
+import superAdminRoutes from "./routes/superAdmin.route.js";
 import { connectToDB } from "./config/db.js";
 
 const app = express();
@@ -10,6 +13,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/users", userRoutes);
+app.use("/api/students", studentRoutes);
+app.use("/api/instutition-admin", institutionAdminRoutes);
+app.use("/api/super-admin", superAdminRoutes);
 
 app.get("/api", (req: Request, res: Response) => {
     return res.send("User Server Running");
