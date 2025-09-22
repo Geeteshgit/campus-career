@@ -5,6 +5,7 @@ import { generateToken } from "../utils/jwt.js";
 import { IAuthUser } from "../types/models.js";
 import { env } from "../config/env.js";
 import axios from "axios";
+import { publishMessage } from "../utils/rabbitmq.js";
 
 export const registerUser = async (req: Request, res: Response) => {
     try {
@@ -26,8 +27,11 @@ export const registerUser = async (req: Request, res: Response) => {
         await user.save();
         const token: string = generateToken(user);
 
-        await axios.post(`${env.USER_SERVICE_URL}/api/users/new`, {
-            userId: user._id,
+        await publishMessage("userQueue", {
+            type: "create_profile",
+            payload: {
+                userId: user._id,
+            }
         });
 
         return res.status(201).json({ 
