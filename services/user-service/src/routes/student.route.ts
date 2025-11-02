@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.use(checkAuth);
 
-router.get("/", restrictTo("institution_admin", "super_admin"), getStudents);
+router.get("/", restrictTo("admin", "super_admin"), getStudents);
 
 export default router;

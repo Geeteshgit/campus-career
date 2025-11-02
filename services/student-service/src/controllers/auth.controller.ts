@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { AuthUser } from "../models/auth.model.js";
+import { AuthUser } from "../models/student.model.js";
 import { comparePassword } from "../utils/password.js";
 import { generateToken } from "../utils/jwt.js";
 import { IAuthUser } from "../types/models.js";

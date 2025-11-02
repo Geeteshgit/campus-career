@@ -27,11 +27,8 @@ const authUserSchema = new mongoose.Schema<IAuthUser>(
     },
     role: {
       type: String,
-      enum: ["super_admin", "institution_admin", "student"],
+      enum: ["super_admin", "admin", "student"],
       default: "student",
-    },
-    institution: {
-      type: String,
     },
   },
   {

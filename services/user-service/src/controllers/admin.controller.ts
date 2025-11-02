@@ -1,7 +1,7 @@
 import { Response } from "express";
 import { User } from "../models/user.model.js";
 
-export const getInstitutionAdmins = async (req: any, res: Response) => {
+export const getAdmins = async (req: any, res: Response) => {
     try {
         let institution;
         if(req.user.role === "institution_admin") {

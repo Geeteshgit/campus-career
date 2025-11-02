@@ -1,11 +1,11 @@
 import express from "express";
 import { checkAuth } from "../middlewares/checkAuth.middleware.js";
 import { restrictTo } from "../middlewares/restrictTo.middleware.js";
-import { getInstitutionAdmins } from "../controllers/insitutionAdmin.controller.js";
+import { getAdmins } from "../controllers/admin.controller.js";
 const router = express.Router();
 
 router.use(checkAuth);
 
-router.get("/", restrictTo("institution_admin", "super_admin"), getInstitutionAdmins);
+router.get("/", restrictTo("admin", "super_admin"), getAdmins);
 
 export default router;

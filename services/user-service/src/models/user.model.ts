@@ -9,28 +9,14 @@ const userSchema = new mongoose.Schema<IUser>(
       required: true,
       unique: true,
     },
-    resume: {
+    phone: {
       type: String,
+      trim: true,
     },
-    skills: {
+    permissions: {
       type: [String],
-    },
-    academicRecord: {
-      cgpa: {
-        type: Number,
-        min: [0, "CGPA cannot be negative"],
-        max: [10, "CGPA cannot exceed 10"],
-      },
-      year: {
-        type: Number,
-        min: [1, "Year must be greater than or equal to 1"],
-        max: [10, "Year must be less than or equal to 10"],
-      },
-      branch: {
-        type: String,
-        trim: true,
-      },
-    },
+      default: [],
+    }
   },
   { timestamps: true }
 );

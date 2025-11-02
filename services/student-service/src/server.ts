@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { env } from "./config/env.js";
 import { connectToDB } from "./config/db.js";
-import institutionRoutes from "./routes/institution.route.js";
+import { connectRabbitMQ } from "./utils/rabbitmq.js";
 
 const app = express();
 connectToDB();
@@ -9,12 +9,15 @@ connectToDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/insitutions", institutionRoutes);
 
 app.get("/api", (req: Request, res: Response) => {
-    return res.send("Institution Server Running");
+    return res.send("Student Server Running");
 });
 
+(async () => {
+    await connectRabbitMQ();
+})
+
 app.listen(env.PORT, () => {
-    console.log(`Institution Server running on port: ${env.PORT}`);
+    console.log(`Student Server running on port: ${env.PORT}`);
 });

@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.post("/new", createNewUser);
 router.get("/me", checkAuth, getMe);
-router.get("/:userId", checkAuth, restrictTo("institution_admin", "super_admin"), getUserById);
+router.get("/:userId", checkAuth, restrictTo("admin", "super_admin"), getUserById);
 
 export default router;
