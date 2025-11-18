@@ -1,4 +1,4 @@
-import ChatContainer from "@/components/ChatPageComponents/ChatContainer";
+import ChatContainer from "@/components/ChatComponents/ChatContainer";
 import Navbar from "@/components/Navbar";
 import PageHeader from "@/components/PageHeader";
 import React from "react";
