@@ -1,0 +1,64 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672" 
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    ports:
+      - 5000:5000
+    env_file:
+      - ./auth-service/.env
+    volumes:
+      - ./auth-service:/app
+      - /app/node_modules
+    command: npm run dev
+    depends_on: 
+      - mongo
+
+  user-service:
+    build: ./user-service
+    container_name: user-service
+    ports:
+      - 5001:5001
+    env_file:
+      - ./user-service/.env
+    volumes:
+      - ./user-service:/app
+      - /app/node_modules
+    command: npm run dev
+    depends_on: 
+      - mongo
+
+  student-service:
+    build: ./student-service
+    container_name: student-service
+    ports:
+      - 5002:5002
+    env_file:
+      - ./student-service/.env
+    volumes:
+      - ./student-service:/app
+      - /app/node_modules
+    command: npm run dev
+    depends_on: 
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
+
