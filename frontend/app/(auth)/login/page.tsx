@@ -7,7 +7,7 @@ const Login = (): React.JSX.Element => {
     const router = useRouter();
     const submitHandler = (e:React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
-        router.push("/home");
+        router.push("/student/home");
     }
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-[url(/background-img.jpg)] bg-top bg-cover">
@@ -16,7 +16,7 @@ const Login = (): React.JSX.Element => {
         {/* Logo */}
         <div className="flex flex-col items-center mb-6 sm:mb-10">
           <Image
-            src="/logo.png" 
+            src="/bennett.png" 
             alt="bennett-logo"
             width={100} 
             height={100}
@@ -67,7 +67,7 @@ const Login = (): React.JSX.Element => {
 
           {/* Login Button */}
           <button
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-lg transition hover:scale-[1.01] duration-300 cursor-pointer"
+            className="w-full bg-blue-500 hover:bg-blue-500 text-white font-semibold py-2 rounded-lg transition hover:scale-[1.01] duration-300 cursor-pointer"
           >
             Login
           </button>
