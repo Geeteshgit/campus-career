@@ -8,6 +8,7 @@ interface UserData {
   phone?: string;
   cgpa?: string;
   skills?: string;
+  role: string;
 }
 
 interface UserState {
@@ -25,6 +26,7 @@ const initialState: UserState = {
     phone: "+91 9876543210",
     cgpa: "8.5",
     skills: "React, Tailwind, Node.js",
+    role: "admin"
   },
 };
 
