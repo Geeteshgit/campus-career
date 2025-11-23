@@ -7,14 +7,14 @@ import { FiBriefcase, FiUsers } from "react-icons/fi";
 import { MdAdminPanelSettings } from "react-icons/md";
 
 const AdminDashboard = (): React.JSX.Element => {
-  type DashboardCardItem = {
+  type AdminDashboardCard = {
     title: string;
     subtitle: string;
     href: string;
     icon: React.ReactNode;
   };
 
-  const adminDashboardCards: DashboardCardItem[] = [
+  const adminDashboardCards: AdminDashboardCard[] = [
     {
       title: "Manage Postings",
       subtitle: "View, create, edit, and remove job postings",
