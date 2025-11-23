@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface UserData {
   name: string;
+  email: string;
   enrollmentNumber: string;
   department?: string;
   year?: string;
@@ -20,6 +21,7 @@ const initialState: UserState = {
   isAuthenticated: true,
   user: {
     name: "Geetesh",
+    email: "geetesh472@gmail.com",
     enrollmentNumber: "E23CSEU0361",
     department: "Computer Science",
     year: "3rd Year",

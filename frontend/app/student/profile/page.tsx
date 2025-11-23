@@ -5,16 +5,15 @@ import Navbar from "@/components/Navbar";
 import PageHeader from "@/components/PageHeader";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { updateUserField } from "@/redux/features/user/userSlice";
-
 import ReadOnlyField from "@/components/FormComponents/ReadonlyField"; 
 import InputField from "@/components/FormComponents/InputField";
-import TextAreaField from "@/components/FormComponents/TextareaField";
+import TextAreaField from "@/components/FormComponents/TextAreaField";
 import FileUploadField from "@/components/FormComponents/FileUploadField";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import ProfileChangePassword from "@/components/ProfileComponents/ProfileChangePassword";
 import FormLabel from "@/components/FormComponents/FormLabel";
 
-const Profile = (): React.JSX.Element => {
+const StudentProfile = (): React.JSX.Element => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user.user);
 
@@ -127,4 +126,4 @@ const Profile = (): React.JSX.Element => {
   );
 };
 
-export default Profile;
+export default StudentProfile;

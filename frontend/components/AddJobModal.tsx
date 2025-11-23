@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import InputField from "./FormComponents/InputField";
-import TextAreaField from "./FormComponents/TextareaField";
+import TextAreaField from "./FormComponents/TextAreaField";
 import SelectField from "./FormComponents/SelectField"; 
 import PrimaryButton from "./ui/PrimaryButton";
 import CloseButton from "./ui/CloseButton";
@@ -78,13 +78,6 @@ const AddJobModal = ({ onClose, onJobAdded }: AddJobModalProps) => {
             value={form.type}
             onChange={handleChange}
             options={["Full-Time", "Internship"]}
-          />
-
-          <SelectField
-            name="status"
-            value={form.status}
-            onChange={handleChange}
-            options={["Active", "Inactive"]}
           />
 
           <TextAreaField
