@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import InputField from "./FormComponents/InputField";
-import TextAreaField from "./FormComponents/TextAreaField";
+import TextAreaField from "./FormComponents/TextareaField";
 import SelectField from "./FormComponents/SelectField"; 
 import PrimaryButton from "./ui/PrimaryButton";
 import CloseButton from "./ui/CloseButton";

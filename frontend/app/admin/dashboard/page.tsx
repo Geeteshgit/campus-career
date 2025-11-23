@@ -3,7 +3,7 @@ import Navbar from "@/components/Navbar";
 import PageHeader from "@/components/PageHeader";
 import React from "react";
 import { BiBarChartAlt2, BiShieldQuarter } from "react-icons/bi";
-import { FiBriefcase, FiUsers } from "react-icons/fi";
+import { FiBriefcase, FiSettings, FiUsers } from "react-icons/fi";
 import { MdAdminPanelSettings } from "react-icons/md";
 
 const AdminDashboard = (): React.JSX.Element => {
@@ -39,6 +39,12 @@ const AdminDashboard = (): React.JSX.Element => {
       href: "/admin/analytics",
       icon: <BiBarChartAlt2 />,
     },
+    {
+      title: "System Configurations",
+      subtitle: "General platform-level controls",
+      href: "/admin/configurations",
+      icon: <FiSettings />,
+    }
   ];
 
   return (

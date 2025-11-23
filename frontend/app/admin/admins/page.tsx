@@ -3,11 +3,10 @@
 import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
 import PageHeader from "@/components/PageHeader";
-import AdminCard, {
-  AdminUser,
-} from "@/components/AdminDashboardComponents/AdminCard";
+import AdminCard, { AdminUser } from "@/components/AdminDashboardComponents/AdminCard";
 import { useAppSelector } from "@/redux/hooks";
 import AddAdminModal from "@/components/AdminDashboardComponents/AddAdminModal";
+import EditModal, { FieldConfig } from "@/components/ui/EditModal";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 
 const dummyAdmins: AdminUser[] = [
@@ -32,14 +31,19 @@ const AdminManagement = (): React.JSX.Element => {
   const role = user?.role ?? "admin";
 
   const [admins, setAdmins] = useState<AdminUser[]>(dummyAdmins);
+
   const [addAdminModalOpen, setAddAdminModalOpen] = useState(false);
 
+  const [editAdminModalOpen, setEditAdminModalOpen] = useState(false);
+  const [selectedAdmin, setSelectedAdmin] = useState<AdminUser | null>(null);
+
   const handleEdit = (admin: AdminUser) => {
-    alert(`Editing admin: ${admin.name}`);
+    setSelectedAdmin(admin);
+    setEditAdminModalOpen(true);
   };
 
   const handleDelete = (admin: AdminUser) => {
-    alert(`Deleting admin: ${admin.name}`);
+    setAdmins((prev) => prev.filter((a) => a.id !== admin.id));
   };
 
   const handleAdminAdded = (newAdmin: AdminUser) => {
@@ -47,20 +51,46 @@ const AdminManagement = (): React.JSX.Element => {
     setAddAdminModalOpen(false);
   };
 
+  const handleAdminUpdated = (updatedValues: Record<string, any>) => {
+    if (!selectedAdmin) return;
+
+    const updatedAdmin: AdminUser = {
+      ...selectedAdmin,
+      ...updatedValues,
+    };
+
+    setAdmins((prev) =>
+      prev.map((a) => (a.id === updatedAdmin.id ? updatedAdmin : a))
+    );
+
+    setEditAdminModalOpen(false);
+  };
+
+  // Fields for EditModal component
+  const adminFields: FieldConfig[] = [
+  { name: "name", placeholder: "Admin Name", type: "text" },
+  { name: "email", placeholder: "Email", type: "email" },
+  { name: "phone", placeholder: "Phone Number", type: "text" },
+];
+
+
   return (
     <>
       <Navbar />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-white flex flex-col gap-8">
-        {/* HEADER + ADD ADMIN BUTTON */}
+
+        {/* Header */}
         <div className="flex items-center justify-between">
           <PageHeader
             title="Admin Users"
             subtitle="View and manage all the admin accounts"
           />
-          <PrimaryButton onClick={() => setAddAdminModalOpen(true)}>Add Admin</PrimaryButton>
+          <PrimaryButton onClick={() => setAddAdminModalOpen(true)}>
+            Add Admin
+          </PrimaryButton>
         </div>
 
-        {/* ADMIN CARDS */}
+        {/* Admin Cards */}
         <div className="flex flex-col gap-4">
           {admins.map((admin) => (
             <AdminCard
@@ -79,6 +109,17 @@ const AdminManagement = (): React.JSX.Element => {
         <AddAdminModal
           onClose={() => setAddAdminModalOpen(false)}
           onAdminAdded={handleAdminAdded}
+        />
+      )}
+
+      {/* EDIT ADMIN MODAL */}
+      {editAdminModalOpen && selectedAdmin && (
+        <EditModal
+          title="Edit Admin"
+          fields={adminFields}
+          initialValues={selectedAdmin}
+          onClose={() => setEditAdminModalOpen(false)}
+          onSave={handleAdminUpdated}
         />
       )}
     </>

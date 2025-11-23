@@ -5,32 +5,33 @@ import InputField from "@/components/FormComponents/InputField";
 import SelectField from "@/components/FormComponents/SelectField";
 import TextAreaField from "@/components/FormComponents/TextareaField";
 import PrimaryButton from "@/components/ui/PrimaryButton";
-import CloseButton from "./CloseButton";
+import CloseButton from "@/components/ui/CloseButton";
 
 export interface FieldConfig {
   name: string;
   placeholder: string;
   type?: "text" | "email" | "number" | "textarea" | "select";
-  options?: string[];     
+  options?: string[];
 }
 
-interface EditModalProps {
+interface AddModalProps {
   title: string;
   fields: FieldConfig[];
-  initialValues: Record<string, any>;
   onClose: () => void;
-  onSave: (updatedData: any) => void;
+  onSave: (data: any) => void;
 }
 
-const EditModal = ({
+const AddModal = ({
   title,
   fields,
-  initialValues,
   onClose,
   onSave,
-}: EditModalProps): React.JSX.Element => {
-  
-  const [formData, setFormData] = useState(initialValues);
+}: AddModalProps): React.JSX.Element => {
+
+  const initialData: Record<string, any> = {};
+  fields.forEach((f) => (initialData[f.name] = ""));
+
+  const [formData, setFormData] = useState(initialData);
 
   const handleChange = (e: any) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -81,10 +82,14 @@ const EditModal = ({
             </div>
           ))}
         </div>
-        <PrimaryButton onClick={handleSave}>Save Changes</PrimaryButton>
+
+        {/* SAVE BUTTON */}
+        <PrimaryButton onClick={handleSave}>
+          Save
+        </PrimaryButton>
       </div>
     </div>
   );
 };
 
-export default EditModal;
+export default AddModal;

@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { updateUserField } from "@/redux/features/user/userSlice";
 import ReadOnlyField from "@/components/FormComponents/ReadonlyField"; 
 import InputField from "@/components/FormComponents/InputField";
-import TextAreaField from "@/components/FormComponents/TextAreaField";
+import TextAreaField from "@/components/FormComponents/TextareaField";
 import FileUploadField from "@/components/FormComponents/FileUploadField";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import ProfileChangePassword from "@/components/ProfileComponents/ProfileChangePassword";
