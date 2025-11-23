@@ -21,30 +21,59 @@ const Navbar = (): React.JSX.Element => {
   const pathname = usePathname();
 
   const user = useAppSelector((state) => state.user.user);
-  // const role = user?.role || "student"; 
-  const role = "admin";
+  const role = user?.role;
 
   const studentLinks: NavLink[] = [
-    { link: "Home", href: "/student/home", icon: <FiHome className="w-4 h-4" /> },
-    { link: "Postings", href: "/student/postings", icon: <FiBriefcase className="w-4 h-4" /> },
-    { link: "Prepare", href: "/student/prepare", icon: <IoBookOutline className="w-4 h-4" /> },
-    { link: "Chat", href: "/chat", icon: <BiComment className="w-4 h-4" /> },
-    { link: "Profile", href: "/student/profile", icon: <FiUser className="w-4 h-4" /> },
+    {
+      link: "Home",
+      href: "/student/home",
+      icon: <FiHome className="w-4 h-4" />,
+    },
+    {
+      link: "Postings",
+      href: "/postings",
+      icon: <FiBriefcase className="w-4 h-4" />,
+    },
+    {
+      link: "Prepare",
+      href: "/student/prepare",
+      icon: <IoBookOutline className="w-4 h-4" />,
+    },
+    {
+      link: "Chat",
+      href: "/chat",
+      icon: <BiComment className="w-4 h-4" />,
+    },
+    {
+      link: "Profile",
+      href: "/student/profile",
+      icon: <FiUser className="w-4 h-4" />,
+    },
   ];
 
   const adminLinks: NavLink[] = [
-    { link: "Dashboard", href: "/admin/dashboard", icon: <RxDashboard className="w-4 h-4" /> },
-    { link: "Chat", href: "/chat", icon: <BiComment className="w-4 h-4" /> },
-    { link: "Profile", href: "/admin/profile", icon: <FiUser className="w-4 h-4" /> },
+    {
+      link: "Dashboard",
+      href: "/admin/dashboard",
+      icon: <RxDashboard className="w-4 h-4" />,
+    },
+    { 
+      link: "Chat", 
+      href: "/chat", 
+      icon: <BiComment className="w-4 h-4" /> 
+    },
+    {
+      link: "Profile",
+      href: "/admin/profile",
+      icon: <FiUser className="w-4 h-4" />,
+    },
   ];
 
-  const navLinks = role === "admin" ? adminLinks : studentLinks;
+  const navLinks: NavLink[] = role === "student" ? studentLinks : adminLinks;
 
   return (
     <header className="sticky top-0 left-0 w-full bg-white shadow-sm z-50">
       <nav className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
-        
-        {/* Logo */}
         <div className="flex items-center gap-2">
           <Image
             src="/logo.png"
@@ -62,14 +91,17 @@ const Navbar = (): React.JSX.Element => {
         {/* Desktop Nav Links */}
         <ul className="hidden md:flex gap-8 text-neutral-800 font-medium">
           {navLinks.map((link) => {
-            const isActive = pathname === link.href;
+            const isActive =
+              pathname === link.href || pathname.startsWith(link.href + "/");
 
             return (
               <li key={link.link}>
                 <Link
                   href={link.href}
                   className={`flex items-center gap-2 transition-colors ${
-                    isActive ? "text-blue-500 font-semibold" : "hover:text-blue-500"
+                    isActive
+                      ? "text-blue-500 font-semibold"
+                      : "hover:text-blue-500"
                   }`}
                 >
                   {link.icon}
@@ -80,7 +112,7 @@ const Navbar = (): React.JSX.Element => {
           })}
         </ul>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu */}
         <button
           className="md:hidden text-neutral-800 focus:outline-none"
           onClick={() => setIsOpen(!isOpen)}
@@ -89,12 +121,12 @@ const Navbar = (): React.JSX.Element => {
         </button>
       </nav>
 
-      {/* Mobile Dropdown */}
       {isOpen && (
         <div className="md:hidden bg-white shadow-lg border-t border-gray-200">
           <ul className="flex flex-col items-center py-4 gap-4 text-neutral-700 font-medium">
             {navLinks.map((link) => {
-              const isActive = pathname === link.href;
+              const isActive =
+                pathname === link.href || pathname.startsWith(link.href + "/");
 
               return (
                 <li key={link.link}>
@@ -102,7 +134,9 @@ const Navbar = (): React.JSX.Element => {
                     href={link.href}
                     onClick={() => setIsOpen(false)}
                     className={`flex items-center gap-2 transition-colors ${
-                      isActive ? "text-blue-500 font-semibold" : "hover:text-blue-500"
+                      isActive
+                        ? "text-blue-500 font-semibold"
+                        : "hover:text-blue-500"
                     }`}
                   >
                     {link.icon}

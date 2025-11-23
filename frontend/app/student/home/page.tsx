@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
-import JobModal, { Job } from "@/components/JobModal";
+import JobModal, { Job } from "@/components/JobModalComponents/JobModal";
 import PageHeader from "@/components/PageHeader";
 import FilterSearchBar from "@/components/FilterSearchBar";
 import PostingsContainer from "@/components/PostingsContainer";

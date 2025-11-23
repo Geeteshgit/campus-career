@@ -7,6 +7,46 @@ import { FiBriefcase, FiUsers } from "react-icons/fi";
 import { MdAdminPanelSettings } from "react-icons/md";
 
 const AdminDashboard = (): React.JSX.Element => {
+  type DashboardCardItem = {
+    title: string;
+    subtitle: string;
+    href: string;
+    icon: React.ReactNode;
+  };
+
+  const adminDashboardCards: DashboardCardItem[] = [
+    {
+      title: "Manage Postings",
+      subtitle: "View, create, edit, and remove job postings",
+      href: "/postings",
+      icon: <FiBriefcase />,
+    },
+    {
+      title: "Student Management",
+      subtitle: "View student profiles, performance & activity",
+      href: "/admin/students",
+      icon: <FiUsers />,
+    },
+    {
+      title: "Admin Users",
+      subtitle: "Manage admin accounts & privileges",
+      href: "/admin/admins",
+      icon: <MdAdminPanelSettings />,
+    },
+    {
+      title: "Permissions",
+      subtitle: "Assign roles and manage access control",
+      href: "/admin/permissions",
+      icon: <BiShieldQuarter />,
+    },
+    {
+      title: "Analytics & Reports",
+      subtitle: "Track metrics and platform performance",
+      href: "/admin/analytics",
+      icon: <BiBarChartAlt2 />,
+    },
+  ];
+
   return (
     <>
       <Navbar />
@@ -16,36 +56,15 @@ const AdminDashboard = (): React.JSX.Element => {
           subtitle="Manage platform data, job postings, users, and system controls"
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <AdminDashboardCard
-            title="Manage Postings"
-            subtitle="View, create, edit, and remove job postings"
-            href="/admin/postings"
-            icon={<FiBriefcase />}
-          />
-          <AdminDashboardCard
-            title="Student Management"
-            subtitle="View student profiles, performance & activity"
-            href="/admin/students"
-            icon={<FiUsers />}
-          />
-          <AdminDashboardCard
-            title="Admin Users"
-            subtitle="Manage admin accounts & privileges"
-            href="/admin/admins"
-            icon={<MdAdminPanelSettings />}
-          />
-          <AdminDashboardCard
-            title="Permissions"
-            subtitle="Assign roles and manage access control"
-            href="/admin/permissions"
-            icon={<BiShieldQuarter />}
-          />
-          <AdminDashboardCard
-            title="Analytics & Reports"
-            subtitle="Track metrics and platform performance"
-            href="/admin/analytics"
-            icon={<BiBarChartAlt2 />}
-          />
+          {adminDashboardCards.map((card, index) => (
+            <AdminDashboardCard
+              key={index}
+              title={card.title}
+              subtitle={card.subtitle}
+              href={card.href}
+              icon={card.icon}
+            />
+          ))}
         </div>
       </main>
     </>

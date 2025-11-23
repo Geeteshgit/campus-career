@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 
-const ChatInput = ({ onSend }: { onSend: (text: string) => void }) => {
-  const [input, setInput] = useState("");
+const ChatInput = ({ onSend }: { onSend: (text: string) => void }): React.JSX.Element => {
+  const [input, setInput] = useState<string>("");
 
   const handleSend = () => {
     if (!input.trim()) return;
@@ -24,7 +24,7 @@ const ChatInput = ({ onSend }: { onSend: (text: string) => void }) => {
 
       <button
         onClick={handleSend}
-        className="px-5 py-2 bg-blue-500 text-white font-medium text-sm sm:text-base rounded-full hover:bg-blue-600 hover:scale-[1.02] transition-all duration-200"
+        className="px-5 py-2 bg-blue-500 text-white font-medium text-sm sm:text-base rounded-full hover:bg-blue-600 hover:scale-[1.01] transition-all duration-200"
       >
         Send
       </button>

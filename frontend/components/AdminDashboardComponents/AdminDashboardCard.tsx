@@ -13,11 +13,11 @@ const AdminDashboardCard = ({
   subtitle,
   href,
   icon,
-}: AdminDashboardCardProps) => {
+}: AdminDashboardCardProps): React.JSX.Element => {
   return (
     <Link
       href={href}
-      className="flex flex-col gap-3 p-6 bg-white border border-neutral-300 rounded-xl shadow hover:shadow-md transition-all"
+      className="flex flex-col gap-3 p-6 bg-white border border-neutral-300 rounded-xl shadow hover:shadow-lg hover:border-blue-500 hover:scale-[1.01] duration-300 transition-all"
     >
       <div className="text-blue-500 text-3xl">{icon}</div>
 

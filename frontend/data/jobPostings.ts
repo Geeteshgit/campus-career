@@ -1,4 +1,4 @@
-import { Job } from "@/components/JobModal";
+import { Job } from "@/components/JobModalComponents/JobModal";
 
 export const jobPostings: Job[] = [
   // 🟢 ACTIVE JOBS

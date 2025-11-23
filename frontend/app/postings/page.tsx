@@ -2,28 +2,36 @@
 
 import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
-import JobModal, { Job } from "@/components/JobModal";
+import JobModal, { Job } from "@/components/JobModalComponents/JobModal";
 import PageHeader from "@/components/PageHeader";
 import FilterSearchBar from "@/components/FilterSearchBar";
 import PostingsContainer from "@/components/PostingsContainer";
+import { useAppSelector } from "@/redux/hooks";
 
 // Job Data
 import { jobPostings } from "@/data/jobPostings";
+import AddJobModal from "@/components/AddJobModal";
 
 const Postings = (): React.JSX.Element => {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [jobModalOpen, setJobModalOpen] = useState<boolean>(false);
+
+  const [addModalOpen, setAddModalOpen] = useState<boolean>(false);
+
   const [filter, setFilter] = useState<"All" | "Full-time" | "Internship">(
     "All"
   );
   const [searchTerm, setSearchTerm] = useState<string>("");
 
+  const user = useAppSelector((state) => state.user.user);
+  const role = user?.role;
+  const isAdmin: boolean = role !== "student";
+
   const handleJobClick = (job: Job) => {
     setSelectedJob(job);
-    setModalOpen(true);
+    setJobModalOpen(true);
   };
 
-  // Filter by type
   const filteredByType =
     filter === "All"
       ? jobPostings
@@ -31,7 +39,6 @@ const Postings = (): React.JSX.Element => {
           (job) => job.type.toLowerCase() === filter.toLowerCase()
         );
 
-  // Apply search
   const filteredJobs = filteredByType.filter((job) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -43,7 +50,6 @@ const Postings = (): React.JSX.Element => {
     );
   });
 
-  // Split into active/inactive
   const activeJobs = filteredJobs.filter((job) => job.status === "Active");
   const inactiveJobs = filteredJobs.filter((job) => job.status === "Inactive");
 
@@ -51,11 +57,22 @@ const Postings = (): React.JSX.Element => {
     <>
       <Navbar />
       <main className="max-w-7xl flex flex-col gap-8 mx-auto px-4 sm:px-6 py-5 sm:py-10 bg-white">
-        <PageHeader
-          title="Job Postings"
-          subtitle="Manage and view the active and inactive opportunities"
-        />
+        <div className="flex items-center justify-between">
+          <PageHeader
+            title="Job Postings"
+            subtitle="Manage and view the active and inactive opportunities"
+          />
+          {isAdmin && (
+            <button
+              onClick={() => setAddModalOpen(true)}
+              className="text-sm sm:text-base px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 hover:scale-[1.01] duration-300 transition cursor-pointer"
+            >
+              Create Posting
+            </button>
+          )}
+        </div>
 
+        {/* FILTER BAR */}
         <FilterSearchBar
           filters={["All", "Full-time", "Internship"]}
           activeFilter={filter}
@@ -67,13 +84,14 @@ const Postings = (): React.JSX.Element => {
           placeholder="Search by company, role, or location..."
         />
 
-        {/* Active Postings */}
+        {/* ACTIVE JOBS */}
         <PostingsContainer
           title="Active Postings"
           jobs={activeJobs}
           onJobClick={handleJobClick}
         />
-        {/* Inactive Postings */}
+
+        {/* INACTIVE JOBS */}
         <PostingsContainer
           title="Inactive Postings"
           jobs={inactiveJobs}
@@ -82,7 +100,15 @@ const Postings = (): React.JSX.Element => {
         />
       </main>
 
-      {modalOpen && <JobModal job={selectedJob} onOpenChange={setModalOpen} />}
+      {/* JOB DETAILS MODAL */}
+      {jobModalOpen && (
+        <JobModal job={selectedJob} onOpenChange={setJobModalOpen} isAdmin={isAdmin} />
+      )}
+
+      {/* CREATE JOB POSTING MODAL */}
+      {addModalOpen && (
+        <AddJobModal onClose={() => setAddModalOpen(false)} onJobAdded={() => setAddModalOpen(false)} />
+      )}
     </>
   );
 };

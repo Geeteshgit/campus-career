@@ -1,7 +1,7 @@
 "use client";
 
 import JobCard from "@/components/JobCard";
-import { Job } from "@/components/JobModal";
+import { Job } from "@/components/JobModalComponents/JobModal";
 import React from "react";
 
 interface PostingsContainerProps {

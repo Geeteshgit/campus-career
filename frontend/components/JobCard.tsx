@@ -1,5 +1,5 @@
 import { FaBuilding, FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
-import { Job } from "./JobModal";
+import { Job } from "./JobModalComponents/JobModal";
 import React from "react";
 
 interface JobCardProps {
@@ -11,7 +11,7 @@ const JobCard = ({ job, onClick }: JobCardProps): React.JSX.Element => {
   return (
     <div
       onClick={onClick}
-      className="p-6 rounded-xl border border-neutral-200 cursor-pointer bg-white hover:shadow-lg transition-all duration-300 hover:border-blue-500/50"
+      className="p-6 rounded-xl border border-neutral-200 cursor-pointer bg-white hover:shadow-lg hover:scale-[1.01] transition-all duration-300 hover:border-blue-500"
     >
       {/* Header Section */}
       <div className="flex items-start justify-between mb-4">
