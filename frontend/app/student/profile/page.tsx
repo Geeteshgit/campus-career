@@ -5,19 +5,14 @@ import Navbar from "@/components/Navbar";
 import PageHeader from "@/components/PageHeader";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { updateUserField } from "@/redux/features/user/userSlice";
-import ProfileHeader from "@/components/ProfileComponents/ProfileHeader";
-import ProfileReadOnlyField from "@/components/ProfileComponents/ProfileReadOnlyField";
-import ProfileEditableField from "@/components/ProfileComponents/ProfileEditableField";
-import ProfileTextarea from "@/components/ProfileComponents/ProfileTextarea";
-import ProfileResumeUpload from "@/components/ProfileComponents/ProfileUploadField";
-import ProfileSaveButton from "@/components/ProfileComponents/ProfileSaveButton";
-import ProfileChangePassword from "@/components/ProfileComponents/ProfileChangePassword";
 
-interface PasswordChangeData {
-  currentPassword: string;
-  newPassword: string;
-  confirmPassword: string;
-}
+import ReadOnlyField from "@/components/FormComponents/ReadonlyField"; 
+import InputField from "@/components/FormComponents/InputField";
+import TextAreaField from "@/components/FormComponents/TextareaField";
+import FileUploadField from "@/components/FormComponents/FileUploadField";
+import PrimaryButton from "@/components/ui/PrimaryButton";
+import ProfileChangePassword from "@/components/ProfileComponents/ProfileChangePassword";
+import FormLabel from "@/components/FormComponents/FormLabel";
 
 const Profile = (): React.JSX.Element => {
   const dispatch = useAppDispatch();
@@ -25,84 +20,107 @@ const Profile = (): React.JSX.Element => {
 
   const [resume, setResume] = useState<File | null>(null);
 
-  const handleSave = (): void => {
-    console.log("Updated User:", user);
-    console.log("Uploaded Resume:", resume);
-    alert("Profile updated successfully!");
+  const handleSave = () => {
+    alert("Profile Saved!");
   };
 
-  const handlePasswordChange = (data: PasswordChangeData): void => {
-    console.log("Password change request:", data);
-
+  const handlePasswordChange = (data: any) => {
     if (data.newPassword !== data.confirmPassword) {
-      alert("New passwords do not match!");
-      return;
+      return alert("Passwords do not match!");
     }
-
-    alert("Password updated successfully!");
+    alert("Password updated");
   };
 
   return (
     <>
       <Navbar />
-      <main className="max-w-7xl flex flex-col gap-8 mx-auto px-4 sm:px-6 py-5 sm:py-10 bg-white">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-white flex flex-col gap-8">
         <PageHeader
           title="My Profile"
           subtitle="Manage your personal and academic details"
         />
-        <div className="bg-neutral-50 border border-neutral-300 rounded-xl p-4 sm:p-8 shadow-sm flex flex-col gap-6 md:gap-8">
-          <ProfileHeader name={user?.name ?? ""} />
-          
-          {/* NAME + ENROLLMENT */}
+
+        <div className="bg-neutral-50 border border-neutral-300 rounded-xl p-6 flex flex-col gap-6">
+
+          {/* NAME + ENROLL */}
           <div className="flex flex-col md:flex-row gap-6">
-            <ProfileReadOnlyField label="Name" value={user?.name ?? ""} />
-            <ProfileReadOnlyField
-              label="Enrollment Number"
-              value={user?.enrollmentNumber ?? ""}
-            />
+
+            <div className="w-full">
+              <FormLabel>Name</FormLabel>
+              <ReadOnlyField value={user?.name ?? ""} />
+            </div>
+
+            <div className="w-full">
+              <FormLabel>Enrollment Number</FormLabel>
+              <ReadOnlyField value={user?.enrollmentNumber ?? ""} />
+            </div>
           </div>
 
           {/* PHONE */}
-          <ProfileEditableField
-            label="Phone Number"
-            value={user?.phone ?? ""}
-            onChange={(v: string) =>
-              dispatch(updateUserField({ field: "phone", value: v }))
-            }
-          />
+          <div>
+            <FormLabel>Phone Number</FormLabel>
+            <InputField
+              name="phone"
+              placeholder="Phone Number"
+              value={user?.phone ?? ""}
+              onChange={(e) =>
+                dispatch(updateUserField({ field: "phone", value: e.target.value }))
+              }
+            />
+          </div>
 
-          {/* DEPARTMENT + YEAR */}
+          {/* DEPT + YEAR */}
           <div className="flex flex-col md:flex-row gap-6">
-            <ProfileReadOnlyField label="Department" value={user?.department ?? ""} />
-            <ProfileReadOnlyField label="Year" value={user?.year ?? ""} />
+
+            <div className="w-full">
+              <FormLabel>Department</FormLabel>
+              <ReadOnlyField value={user?.department ?? ""} />
+            </div>
+
+            <div className="w-full">
+              <FormLabel>Year</FormLabel>
+              <ReadOnlyField value={user?.year ?? ""} />
+            </div>
           </div>
 
           {/* CGPA */}
-          <ProfileEditableField
-            label="CGPA"
-            value={user?.cgpa ?? ""}
-            onChange={(v: string) =>
-              dispatch(updateUserField({ field: "cgpa", value: v }))
-            }
-          />
+          <div>
+            <FormLabel>CGPA</FormLabel>
+            <InputField
+              name="cgpa"
+              placeholder="CGPA"
+              value={user?.cgpa ?? ""}
+              onChange={(e) =>
+                dispatch(updateUserField({ field: "cgpa", value: e.target.value }))
+              }
+            />
+          </div>
 
           {/* SKILLS */}
-          <ProfileTextarea
-            label="Skills"
-            value={user?.skills ?? ""}
-            onChange={(v: string) =>
-              dispatch(updateUserField({ field: "skills", value: v }))
-            }
-          />
+          <div>
+            <FormLabel>Skills</FormLabel>
+            <TextAreaField
+              name="skills"
+              value={user?.skills ?? ""}
+              placeholder="Add your skills..."
+              onChange={(e) =>
+                dispatch(updateUserField({ field: "skills", value: e.target.value }))
+              }
+            />
+          </div>
 
           {/* RESUME UPLOAD */}
-          <ProfileResumeUpload resume={resume} onChange={setResume} />
+          <div>
+            <FormLabel>Resume Upload</FormLabel>
+            <FileUploadField file={resume} onChange={setResume} />
+          </div>
 
           {/* SAVE BUTTON */}
-          <ProfileSaveButton onClick={handleSave} />
+          <PrimaryButton children="Save" onClick={handleSave} />
 
           {/* CHANGE PASSWORD */}
           <ProfileChangePassword onSubmit={handlePasswordChange} />
+
         </div>
       </main>
     </>

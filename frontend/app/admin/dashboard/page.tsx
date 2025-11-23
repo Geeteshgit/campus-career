@@ -23,21 +23,15 @@ const AdminDashboard = (): React.JSX.Element => {
     },
     {
       title: "Student Management",
-      subtitle: "View student profiles, performance & activity",
+      subtitle: "View and manage all the students",
       href: "/admin/students",
       icon: <FiUsers />,
     },
     {
       title: "Admin Users",
-      subtitle: "Manage admin accounts & privileges",
+      subtitle: "View and manage all the admin accounts",
       href: "/admin/admins",
       icon: <MdAdminPanelSettings />,
-    },
-    {
-      title: "Permissions",
-      subtitle: "Assign roles and manage access control",
-      href: "/admin/permissions",
-      icon: <BiShieldQuarter />,
     },
     {
       title: "Analytics & Reports",

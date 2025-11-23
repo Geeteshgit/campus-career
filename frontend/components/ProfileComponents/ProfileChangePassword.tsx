@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import ProfileEditableField from "./ProfileEditableField";
+import FormLabel from "@/components/FormComponents/FormLabel";
+import InputField from "@/components/FormComponents/InputField";
+import SaveButton from "@/components/ui/PrimaryButton";
+import PrimaryButton from "@/components/ui/PrimaryButton";
 
 interface ProfileChangePasswordProps {
   onSubmit: (data: {
@@ -12,9 +15,9 @@ interface ProfileChangePasswordProps {
 }
 
 const ProfileChangePassword = ({ onSubmit }: ProfileChangePasswordProps) => {
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
 
   const handleSubmit = () => {
     onSubmit({
@@ -28,33 +31,47 @@ const ProfileChangePassword = ({ onSubmit }: ProfileChangePasswordProps) => {
     <div className="flex flex-col gap-6 mt-4 bg-neutral-50/50 p-6 rounded-xl border border-neutral-200">
       <h3 className="text-xl font-semibold text-neutral-800">Change Password</h3>
 
-      <ProfileEditableField
-        label="Current Password"
-        type="password"
-        value={currentPassword}
-        onChange={setCurrentPassword}
-      />
+      {/* Current Password */}
+      <div>
+        <FormLabel>Current Password</FormLabel>
+        <InputField
+          name="currentPassword"
+          type="password"
+          placeholder="Enter current password"
+          value={currentPassword}
+          onChange={(e) => setCurrentPassword(e.target.value)}
+          required={true}
+        />
+      </div>
 
-      <ProfileEditableField
-        label="New Password"
-        type="password"
-        value={newPassword}
-        onChange={setNewPassword}
-      />
+      {/* New Password */}
+      <div>
+        <FormLabel>New Password</FormLabel>
+        <InputField
+          name="newPassword"
+          type="password"
+          placeholder="Enter new password"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          required={true}
+        />
+      </div>
 
-      <ProfileEditableField
-        label="Confirm New Password"
-        type="password"
-        value={confirmPassword}
-        onChange={setConfirmPassword}
-      />
+      {/* Confirm Password */}
+      <div>
+        <FormLabel>Confirm New Password</FormLabel>
+        <InputField
+          name="confirmPassword"
+          type="password"
+          placeholder="Re-enter new password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required={true}
+        />
+      </div>
 
-      <button
-        onClick={handleSubmit}
-        className="w-full h-12 bg-blue-500 text-white font-semibold text-lg rounded-lg hover:bg-blue-600 transition cursor-pointer"
-      >
-        Update Password
-      </button>
+      {/* Save Button */}
+      <PrimaryButton onClick={handleSubmit}>Change Password</PrimaryButton>
     </div>
   );
 };

@@ -6,17 +6,18 @@ import JobModal, { Job } from "@/components/JobModalComponents/JobModal";
 import PageHeader from "@/components/PageHeader";
 import FilterSearchBar from "@/components/FilterSearchBar";
 import PostingsContainer from "@/components/PostingsContainer";
+import PrimaryButton from "@/components/ui/PrimaryButton";
+import AddJobModal from "@/components/AddJobModal";
 import { useAppSelector } from "@/redux/hooks";
 
 // Job Data
 import { jobPostings } from "@/data/jobPostings";
-import AddJobModal from "@/components/AddJobModal";
 
 const Postings = (): React.JSX.Element => {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [jobModalOpen, setJobModalOpen] = useState<boolean>(false);
 
-  const [addModalOpen, setAddModalOpen] = useState<boolean>(false);
+  const [addJobModalOpen, setAddJobModalOpen] = useState<boolean>(false);
 
   const [filter, setFilter] = useState<"All" | "Full-time" | "Internship">(
     "All"
@@ -63,12 +64,8 @@ const Postings = (): React.JSX.Element => {
             subtitle="Manage and view the active and inactive opportunities"
           />
           {isAdmin && (
-            <button
-              onClick={() => setAddModalOpen(true)}
-              className="text-sm sm:text-base px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 hover:scale-[1.01] duration-300 transition cursor-pointer"
-            >
-              Create Posting
-            </button>
+            <PrimaryButton onClick={() => setAddJobModalOpen(true)}>Create Posting</PrimaryButton>
+            
           )}
         </div>
 
@@ -106,8 +103,8 @@ const Postings = (): React.JSX.Element => {
       )}
 
       {/* CREATE JOB POSTING MODAL */}
-      {addModalOpen && (
-        <AddJobModal onClose={() => setAddModalOpen(false)} onJobAdded={() => setAddModalOpen(false)} />
+      {addJobModalOpen && (
+        <AddJobModal onClose={() => setAddJobModalOpen(false)} onJobAdded={() => setAddJobModalOpen(false)} />
       )}
     </>
   );

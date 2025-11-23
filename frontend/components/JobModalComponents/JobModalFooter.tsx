@@ -1,3 +1,5 @@
+import DangerButton from "../ui/DangerButton";
+import PrimaryButton from "../ui/PrimaryButton";
 import { Job } from "./JobModal";
 
 interface JobModalFooterProps {
@@ -23,27 +25,11 @@ const JobModalFooter = ({
     <div className="mt-2 flex flex-col sm:flex-row gap-2">
       {isAdmin ? (
         <>
-          <button
-            onClick={() => onEdit && onEdit(job)}
-            className="w-full h-12 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 hover:scale-[1.01] duration-300 transition cursor-pointer"
-          >
-            Edit Posting
-          </button>
-
-          <button
-            onClick={() => onDelete && onDelete(job)}
-            className="w-full h-12 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 hover:scale-[1.01] duration-300 transition cursor-pointer"
-          >
-            Delete Posting
-          </button>
+          <PrimaryButton onClick={() => onEdit && onEdit(job)} className="w-full">Edit Posting</PrimaryButton>
+          <DangerButton onClick={() => onDelete && onDelete(job)} className="w-full">Delete Posting</DangerButton>
         </>
       ) : (
-        <button
-          onClick={onApply}
-          className="w-full h-12 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 hover:scale-[1.01] duration-300 transition cursor-pointer"
-        >
-          Apply Now
-        </button>
+        <PrimaryButton onClick={onApply} className="w-full">Apply Now</PrimaryButton>
       )}
     </div>
   );

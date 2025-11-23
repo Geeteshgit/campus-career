@@ -2,14 +2,18 @@
 
 import React, { useState } from "react";
 import axios from "axios";
-import { FaTimes } from "react-icons/fa";
+import InputField from "./FormComponents/InputField";
+import TextAreaField from "./FormComponents/TextareaField";
+import SelectField from "./FormComponents/SelectField"; 
+import PrimaryButton from "./ui/PrimaryButton";
+import CloseButton from "./ui/CloseButton";
 
 interface AddJobModalProps {
   onClose: () => void;
   onJobAdded: () => void;
 }
 
-const AddJobModal = ({ onClose, onJobAdded }: AddJobModalProps): React.JSX.Element => {
+const AddJobModal = ({ onClose, onJobAdded }: AddJobModalProps) => {
   const [form, setForm] = useState({
     company: "",
     role: "",
@@ -25,19 +29,21 @@ const AddJobModal = ({ onClose, onJobAdded }: AddJobModalProps): React.JSX.Eleme
     status: "Active",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async () => {
-    const jobData = {
-      ...form,
-      postedOn: new Date().toLocaleDateString(),
-      requirements: form.requirements.split("\n"),
-      positions: Number(form.positions),
-    };
+    // const jobData = {
+    //   ...form,
+    //   postedOn: new Date().toLocaleDateString(),
+    //   requirements: form.requirements.split("\n"),
+    //   positions: Number(form.positions),
+    // };
 
-    await axios.post("http://localhost:5003/api/jobs", jobData);
+    // await axios.post("http://localhost:5003/api/jobs", jobData);
 
     onJobAdded();
     onClose();
@@ -49,69 +55,62 @@ const AddJobModal = ({ onClose, onJobAdded }: AddJobModalProps): React.JSX.Eleme
       onClick={onClose}
     >
       <div
+        className="bg-white p-6 rounded-xl shadow-lg w-full max-w-xl max-h-[90vh] overflow-y-auto flex flex-col gap-5 relative"
         onClick={(e) => e.stopPropagation()}
-        className="bg-white rounded-xl shadow-lg w-full max-w-2xl max-h-[90vh] p-6 relative overflow-y-auto"
       >
-        {/* Close */}
-        <button
-          className="absolute top-4 right-4 text-neutral-600 hover:text-neutral-800"
-          onClick={onClose}
-        >
-          <FaTimes className="w-5 h-5" />
-        </button>
+        {/* CLOSE BUTTON */}
+        <CloseButton onClick={onClose} />
 
-        <h2 className="text-xl font-bold mb-4">Add Job Posting</h2>
+        <h2 className="text-xl font-bold text-neutral-900">Add Job Posting</h2>
 
-        {/* Form */}
-        <div className="grid grid-cols-2 gap-4">
-          <input name="company" onChange={handleChange} placeholder="Company" className="input" />
-          <input name="role" onChange={handleChange} placeholder="Job Role" className="input" />
-          <input name="location" onChange={handleChange} placeholder="Location" className="input" />
-          <input name="salary" onChange={handleChange} placeholder="Salary" className="input" />
-          <input name="deadline" onChange={handleChange} placeholder="Deadline" className="input" />
-          <input name="package" onChange={handleChange} placeholder="Package" className="input" />
-          <input name="positions" onChange={handleChange} placeholder="Positions" className="input" />
+        {/* FORM FIELDS */}
+        <div className="flex flex-col gap-3">
+          <InputField name="company" placeholder="Company" onChange={handleChange} />
+          <InputField name="role" placeholder="Job Role" onChange={handleChange} />
+          <InputField name="location" placeholder="Location" onChange={handleChange} />
+          <InputField name="salary" placeholder="Salary" onChange={handleChange} />
+          <InputField name="deadline" placeholder="Deadline" onChange={handleChange} />
+          <InputField name="package" placeholder="Package" onChange={handleChange} />
+          <InputField name="positions" placeholder="Positions" onChange={handleChange} />
 
-          <select name="type" onChange={handleChange} className="input">
-            <option>Full-Time</option>
-            <option>Internship</option>
-            <option>Part-Time</option>
-          </select>
+          <SelectField
+            name="type"
+            value={form.type}
+            onChange={handleChange}
+            options={["Full-Time", "Internship"]}
+          />
 
-          <select name="status" onChange={handleChange} className="input">
-            <option>Active</option>
-            <option>Inactive</option>
-          </select>
+          <SelectField
+            name="status"
+            value={form.status}
+            onChange={handleChange}
+            options={["Active", "Inactive"]}
+          />
+
+          <TextAreaField
+            name="description"
+            placeholder="Job Description"
+            onChange={handleChange}
+            rows={4}
+          />
+
+          <TextAreaField
+            name="requirements"
+            placeholder="Requirements (one per line)"
+            onChange={handleChange}
+            rows={4}
+          />
+
+          <TextAreaField
+            name="eligibility"
+            placeholder="Eligibility"
+            onChange={handleChange}
+            rows={3}
+          />
         </div>
 
-        <textarea
-          name="description"
-          onChange={handleChange}
-          placeholder="Job Description"
-          className="input h-24 mt-4"
-        />
-
-        <textarea
-          name="requirements"
-          onChange={handleChange}
-          placeholder="Requirements (one per line)"
-          className="input h-24 mt-4"
-        />
-
-        <textarea
-          name="eligibility"
-          onChange={handleChange}
-          placeholder="Eligibility"
-          className="input h-20 mt-4"
-        />
-
-        {/* Submit */}
-        <button
-          onClick={handleSubmit}
-          className="mt-6 w-full bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-blue-600"
-        >
-          Add Posting
-        </button>
+        {/* BUTTON */}
+        <PrimaryButton onClick={handleSubmit}>Add Job Posting</PrimaryButton>
       </div>
     </div>
   );
