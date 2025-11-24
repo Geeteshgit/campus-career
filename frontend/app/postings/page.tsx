@@ -7,11 +7,11 @@ import PageHeader from "@/components/PageHeader";
 import FilterSearchBar from "@/components/FilterSearchBar";
 import PostingsContainer from "@/components/PostingsContainer";
 import PrimaryButton from "@/components/ui/PrimaryButton";
-import AddJobModal from "@/components/AddJobModal";
 import { useAppSelector } from "@/redux/hooks";
 
 // Job Data
 import { jobPostings } from "@/data/jobPostings";
+import AddModal, { FieldConfig } from "@/components/ui/AddModal";
 
 const Postings = (): React.JSX.Element => {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
@@ -28,9 +28,46 @@ const Postings = (): React.JSX.Element => {
   const role = user?.role;
   const isAdmin: boolean = role !== "student";
 
+  const jobFields: FieldConfig[] = [
+    { name: "company", placeholder: "Company" },
+    { name: "role", placeholder: "Job Role" },
+    { name: "location", placeholder: "Location" },
+    { name: "salary", placeholder: "Salary" },
+    { name: "deadline", placeholder: "Deadline" },
+    { name: "package", placeholder: "Package" },
+    { name: "positions", placeholder: "Positions", type: "number" },
+    {
+      name: "type",
+      placeholder: "Select Type",
+      type: "select",
+      options: ["Full-Time", "Internship"],
+    },
+    { name: "description", placeholder: "Job Description", type: "textarea" },
+    {
+      name: "requirements",
+      placeholder: "Requirements (one per line)",
+      type: "textarea",
+    },
+    { name: "eligibility", placeholder: "Eligibility", type: "textarea" },
+  ];
+
   const handleJobClick = (job: Job) => {
     setSelectedJob(job);
     setJobModalOpen(true);
+  };
+
+  const handleJobSave = async (formData: any) => {
+    // const jobData = {
+    //   ...formData,
+    //   postedOn: new Date().toLocaleDateString(),
+    //   requirements: formData.requirements
+    //     ? formData.requirements.split("\n")
+    //     : [],
+    //   positions: Number(formData.positions) || 0,
+    // };
+    // await axios.post("http://localhost:5003/api/jobs", jobData);
+
+    setAddJobModalOpen(false);
   };
 
   const filteredByType =
@@ -64,8 +101,9 @@ const Postings = (): React.JSX.Element => {
             subtitle="Manage and view the active and inactive opportunities"
           />
           {isAdmin && (
-            <PrimaryButton onClick={() => setAddJobModalOpen(true)}>Create Posting</PrimaryButton>
-            
+            <PrimaryButton onClick={() => setAddJobModalOpen(true)}>
+              Create Posting
+            </PrimaryButton>
           )}
         </div>
 
@@ -99,12 +137,21 @@ const Postings = (): React.JSX.Element => {
 
       {/* JOB DETAILS MODAL */}
       {jobModalOpen && (
-        <JobModal job={selectedJob} onOpenChange={setJobModalOpen} isAdmin={isAdmin} />
+        <JobModal
+          job={selectedJob}
+          onOpenChange={setJobModalOpen}
+          isAdmin={isAdmin}
+        />
       )}
 
       {/* CREATE JOB POSTING MODAL */}
       {addJobModalOpen && (
-        <AddJobModal onClose={() => setAddJobModalOpen(false)} onJobAdded={() => setAddJobModalOpen(false)} />
+        <AddModal
+          title="Create Job Posting"
+          fields={jobFields}
+          onClose={() => setAddJobModalOpen(false)}
+          onSave={handleJobSave}
+        />
       )}
     </>
   );
