@@ -1,5 +1,9 @@
-import mongoose from "mongoose";
-import { IMessage } from "../types/models.js";
+import mongoose, { Document } from "mongoose";
+
+export interface IMessage extends Document {
+  senderId: mongoose.Schema.Types.ObjectId;
+  message: string;
+}
 
 const MessageSchema = new mongoose.Schema<IMessage>(
   {
