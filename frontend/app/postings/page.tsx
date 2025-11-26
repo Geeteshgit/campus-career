@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import JobModal, { Job } from "@/components/JobModalComponents/JobModal";
 import PageHeader from "@/components/PageHeader";
@@ -8,10 +9,10 @@ import FilterSearchBar from "@/components/FilterSearchBar";
 import PostingsContainer from "@/components/PostingsContainer";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { useAppSelector } from "@/redux/hooks";
+import AddModal, { FieldConfig } from "@/components/ui/AddModal";
 
 // Job Data
 import { jobPostings } from "@/data/jobPostings";
-import AddModal, { FieldConfig } from "@/components/ui/AddModal";
 
 const Postings = (): React.JSX.Element => {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
@@ -34,7 +35,6 @@ const Postings = (): React.JSX.Element => {
     { name: "location", placeholder: "Location" },
     { name: "salary", placeholder: "Salary" },
     { name: "deadline", placeholder: "Deadline" },
-    { name: "package", placeholder: "Package" },
     { name: "positions", placeholder: "Positions", type: "number" },
     {
       name: "type",
@@ -100,10 +100,14 @@ const Postings = (): React.JSX.Element => {
             title="Job Postings"
             subtitle="Manage and view the active and inactive opportunities"
           />
-          {isAdmin && (
+          {isAdmin ? (
             <PrimaryButton onClick={() => setAddJobModalOpen(true)}>
               Create Posting
             </PrimaryButton>
+          ) : (
+            <Link href="/student/applications">
+              <PrimaryButton>My Applications</PrimaryButton>
+            </Link>
           )}
         </div>
 

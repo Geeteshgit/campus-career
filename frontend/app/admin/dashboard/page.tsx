@@ -2,9 +2,10 @@ import AdminDashboardCard from "@/components/AdminDashboardComponents/AdminDashb
 import Navbar from "@/components/Navbar";
 import PageHeader from "@/components/PageHeader";
 import React from "react";
-import { BiBarChartAlt2, BiShieldQuarter } from "react-icons/bi";
+import { BiBarChartAlt2 } from "react-icons/bi";
 import { FiBriefcase, FiSettings, FiUsers } from "react-icons/fi";
 import { MdAdminPanelSettings } from "react-icons/md";
+import { TbChecklist } from "react-icons/tb";
 
 const AdminDashboard = (): React.JSX.Element => {
   type AdminDashboardCard = {
@@ -20,6 +21,12 @@ const AdminDashboard = (): React.JSX.Element => {
       subtitle: "View, create, edit, and remove job postings",
       href: "/postings",
       icon: <FiBriefcase />,
+    },
+    {
+      title: "Applications",
+      subtitle: "View and manage all student job applications",
+      href: "/admin/applications",
+      icon: <TbChecklist />,
     },
     {
       title: "Student Management",

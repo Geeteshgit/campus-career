@@ -46,7 +46,7 @@ const EditModal = ({
       onClick={onClose}
     >
       <div
-        className="bg-white p-6 rounded-xl shadow-lg w-full max-w-lg flex flex-col gap-5 relative"
+        className="bg-white p-6 rounded-xl shadow-lg w-full max-w-xl max-h-[90vh] overflow-y-auto flex flex-col gap-5 relative"
         onClick={(e) => e.stopPropagation()}
       >
         <CloseButton onClick={onClose} />
