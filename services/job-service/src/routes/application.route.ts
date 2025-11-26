@@ -11,7 +11,6 @@ const router = Router();
 
 router.get("/my", checkAuth, restrictTo("student"), getMyApplications);
 router.get("/:jobId", checkAuth, restrictTo("admin", "super_admin"), getApplicantsForJob);
-router.get("/:jobId", checkAuth, restrictTo("admin", "super_admin"), getApplicantsForJob);
 router.post("/:jobId", checkAuth, restrictTo("student"), applyToJob);
 
 export default router;
