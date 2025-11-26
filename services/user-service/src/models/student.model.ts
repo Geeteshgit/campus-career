@@ -8,7 +8,6 @@ export interface IStudent extends Document {
   skills: string[];
   resume: string;
   cgpa?: number;
-  appliedJobs?: mongoose.Schema.Types.ObjectId[];
 }
 
 const studentSchema = new mongoose.Schema<IStudent>(
@@ -59,13 +58,6 @@ const studentSchema = new mongoose.Schema<IStudent>(
       min: [0, "CGPA cannot be less than 0"],
       max: [10, "CGPA cannot exceed 10"],
     },
-
-    appliedJobs: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Job",
-      },
-    ],
   },
   { timestamps: true }
 );
