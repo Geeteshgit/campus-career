@@ -2,12 +2,17 @@ import express, { Request, Response } from "express";
 import { env } from "./config/env.js";
 import { connectToDB } from "./config/db.js";
 import { connectRabbitMQ } from "./utils/rabbitmq.js";
+import academicRoutes from "./routes/academic.route.js";
+import resourceRoutes from "./routes/resource.route.js";
 
 const app = express();
 connectToDB();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use("/api/academics", academicRoutes);
+app.use("/api/resources", resourceRoutes);
 
 app.get("/api", (req: Request, res: Response) => {
     return res.send("Academic Configuration Server Running");
