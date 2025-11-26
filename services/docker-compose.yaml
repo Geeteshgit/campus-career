@@ -8,25 +8,11 @@ services:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
 
-  auth-service:
-    build: ./auth-service
-    container_name: auth-service
-    ports:
-      - 5000:5000
-    env_file:
-      - ./auth-service/.env
-    volumes:
-      - ./auth-service:/app
-      - /app/node_modules
-    command: npm run dev
-    depends_on: 
-      - mongo
-
   user-service:
     build: ./user-service
     container_name: user-service
     ports:
-      - 5001:5001
+      - 5000:5000
     env_file:
       - ./user-service/.env
     volumes:
@@ -36,15 +22,29 @@ services:
     depends_on: 
       - mongo
 
-  student-service:
-    build: ./student-service
-    container_name: student-service
+  job-service:
+    build: ./job-service
+    container_name: job-service
     ports:
-      - 5002:5002
+      - 5001:5001
     env_file:
-      - ./student-service/.env
+      - ./job-service/.env
     volumes:
-      - ./student-service:/app
+      - ./job-service:/app
+      - /app/node_modules
+    command: npm run dev
+    depends_on: 
+      - mongo
+
+  message-service:
+    build: ./message-service
+    container_name: message-service
+    ports:
+      - 5003:5003
+    env_file:
+      - ./message-service/.env
+    volumes:
+      - ./message-service:/app
       - /app/node_modules
     command: npm run dev
     depends_on: 
