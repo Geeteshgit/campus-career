@@ -5,7 +5,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import JobModal, { Job } from "@/components/JobModalComponents/JobModal";
 import PageHeader from "@/components/PageHeader";
-import FilterSearchBar from "@/components/FilterSearchBar";
+import FilterSearchBar from "@/components/ui/FilterSearchBar";
 import PostingsContainer from "@/components/PostingsContainer";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { useAppSelector } from "@/redux/hooks";

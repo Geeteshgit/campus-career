@@ -4,6 +4,7 @@ import PageHeader from "@/components/PageHeader";
 import React from "react";
 import { BiBarChartAlt2 } from "react-icons/bi";
 import { FiBriefcase, FiSettings, FiUsers } from "react-icons/fi";
+import { GiNotebook } from "react-icons/gi";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { TbChecklist } from "react-icons/tb";
 
@@ -23,7 +24,7 @@ const AdminDashboard = (): React.JSX.Element => {
       icon: <FiBriefcase />,
     },
     {
-      title: "Applications",
+      title: "Manage Applications",
       subtitle: "View and manage all student job applications",
       href: "/admin/applications",
       icon: <TbChecklist />,
@@ -33,6 +34,12 @@ const AdminDashboard = (): React.JSX.Element => {
       subtitle: "View and manage all the students",
       href: "/admin/students",
       icon: <FiUsers />,
+    },
+     {
+      title: "Preparation Resources",
+      subtitle: "Manage interview & placement preparation content",
+      href: "/admin/prepare",
+      icon: <GiNotebook />, 
     },
     {
       title: "Admin Users",

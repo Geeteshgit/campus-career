@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
 import PageHeader from "@/components/PageHeader";
-import FilterSearchBar from "@/components/FilterSearchBar";
+import FilterSearchBar from "@/components/ui/FilterSearchBar";
 import StudentCard from "@/components/AdminDashboardComponents/StudentCard";
 import AddStudentModal from "@/components/AdminDashboardComponents/AddStudentModal";
 import PrimaryButton from "@/components/ui/PrimaryButton";
