@@ -1,49 +1,40 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import { User } from "../models/user.model.js";
 
-export const createNewUser = async (req: Request, res: Response) => {
-    try {
-        const { userId } = req.body;
-        const userProfile = new User({
-            userId,
-        });
-        await userProfile.save();
-        return res.status(201).json({ message: "User profile created successfully", userProfile });
-
-    } catch (err) {
-        console.error("Error Creating User Profile: ", err);
-        return res.status(500).json({ message: "Failed to create profile" });
+export const getMyAccount = async (req: any, res: Response) => {
+  try {
+    const userId = req.user._id;
+    if (!userId) {
+      return res.status(400).json({ message: "User ID missing in request" });
     }
-}
 
-export const getMe = async(req: any, res: Response) => {
-    try {
-        const { id } = req.user;
-        const user = await User.findById(id);
+    const user = await User.findById(userId);
 
-        if(!user) {
-            return res.status(404).json({ message: "User Not Found" });
-        }
-        return res.status(200).json({ message: "Fetched user", user });
-    
-    } catch (err) {
-        console.error("Error Fetching User Data: ", err);
-        return res.status(500).json({ message: "Failed to fetch data" });
+    if (!user) {
+      return res.status(404).json({ message: "User Not Found" });
     }
-}
 
-export const getUserById = async (req: Request, res: Response) => {
-    try {
-        const { userId } = req.params;
-        const user = await User.findOne({ userId });
+    return res.status(200).json({
+      message: "Fetched profile",
+      user,
+    });
+  } catch (err) {
+    console.error("Error Fetching My Profile: ", err);
+    return res.status(500).json({ message: "Failed to fetch profile" });
+  }
+};
 
-        if(!user) {
-            return res.status(404).json({ message: "User Not Found" });
-        }
-        return res.status(200).json({ message: "Fetched user", user });
+export const updateMyAccount = async (req: any, res: Response) => {
+  try {
+    const updates = req.body;
 
-    } catch (err) {
-        console.error("Error Fetching User Profile: ", err);
-        return res.status(500).json({ message: "Failed to fetch user" });
-    }
-}
+    const updatedUser = await User.findByIdAndUpdate(req.user._id, updates, {
+      new: true,
+    });
+
+    return res.status(200).json({ message: "Profile updated", updatedUser });
+  } catch (err) {
+    console.error("Error Updating Profile: ", err);
+    return res.status(500).json({ message: "Failed to update profile" });
+  }
+};

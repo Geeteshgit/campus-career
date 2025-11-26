@@ -1,18 +1,81 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import { User } from "../models/user.model.js";
+import { Student } from "../models/student.model.js";
 
-export const getAdmins = async (req: any, res: Response) => {
-    try {
-        let institution;
-        if(req.user.role === "institution_admin") {
-            institution = req.user.institution;
-        } else if(req.user.role === "super_admin") {
-            institution = req.query.institution;
-        }
-        const students = await User.find({ role: "institution_admin", institution });
-        return res.status(200).json({ message: "Students fetched successfully", students });
-    } catch (err) {
-        console.error("Error Fetching Admins: ", err);
-        return res.status(500).json({ message: "Failed to fetch admins" });
+export const getUserById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findOne({ id });
+
+    if (!user) {
+      return res.status(404).json({ message: "User Not Found" });
     }
-}
+    return res.status(200).json({ message: "Fetched user", user });
+  } catch (err) {
+    console.error("Error Fetching User Profile: ", err);
+    return res.status(500).json({ message: "Failed to fetch user" });
+  }
+};
+
+export const updateUserById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const updatedUser = await User.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
+    return res.status(200).json({ message: "Updated user", updatedUser });
+  } catch (err) {
+    console.error("Error Updating User Profile: ", err);
+    return res.status(500).json({ message: "Failed to update user" });
+  }
+};
+
+export const deleteUserById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User Not Found" });
+    }
+
+    if (user.role === "student") {
+      await Student.findOneAndDelete({ userId: id });
+    }
+
+    await User.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      message: "User deleted successfully",
+    });
+
+  } catch (err) {
+    console.error("Error Deleting User: ", err);
+    return res.status(500).json({ message: "Failed to delete user" });
+  }
+};
+
+export const createAdmin = async (req: Request, res: Response) => {
+  try {
+    const { name, email, phone } = req.body;
+
+    const admin = new User({
+      name,
+      email,
+      phone,
+      password: `BUCC@#${phone}`,
+      role: "admin",
+    });
+    
+    await admin.save();
+
+    return res.status(201).json({
+      message: "Admin created",
+      admin,
+    });
+  } catch (err) {
+    console.error("Error Creating Admin: ", err);
+    return res.status(500).json({ message: "Failed to create admin" });
+  }
+};

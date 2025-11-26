@@ -12,10 +12,10 @@ type ENV = {
 
 export const env: ENV = {
     NODE_ENV: (process.env.NODE_ENV as "development" | "production" | "test") ?? "development",
-    PORT: Number(process.env.PORT) || 3001,
+    PORT: Number(process.env.PORT) || 3000,
     MONGO_USERNAME: process.env.MONGO_URI || "admin",
     MONGO_PASSWORD: process.env.MONGO_PASSWORD || "admin",
-    MONGO_DB_NAME: process.env.MONGO_DB_NAME || "CampusCareer_User",
+    MONGO_DB_NAME: process.env.MONGO_DB_NAME || "CampusCareer_UserDB",
     JWT_SECRET: process.env.JWT_SECRET ?? (() => { throw new Error("Missing JWT SECRET environment variable") })(),
 };
 
