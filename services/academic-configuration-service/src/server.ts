@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/api", (req: Request, res: Response) => {
-    return res.send("Configuration Server Running");
+    return res.send("Academic Configuration Server Running");
 });
 
 (async () => {
@@ -18,5 +18,5 @@ app.get("/api", (req: Request, res: Response) => {
 })
 
 app.listen(env.PORT, () => {
-    console.log(`Configuration Server running on port: ${env.PORT}`);
+    console.log(`Academic Configuration Server running on port: ${env.PORT}`);
 });
