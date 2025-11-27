@@ -3,12 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface UserData {
   name: string;
   email: string;
-  enrollmentNumber: string;
-  department?: string;
-  year?: string;
-  phone?: string;
-  cgpa?: string;
-  skills?: string;
+  phone: string;
   role: string;
 }
 
@@ -18,18 +13,8 @@ interface UserState {
 }
 
 const initialState: UserState = {
-  isAuthenticated: true,
-  user: {
-    name: "Geetesh",
-    email: "geetesh472@gmail.com",
-    enrollmentNumber: "E23CSEU0361",
-    department: "Computer Science",
-    year: "3rd Year",
-    phone: "+91 9876543210",
-    cgpa: "8.5",
-    skills: "React, Tailwind, Node.js",
-    role: "super_admin"
-  },
+  isAuthenticated: false,
+  user: null,
 };
 
 export const userSlice = createSlice({
