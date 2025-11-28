@@ -2,7 +2,11 @@
 
 import React, { useState } from "react";
 
-const ChatInput = ({ onSend }: { onSend: (text: string) => void }): React.JSX.Element => {
+const ChatInput = ({
+  onSend,
+}: {
+  onSend: (text: string) => void;
+}): React.JSX.Element => {
   const [input, setInput] = useState<string>("");
 
   const handleSend = () => {
