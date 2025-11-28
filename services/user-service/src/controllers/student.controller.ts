@@ -41,7 +41,6 @@ export const updateMyStudentProfile = async (req: any, res: Response) => {
 export const getAllStudents = async (req: Request, res: Response) => {
   try {
     const students = await Student.find().populate("userId");
-
     return res.status(200).json({ message: "Fetched all students", students });
   } catch (err) {
     console.error("Error Fetching Students: ", err);
@@ -66,44 +65,105 @@ export const getStudentByUserId = async (req: Request, res: Response) => {
 
 export const createStudent = async (req: Request, res: Response) => {
   try {
-    const {
-      name,
-      email,
-      phone,
-      enrollmentNumber,
-      program,
-      year,
-      cgpa,
-    } = req.body;
+    const { name, email, phone, enrollmentNumber, program, year, cgpa } =
+      req.body;
 
-    const newStudent = new User({
+    const newUser = new User({
       name,
       email,
       phone,
-      password: `BUCC@#$${phone}`,
+      password: `BUCC@#${phone}`,
       role: "student",
     });
 
-    await newStudent.save();
+    await newUser.save();
 
     const newStudentProfile = new Student({
-      userId: newStudent._id,
+      userId: newUser._id,
       enrollmentNumber,
       program,
       year,
       cgpa,
-      appliedJobs: [],
     });
 
     await newStudentProfile.save();
 
+    const populatedStudent = await Student.findById(
+      newStudentProfile._id
+    ).populate("userId");
+
     return res.status(201).json({
       message: "Student created successfully",
-      newStudent,
-      newStudentProfile,
+      student: populatedStudent,
     });
   } catch (err) {
     console.error("Error Creating Student: ", err);
     return res.status(500).json({ message: "Failed to create student" });
+  }
+};
+
+export const updateStudent = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    const student = await Student.findById(id);
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    const userUpdates: any = {};
+    if (updates.name) userUpdates.name = updates.name;
+    if (updates.email) userUpdates.email = updates.email;
+    if (updates.phone) userUpdates.phone = updates.phone;
+
+    if (Object.keys(userUpdates).length > 0) {
+      await User.findByIdAndUpdate(student.userId, userUpdates, {
+        new: true,
+      });
+    }
+
+    const studentUpdates: any = {
+      enrollmentNumber: updates.enrollmentNumber,
+      program: updates.program,
+      year: updates.year,
+      cgpa: updates.cgpa,
+    };
+
+    const updatedStudent = await Student.findByIdAndUpdate(id, studentUpdates, {
+      new: true,
+    }).populate("userId");
+
+    return res.status(200).json({
+      message: "Student updated successfully",
+      student: updatedStudent,
+    });
+  } catch (err) {
+    console.error("Error updating student:", err);
+    return res.status(500).json({ message: "Failed to update student" });
+  }
+};
+
+export const deleteStudent = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const student = await Student.findById(id);
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    await User.findByIdAndDelete(student.userId);
+
+    await Student.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      message: "Student deleted successfully",
+    });
+  } catch (err) {
+    console.error("Error deleting student:", err);
+    return res.status(500).json({
+      message: "Failed to delete student",
+    });
   }
 };

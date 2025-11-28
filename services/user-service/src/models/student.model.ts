@@ -2,9 +2,9 @@ import mongoose, { Document } from "mongoose";
 
 export interface IStudent extends Document {
   userId: mongoose.Schema.Types.ObjectId; 
-  enrollmentNo: string;
+  enrollmentNumber: string;
   program: string;
-  year: number;
+  year: string;
   skills: string[];
   resume: string;
   cgpa?: number;
@@ -19,7 +19,7 @@ const studentSchema = new mongoose.Schema<IStudent>(
       unique: true,  
     },
 
-    enrollmentNo: {
+    enrollmentNumber: {
       type: String,
       required: [true, "Enrollment number is required"],
       unique: true,
@@ -37,10 +37,8 @@ const studentSchema = new mongoose.Schema<IStudent>(
     },
 
     year: {
-      type: Number,
+      type: String,
       required: [true, "Year is required"],
-      min: [1, "Year must be at least 1"],
-      max: [5, "Year must not exceed 5"],
     },
 
     skills: {

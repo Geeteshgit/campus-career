@@ -1,9 +1,10 @@
 import { Response } from "express";
 import { User } from "../models/user.model.js";
+import { env } from "../config/env.js";
 
 export const getMyAccount = async (req: any, res: Response) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user.id;
     if (!userId) {
       return res.status(400).json({ message: "User ID missing in request" });
     }
@@ -26,11 +27,13 @@ export const getMyAccount = async (req: any, res: Response) => {
 
 export const updateMyAccount = async (req: any, res: Response) => {
   try {
-    const updates = req.body;
+    const { phone } = req.body;
 
-    const updatedUser = await User.findByIdAndUpdate(req.user._id, updates, {
-      new: true,
-    });
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      { phone },
+      { new: true, runValidators: true }
+    );
 
     return res.status(200).json({ message: "Profile updated", updatedUser });
   } catch (err) {
@@ -38,3 +41,5 @@ export const updateMyAccount = async (req: any, res: Response) => {
     return res.status(500).json({ message: "Failed to update profile" });
   }
 };
+
+

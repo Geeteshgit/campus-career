@@ -2,6 +2,20 @@ import { Request, Response } from "express";
 import { User } from "../models/user.model.js";
 import { Student } from "../models/student.model.js";
 
+export const getAllAdmins = async (req: Request, res: Response) => {
+  try {
+    const admins = await User.find({ role: "admin" });
+
+    return res.status(200).json({
+      message: "Admins fetched successfully",
+      admins,
+    });
+  } catch (err) {
+    console.error("Error fetching admins:", err);
+    return res.status(500).json({ message: "Failed to fetch admins" });
+  }
+};
+
 export const getUserById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -49,7 +63,6 @@ export const deleteUserById = async (req: Request, res: Response) => {
     return res.status(200).json({
       message: "User deleted successfully",
     });
-
   } catch (err) {
     console.error("Error Deleting User: ", err);
     return res.status(500).json({ message: "Failed to delete user" });
@@ -67,7 +80,7 @@ export const createAdmin = async (req: Request, res: Response) => {
       password: `BUCC@#${phone}`,
       role: "admin",
     });
-    
+
     await admin.save();
 
     return res.status(201).json({
