@@ -4,9 +4,9 @@ import { Application } from "../models/application.model.js";
 export const applyToJob = async (req: any, res: Response) => {
   try {
     const { jobId } = req.params;
-    const { studentName } = req.body;
+    const { name, phone, enrollmentNumber, program, year, cgpa } = req.body;
 
-    const studentEmail = req.user.email;
+    const email = req.user.email;
 
     const existing = await Application.findOne({
       jobId,
@@ -20,8 +20,13 @@ export const applyToJob = async (req: any, res: Response) => {
     const application = await Application.create({
       jobId,
       studentId: req.user.id,
-      studentName,
-      studentEmail,
+      name,
+      email,
+      phone,
+      enrollmentNumber,
+      program,
+      year,
+      cgpa
     });
 
     return res.status(201).json({
