@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express";
+import cors from "cors";
 import { env } from "./config/env.js";
 import { connectToDB } from "./config/db.js";
 import { connectRabbitMQ } from "./utils/rabbitmq.js";
@@ -7,6 +8,10 @@ import applicationsRoute from "./routes/application.route.js";
 
 const app = express();
 connectToDB();
+
+app.use(cors({
+    origin: "*",
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

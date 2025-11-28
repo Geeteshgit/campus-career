@@ -4,14 +4,13 @@ import { Application } from "../models/application.model.js";
 export const applyToJob = async (req: any, res: Response) => {
   try {
     const { jobId } = req.params;
-    const { cgpa } = req.body;
+    const { studentName } = req.body;
 
-    const studentName = req.user.name;
     const studentEmail = req.user.email;
 
     const existing = await Application.findOne({
       jobId,
-      studentId: req.user._id,
+      studentId: req.user.id,
     });
 
     if (existing) {
@@ -20,10 +19,9 @@ export const applyToJob = async (req: any, res: Response) => {
 
     const application = await Application.create({
       jobId,
-      studentId: req.user._id,
+      studentId: req.user.id,
       studentName,
       studentEmail,
-      cgpa,
     });
 
     return res.status(201).json({
@@ -36,12 +34,11 @@ export const applyToJob = async (req: any, res: Response) => {
   }
 };
 
-
 export const getMyApplications = async (req: any, res: Response) => {
   try {
-    const applications = await Application.find({ studentId: req.user._id })
+    const applications = await Application.find({ studentId: req.user.id })
       .populate("jobId")
-      .sort({ createdAt: -1 }); 
+      .sort({ createdAt: -1 });
 
     return res.status(200).json({
       message: "Fetched applications",
@@ -52,7 +49,6 @@ export const getMyApplications = async (req: any, res: Response) => {
     return res.status(500).json({ message: "Failed to fetch applications" });
   }
 };
-
 
 export const getApplicantsForJob = async (req: Request, res: Response) => {
   try {

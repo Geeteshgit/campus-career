@@ -4,14 +4,13 @@ export interface IJob extends Document {
   company: string;
   role: string;
   location: string;
-  salary: string;
+  package: string;
   deadline: string;
   description: string;
   requirements: string[];
   eligibility: string;
-  package: string;
   positions: number;
-  type: "Full-time" | "Internship";
+  type: "Full-Time" | "Internship";
   status: "Active" | "Inactive";
 }
 
@@ -41,9 +40,9 @@ const jobSchema = new mongoose.Schema<IJob>(
       maxLength: [100, "Location must not exceed 100 characters"],
     },
 
-    salary: {
+    package: {
       type: String,
-      required: [true, "Salary is required"],
+      required: [true, "package is required"],
       trim: true,
     },
 
@@ -86,8 +85,8 @@ const jobSchema = new mongoose.Schema<IJob>(
       required: [true, "Job type is required"],
       trim: true,
       enum: {
-        values: ["Full-time", "Internship"],
-        message: "Job type must be Full-time or Internship",
+        values: ["Full-Time", "Internship"],
+        message: "Job type must be Full-Time or Internship",
       },
     },
 

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Job } from "../models/job.model.js";
+import { Application } from "../models/application.model.js";
 
 export const getAllJobs = async (req: Request, res: Response) => {
   try {
@@ -55,9 +56,10 @@ export const deleteJob = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     await Job.findByIdAndDelete(id);
+    await Application.deleteMany({ jobId: id });
 
     return res.status(200).json({
-      message: "Job deleted successfully",
+      message: "Job and related applications deleted successfully",
     });
   } catch (err) {
     console.error("Error Deleting Job:", err);
