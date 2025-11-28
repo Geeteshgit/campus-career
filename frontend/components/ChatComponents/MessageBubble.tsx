@@ -15,7 +15,7 @@ const MessageBubble = ({
   return (
     <div className={`flex flex-col ${isUser ? "items-end" : "items-start"}`}>
       <div
-        className={`px-4 py-2 rounded-2xl max-w-[70%] lg:max-w-[50%] shadow-sm text-sm ${
+        className={`px-4 py-2 rounded-xl max-w-[70%] lg:max-w-[50%] shadow-sm text-sm ${
           isUser
             ? "bg-blue-500 text-white rounded-tr-none"
             : "bg-blue-50 text-neutral-900 border border-neutral-300 rounded-tl-none"
