@@ -30,7 +30,7 @@ export const updateMyAccount = async (req: any, res: Response) => {
     const { phone } = req.body;
 
     const updatedUser = await User.findByIdAndUpdate(
-      req.user._id,
+      req.user.id,
       { phone },
       { new: true, runValidators: true }
     );

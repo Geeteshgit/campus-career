@@ -4,7 +4,7 @@ import { User } from "../models/user.model.js";
 
 export const getMyStudentProfile = async (req: any, res: Response) => {
   try {
-    const profile = await Student.findOne({ userId: req.user._id });
+    const profile = await Student.findOne({ userId: req.user.id });
 
     if (!profile)
       return res.status(404).json({ message: "Student profile not found" });
@@ -22,7 +22,7 @@ export const updateMyStudentProfile = async (req: any, res: Response) => {
   try {
     const updates = req.body;
     const updatedStudent = await Student.findOneAndUpdate(
-      { userId: req.user._id },
+      { userId: req.user.id },
       updates,
       { new: true }
     );
