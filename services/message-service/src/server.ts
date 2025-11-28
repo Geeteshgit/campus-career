@@ -6,7 +6,7 @@ import { connectRabbitMQ } from "./utils/rabbitmq.js";
 import cors from "cors";
 import messageRoutes from "./routes/message.route.js";
 import { Server } from "socket.io";
-import { Message } from "./models/message.model.js";
+import { socketHandler } from "./config/socket.js";
 
 const app = express();
 connectToDB();
@@ -33,31 +33,7 @@ const io = new Server(server, {
   pingTimeout: 5000,
 });
 
-io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
-
-  socket.on(
-    "sendMessage",
-    async (data: { senderId: string; message: string }) => {
-      try {
-        if (!data.senderId || !data.message) return;
-
-        const newMessage = await Message.create({
-          senderId: data.senderId,
-          message: data.message,
-        });
-
-        io.emit("receiveMessage", newMessage);
-      } catch (err) {
-        console.error("Chat error:", err);
-      }
-    }
-  );
-
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
-  });
-});
+socketHandler(io);
 
 async () => {
   await connectRabbitMQ();
