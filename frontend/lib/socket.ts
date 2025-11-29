@@ -1,8 +1,33 @@
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
+import { env } from "@/config/env";
 
-export const socket = io("http://localhost:5003", {
-  transports: ["websocket"],
-  reconnection: true,
-  reconnectionAttempts: 5,
-  reconnectionDelay: 3000,
-});
+let socket: Socket | null = null;
+
+export const getSocket = (): Socket | null => {
+  return socket;
+};
+
+export const initSocket = (): Socket => {
+  if (!socket) {
+    socket = io(env.MESSAGE_SERVICE, {
+      autoConnect: false,
+      transports: ["websocket"],
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 3000,
+    });
+  }
+  return socket;
+};
+
+export const connectSocket = () => {
+  if (socket && !socket.connected) {
+    socket.connect();
+  }
+};
+
+export const disconnectSocket = () => {
+  if (socket && socket.connected) {
+    socket.disconnect();
+  }
+};
