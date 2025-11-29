@@ -67,17 +67,17 @@ export const getStudentStats = async (req: Request, res: Response) => {
   try {
     const students = await Student.find();
 
-    const byProgram: any = {};
-    const byYear: any = {};
+    const studentsPerProgram: Record<string, number> = {};
+    const studentsPerYear: Record<string, number> = {};
 
     students.forEach((s) => {
-      byProgram[s.program] = (byProgram[s.program] || 0) + 1;
-      byYear[s.year] = (byYear[s.year] || 0) + 1;
+      studentsPerProgram[s.program] = (studentsPerProgram[s.program] || 0) + 1;
+      studentsPerYear[s.year] = (studentsPerYear[s.year] || 0) + 1;
     });
 
     return res.status(200).json({
       message: "Fetched student statistics",
-      stats: { byProgram, byYear },
+      stats: { studentsPerProgram, studentsPerYear },
     });
   } catch (err) {
     console.error("Error Fetching Student Stats:", err);
