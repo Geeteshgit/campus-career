@@ -1,51 +1,79 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import PageHeader from "@/components/PageHeader";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import DangerButton from "@/components/ui/DangerButton";
 import InputField from "@/components/FormComponents/InputField";
+import axios from "axios";
+import { env } from "@/config/env";
+
+interface Program {
+  _id: string;
+  name: string;
+}
 
 const ConfigurationsPage = (): React.JSX.Element => {
-  // PROGRAMS LIST
-  const [programs, setPrograms] = useState<string[]>([
-    "B.Tech",
-    "BCA",
-    "MCA",
-    "MBA",
-    "BBA",
-  ]);
+  const [programs, setPrograms] = useState<Program[]>([]);
   const [newProgram, setNewProgram] = useState("");
 
-  // YEARS LIST
-  const [years, setYears] = useState<number[]>([1, 2, 3, 4]);
-  const [newYear, setNewYear] = useState<number | "">("");
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
-  // Add program
-  const addProgram = () => {
+  const fetchPrograms = async () => {
+    try {
+      const response = await axios.get(
+        `${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setPrograms(response.data.programs);
+    } catch (err) {
+      console.error("Failed to fetch programs:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchPrograms();
+  }, []);
+
+  const addProgram = async () => {
     if (!newProgram.trim()) return;
-    setPrograms([...programs, newProgram.trim()]);
-    setNewProgram("");
+
+    try {
+      const response = await axios.post(
+        `${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs`,
+        { name: newProgram.trim() },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setPrograms((prev) => [...prev, response.data.program]);
+      setNewProgram("");
+    } catch (err) {
+      console.error("Failed to add program:", err);
+      alert("Could not add program");
+    }
   };
 
-  const addYear = () => {
-    if (newYear === "" || isNaN(Number(newYear)) || Number(newYear) <= 0) return;
+  const deleteProgram = async (programId: string) => {
+    try {
+      await axios.delete(
+        `${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs/${programId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-    const yearNum = Number(newYear);
-
-    if (years.includes(yearNum)) return; 
-
-    setYears([...years, yearNum]);
-    setNewYear("");
-  };
-
-  const deleteProgram = (p: string) => {
-    setPrograms(programs.filter((item) => item !== p));
-  };
-
-  const deleteYear = (y: number) => {
-    setYears(years.filter((item) => item !== y));
+      setPrograms((prev) => prev.filter((p) => p._id !== programId));
+    } catch (err) {
+      console.error("Failed to delete program:", err);
+      alert("Could not delete program");
+    }
   };
 
   return (
@@ -53,17 +81,11 @@ const ConfigurationsPage = (): React.JSX.Element => {
       <Navbar />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-white flex flex-col gap-10">
-        
-        <PageHeader
-          title="System Configurations"
-          subtitle="Manage Programs and Academic Years"
-        />
+        <PageHeader title="System Configurations" subtitle="Manage Programs" />
 
-        {/* PROGRAMS SECTION */}
-        <div className="bg-neutral-50 border border-neutral-200 rounded-xl p-6 flex flex-col gap-6">
+        <div className="bg-neutral-50 border border-neutral-200 rounded-xl p-4 flex flex-col gap-6">
           <h2 className="text-lg font-semibold text-neutral-800">Programs</h2>
 
-          {/* Add program input */}
           <div className="flex gap-2">
             <InputField
               name="program"
@@ -74,57 +96,25 @@ const ConfigurationsPage = (): React.JSX.Element => {
             <PrimaryButton onClick={addProgram}>Add</PrimaryButton>
           </div>
 
-          {/* Program list */}
           <div className="flex flex-col gap-2">
-            {programs.map((program, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between bg-white border border-neutral-200 rounded-lg px-4 py-2"
-              >
-                <p className="font-medium text-neutral-800">{program}</p>
+            {programs.length === 0 ? (
+              <p className="text-neutral-600 text-center py-4">
+                No programs available.
+              </p>
+            ) : (
+              programs.map((program) => (
+                <div
+                  key={program._id}
+                  className="flex items-center justify-between bg-white border border-neutral-200 rounded-lg px-4 py-2"
+                >
+                  <p className="font-medium text-neutral-800">{program.name}</p>
 
-                <DangerButton onClick={() => deleteProgram(program)}>
-                  Delete
-                </DangerButton>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* YEARS SECTION  */}
-        <div className="bg-neutral-50 border border-neutral-200 rounded-xl p-6 flex flex-col gap-6">
-          <h2 className="text-lg font-semibold text-neutral-800">Academic Years</h2>
-
-          {/* Add year input */}
-          <div className="flex gap-2">
-            <input
-              type="number"
-              value={newYear}
-              min={1}
-              onChange={(e) => {
-                const value = e.target.value;
-                setNewYear(value === "" ? "" : Number(value));
-              }}
-              placeholder="Add Academic Year (e.g., 1, 2, 3)"
-              className="flex-1 px-4 py-2 border border-neutral-300 rounded-lg"
-            />
-            <PrimaryButton onClick={addYear}>Add</PrimaryButton>
-          </div>
-
-          {/* Year list */}
-          <div className="flex flex-col gap-2">
-            {years.map((year, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between bg-white border border-neutral-200 rounded-lg px-4 py-2"
-              >
-                <p className="font-medium text-neutral-800">{year}</p>
-
-                <DangerButton onClick={() => deleteYear(year)}>
-                  Delete
-                </DangerButton>
-              </div>
-            ))}
+                  <DangerButton onClick={() => deleteProgram(program._id)}>
+                    Delete
+                  </DangerButton>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </main>
