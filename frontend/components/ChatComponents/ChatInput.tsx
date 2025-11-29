@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import PrimaryButton from "../ui/PrimaryButton";
 
 const ChatInput = ({
   onSend,
@@ -23,15 +24,9 @@ const ChatInput = ({
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && handleSend()}
         placeholder="Type a message..."
-        className="flex-1 px-4 py-2 border border-neutral-300 rounded-full text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className="flex-1 px-4 py-2 border border-neutral-300 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
-
-      <button
-        onClick={handleSend}
-        className="px-5 py-2 bg-blue-500 text-white font-medium text-sm sm:text-base rounded-full hover:bg-blue-600 hover:scale-[1.01] transition-all duration-200"
-      >
-        Send
-      </button>
+      <PrimaryButton onClick={handleSend} className="px-6">Send</PrimaryButton>
     </div>
   );
 };
