@@ -13,7 +13,7 @@ const AnalyticsNumberCard = ({ label, value }: AnalyticsNumberCardProps): React.
       </p>
 
       {/* Reusable Circular Number Box */}
-      <div className="w-15 h-15 flex items-center justify-center rounded-full border-4 border-blue-500 text-blue-500 text-2xl font-bold">
+      <div className="flex items-center justify-center rounded-full text-blue-500 text-xl sm:text-2xl md:text-3xl font-bold">
         {value}
       </div>
     </div>

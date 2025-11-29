@@ -9,11 +9,12 @@ import PostingsContainer from "@/components/PostingsContainer";
 
 // Import job data
 import { jobPostings } from "@/data/jobPostings";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 const StudentHomepage = (): React.JSX.Element => {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [filter, setFilter] = useState<"All" | "Full-time" | "Internship">(
+  const [filter, setFilter] = useState<"All" | "Full-Time" | "Internship">(
     "All"
   );
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -37,40 +38,43 @@ const StudentHomepage = (): React.JSX.Element => {
         job.company.toLowerCase().includes(term) ||
         job.role.toLowerCase().includes(term) ||
         job.location.toLowerCase().includes(term) ||
-        job.package.toLowerCase().includes(term) ||
-        job.salary.toLowerCase().includes(term)
+        job.package.toLowerCase().includes(term)
       );
     });
 
   return (
-    <>
-      <Navbar />
-      <main className="max-w-7xl flex flex-col gap-8 mx-auto px-4 sm:px-6 py-5 sm:py-10 bg-white">
-        <PageHeader
-          title="Recommended for You"
-          subtitle="Job opportunities matching your profile"
-        />
+    <ProtectedRoute allowedRoles={["student"]}>
+      <>
+        <Navbar />
+        <main className="max-w-7xl flex flex-col gap-8 mx-auto px-4 sm:px-6 py-5 sm:py-10 bg-white">
+          <PageHeader
+            title="Recommended for You"
+            subtitle="Job opportunities matching your profile"
+          />
 
-        <FilterSearchBar
-          filters={["All", "Full-time", "Internship"]}
-          activeFilter={filter}
-          onFilterChange={(f) =>
-            setFilter(f as "All" | "Full-time" | "Internship")
-          }
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          placeholder="Search by company, role, or location..."
-        />
+          <FilterSearchBar
+            filters={["All", "Full-Time", "Internship"]}
+            activeFilter={filter}
+            onFilterChange={(f) =>
+              setFilter(f as "All" | "Full-Time" | "Internship")
+            }
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            placeholder="Search by company, role, or location..."
+          />
 
-        <PostingsContainer
-          title="Recommended Postings"
-          jobs={filteredJobs}
-          onJobClick={handleJobClick}
-        />
-      </main>
+          <PostingsContainer
+            title="Recommended Postings"
+            jobs={filteredJobs}
+            onJobClick={handleJobClick}
+          />
+        </main>
 
-      {modalOpen && <JobModal job={selectedJob} onOpenChange={setModalOpen} />}
-    </>
+        {modalOpen && (
+          <JobModal job={selectedJob} onOpenChange={setModalOpen} />
+        )}
+      </>
+    </ProtectedRoute>
   );
 };
 

@@ -8,6 +8,7 @@ import DangerButton from "@/components/ui/DangerButton";
 import InputField from "@/components/FormComponents/InputField";
 import axios from "axios";
 import { env } from "@/config/env";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 interface Program {
   _id: string;
@@ -77,48 +78,55 @@ const ConfigurationsPage = (): React.JSX.Element => {
   };
 
   return (
-    <>
-      <Navbar />
+    <ProtectedRoute allowedRoles={["admin", "super_admin"]}>
+      <>
+        <Navbar />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-white flex flex-col gap-10">
-        <PageHeader title="System Configurations" subtitle="Manage Programs" />
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-white flex flex-col gap-8">
+          <PageHeader
+            title="System Configurations"
+            subtitle="Manage Programs"
+          />
 
-        <div className="bg-neutral-50 border border-neutral-200 rounded-xl p-4 flex flex-col gap-6">
-          <h2 className="text-lg font-semibold text-neutral-800">Programs</h2>
+          <div className="bg-neutral-50 border border-neutral-200 rounded-xl p-4 flex flex-col gap-6">
+            <h2 className="text-lg font-semibold text-neutral-800">Programs</h2>
 
-          <div className="flex gap-2">
-            <InputField
-              name="program"
-              value={newProgram}
-              onChange={(e) => setNewProgram(e.target.value)}
-              placeholder="Add Program"
-            />
-            <PrimaryButton onClick={addProgram}>Add</PrimaryButton>
+            <div className="flex gap-2">
+              <InputField
+                name="program"
+                value={newProgram}
+                onChange={(e) => setNewProgram(e.target.value)}
+                placeholder="Add Program"
+              />
+              <PrimaryButton onClick={addProgram}>Add</PrimaryButton>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              {programs.length === 0 ? (
+                <p className="text-neutral-600 text-center py-4">
+                  No programs available.
+                </p>
+              ) : (
+                programs.map((program) => (
+                  <div
+                    key={program._id}
+                    className="flex items-center justify-between bg-white border border-neutral-200 rounded-lg px-4 py-2"
+                  >
+                    <p className="font-medium text-neutral-800">
+                      {program.name}
+                    </p>
+
+                    <DangerButton onClick={() => deleteProgram(program._id)}>
+                      Delete
+                    </DangerButton>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
-
-          <div className="flex flex-col gap-2">
-            {programs.length === 0 ? (
-              <p className="text-neutral-600 text-center py-4">
-                No programs available.
-              </p>
-            ) : (
-              programs.map((program) => (
-                <div
-                  key={program._id}
-                  className="flex items-center justify-between bg-white border border-neutral-200 rounded-lg px-4 py-2"
-                >
-                  <p className="font-medium text-neutral-800">{program.name}</p>
-
-                  <DangerButton onClick={() => deleteProgram(program._id)}>
-                    Delete
-                  </DangerButton>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      </main>
-    </>
+        </main>
+      </>
+    </ProtectedRoute>
   );
 };
 

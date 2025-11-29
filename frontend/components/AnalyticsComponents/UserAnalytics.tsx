@@ -39,7 +39,7 @@ const UsersAnalytics = ({
         </div>
 
         {/* PROGRAM + YEAR CARDS */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
           {/* STUDENTS BY PROGRAM */}
           <div className="p-4 bg-white border border-blue-200 rounded-lg">
@@ -47,7 +47,7 @@ const UsersAnalytics = ({
               Students by Program
             </h4>
 
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
               {Object.entries(studentsPerProgram).map(([program, count]) => (
                 <AnalyticsNumberCard
                   key={program}
@@ -64,7 +64,7 @@ const UsersAnalytics = ({
               Students by Year
             </h4>
 
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-2 gap-4">
               {Object.entries(studentsPerYear).map(([year, count]) => (
                 <AnalyticsNumberCard
                   key={year}

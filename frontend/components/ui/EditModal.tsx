@@ -10,7 +10,7 @@ import CloseButton from "./CloseButton";
 export interface FieldConfig {
   name: string;
   placeholder: string;
-  type?: "text" | "email" | "number" | "textarea" | "select";
+  type?: "text" | "email" | "number" | "textarea" | "select" | "date";
   options?: string[];     
 }
 
@@ -76,6 +76,7 @@ const EditModal = ({
                   placeholder={field.placeholder}
                   value={formData[field.name]}
                   onChange={handleChange}
+                  type={field.type || "text"}
                 />
               )}
             </div>

@@ -24,7 +24,7 @@ const PostingsContainer = ({
       {jobs.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {jobs.map((job) => (
-            <div key={job.id} className={inactive ? "opacity-70" : ""}>
+            <div key={job._id} className={inactive ? "opacity-70" : ""}>
               <JobCard job={job} onClick={() => onJobClick(job)} />
             </div>
           ))}

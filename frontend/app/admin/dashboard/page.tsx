@@ -1,6 +1,7 @@
 import AdminDashboardCard from "@/components/AdminDashboardComponents/AdminDashboardCard";
 import Navbar from "@/components/Navbar";
 import PageHeader from "@/components/PageHeader";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import React from "react";
 import { BiBarChartAlt2 } from "react-icons/bi";
 import { FiBriefcase, FiSettings, FiUsers } from "react-icons/fi";
@@ -35,11 +36,11 @@ const AdminDashboard = (): React.JSX.Element => {
       href: "/admin/students",
       icon: <FiUsers />,
     },
-     {
+    {
       title: "Preparation Resources",
       subtitle: "Manage interview & placement preparation content",
       href: "/admin/prepare",
-      icon: <GiNotebook />, 
+      icon: <GiNotebook />,
     },
     {
       title: "Admin Users",
@@ -58,30 +59,32 @@ const AdminDashboard = (): React.JSX.Element => {
       subtitle: "General platform-level controls",
       href: "/admin/configurations",
       icon: <FiSettings />,
-    }
+    },
   ];
 
   return (
-    <>
-      <Navbar />
-      <main className="max-w-7xl flex flex-col gap-8 mx-auto px-4 sm:px-6 py-5 sm:py-10 bg-white">
-        <PageHeader
-          title="Admin Dashboard"
-          subtitle="Manage platform data, job postings, users, and system controls"
-        />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {adminDashboardCards.map((card, index) => (
-            <AdminDashboardCard
-              key={index}
-              title={card.title}
-              subtitle={card.subtitle}
-              href={card.href}
-              icon={card.icon}
-            />
-          ))}
-        </div>
-      </main>
-    </>
+    <ProtectedRoute allowedRoles={["admin", "super_admin"]}>
+      <>
+        <Navbar />
+        <main className="max-w-7xl flex flex-col gap-8 mx-auto px-4 sm:px-6 py-5 sm:py-10 bg-white">
+          <PageHeader
+            title="Admin Dashboard"
+            subtitle="Manage platform data, job postings, users, and system controls"
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {adminDashboardCards.map((card, index) => (
+              <AdminDashboardCard
+                key={index}
+                title={card.title}
+                subtitle={card.subtitle}
+                href={card.href}
+                icon={card.icon}
+              />
+            ))}
+          </div>
+        </main>
+      </>
+    </ProtectedRoute>
   );
 };
 

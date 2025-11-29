@@ -14,7 +14,7 @@ const JobModalHeader = ({
   onClose,
 }: JobModalHeaderProps): React.JSX.Element => {
   const formattedDate = job.createdAt
-    ? new Date(job.deadline).toLocaleDateString("en-GB", {
+    ? new Date(job.createdAt).toLocaleDateString("en-GB", {
         day: "2-digit",
         month: "long",
         year: "numeric",

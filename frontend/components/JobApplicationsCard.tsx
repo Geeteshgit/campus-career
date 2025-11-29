@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Job } from "@/components/JobModalComponents/JobModal";
 import { FiDownload } from "react-icons/fi";
@@ -7,28 +5,34 @@ import PrimaryButton from "./ui/PrimaryButton";
 
 interface JobApplicationsCardProps {
   job: Job;
-  role: "super_admin" | "admin" | "student";
-  appliedOn?: string;               
-  onDownload?: (job: Job) => void;  
+  isAdmin: boolean;
+  onDownload?: (job: Job) => void;
   onOpenModal: (job: Job) => void;
 }
 
 const JobApplicationsCard = ({
   job,
-  role,
-  appliedOn,
+  isAdmin,
   onDownload,
   onOpenModal,
 }: JobApplicationsCardProps): React.JSX.Element => {
+  const formattedDate = job.createdAt
+    ? new Date(job.createdAt).toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      })
+    : "N/A";
   return (
     <div
       onClick={() => onOpenModal(job)}
-      className="grid grid-cols-1 sm:grid-cols-3 items-center gap-3 p-5 border-b 
-                 border-neutral-200 hover:bg-neutral-50 transition cursor-pointer"
+      className="grid grid-cols-1 sm:grid-cols-3 items-center gap-3 p-4 border border-neutral-200 hover:bg-neutral-50 transition cursor-pointer"
     >
-      <div className="flex flex-col text-left">
-        <p className="text-lg font-semibold text-neutral-900">{job.company}</p>
-        <p className="text-neutral-600 text-sm">{job.role}</p>
+      <div className="flex flex-col">
+        <p className="text-base sm:text-lg font-semibold text-neutral-900">
+          {job.role}
+        </p>
+        <p className="text-neutral-600 text-sm ">{job.company}</p>
       </div>
 
       <div className="flex flex-wrap gap-2 sm:justify-center">
@@ -48,11 +52,8 @@ const JobApplicationsCard = ({
         </span>
       </div>
 
-      <div
-        className="flex sm:justify-end"
-        onClick={(e) => e.stopPropagation()} 
-      >
-        {role === "admin" && onDownload && (
+      <div className="flex sm:justify-end" onClick={(e) => e.stopPropagation()}>
+        {isAdmin && onDownload && (
           <PrimaryButton
             onClick={() => onDownload(job)}
             className="flex items-center gap-2"
@@ -62,10 +63,10 @@ const JobApplicationsCard = ({
           </PrimaryButton>
         )}
 
-        {role === "student" && (
+        {!isAdmin && (
           <p className="text-sm font-medium text-neutral-700">
             Applied on:{" "}
-            <span className="font-semibold text-neutral-900">{appliedOn}</span>
+            <span className="font-semibold text-neutral-900">{formattedDate}</span>
           </p>
         )}
       </div>

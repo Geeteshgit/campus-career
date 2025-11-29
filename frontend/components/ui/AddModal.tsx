@@ -10,7 +10,7 @@ import CloseButton from "@/components/ui/CloseButton";
 export interface FieldConfig {
   name: string;
   placeholder: string;
-  type?: "text" | "email" | "number" | "textarea" | "select";
+  type?: "text" | "email" | "number" | "textarea" | "select" | "date";
   options?: string[];
 }
 
@@ -27,9 +27,14 @@ const AddModal = ({
   onClose,
   onSave,
 }: AddModalProps): React.JSX.Element => {
-
   const initialData: Record<string, any> = {};
-  fields.forEach((f) => (initialData[f.name] = ""));
+  fields.forEach((f) => {
+    if (f.type === "select" && f.options?.length) {
+      initialData[f.name] = f.options[0]; 
+    } else {
+      initialData[f.name] = "";
+    }
+  });
 
   const [formData, setFormData] = useState(initialData);
 
@@ -77,6 +82,7 @@ const AddModal = ({
                   placeholder={field.placeholder}
                   value={formData[field.name]}
                   onChange={handleChange}
+                  type={field.type || "text"}
                 />
               )}
             </div>
@@ -84,9 +90,7 @@ const AddModal = ({
         </div>
 
         {/* SAVE BUTTON */}
-        <PrimaryButton onClick={handleSave}>
-          Save
-        </PrimaryButton>
+        <PrimaryButton onClick={handleSave}>Save</PrimaryButton>
       </div>
     </div>
   );

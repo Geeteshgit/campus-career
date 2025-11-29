@@ -16,7 +16,9 @@ const JobCard = ({ job, onClick }: JobCardProps): React.JSX.Element => {
       {/* Header Section */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
-          <h3 className="font-bold text-lg text-neutral-900 mb-1">{job.role}</h3>
+          <h3 className="font-bold text-lg text-neutral-900 mb-1">
+            {job.role}
+          </h3>
           <div className="flex items-center gap-2 text-blue-500 font-semibold">
             <FaBuilding className="w-4 h-4" />
             <span>{job.company}</span>
@@ -37,14 +39,21 @@ const JobCard = ({ job, onClick }: JobCardProps): React.JSX.Element => {
         </div>
         <div className="flex items-center gap-2">
           <FaCalendarAlt className="w-4 h-4 text-neutral-500" />
-          <span>Apply by: {job.deadline}</span>
+          <span>
+            Apply by:{" "}
+            {new Date(job.deadline).toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            })}
+          </span>
         </div>
       </div>
 
-      {/* Salary Section */}
+      {/* package Section */}
       <div className="mt-4 pt-4 border-t border-neutral-200">
         <p className="text-sm font-semibold text-neutral-900">
-          Package: <span className="text-blue-500">{job.salary}</span>
+          Package: <span className="text-blue-500">{job.package}</span>
         </p>
       </div>
     </div>

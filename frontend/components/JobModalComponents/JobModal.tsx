@@ -24,6 +24,7 @@ interface JobModalProps {
   onOpenChange: (open: boolean) => void;
   onDelete?: (job: Job) => void;
   onEdit?: (job: Job) => void;
+  onApply?: (job: Job) => void;
 }
 
 const JobModal = ({
@@ -32,6 +33,7 @@ const JobModal = ({
   onOpenChange,
   onDelete,
   onEdit,
+  onApply
 }: JobModalProps) => {
 
   if (!job) return null;
@@ -64,6 +66,7 @@ const JobModal = ({
             isAdmin={isAdmin}
             onEdit={handleEditClick}
             onDelete={handleDeleteClick}
+            onApply={onApply}
           />
         </div>
       </div>

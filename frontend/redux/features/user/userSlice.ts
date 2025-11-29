@@ -1,44 +1,76 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface UserData {
+  _id: string;
   name: string;
   email: string;
   phone: string;
-  role: string;
+  role: "admin" | "super_admin" | "student";
+}
+
+interface StudentProfileData {
+  enrollmentNumber: string;
+  program: string;
+  year: string;
+  cgpa: string;
+  skills?: string;
+  resumeUrl?: string;
 }
 
 interface UserState {
-  isAuthenticated: boolean;
   user: UserData | null;
+  studentProfile: StudentProfileData | null;
 }
 
 const initialState: UserState = {
-  isAuthenticated: false,
   user: null,
+  studentProfile: null,
 };
 
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    login(state, action: PayloadAction<UserData>) {
-      state.isAuthenticated = true;
-      state.user = action.payload;
+    login(
+      state,
+      action: PayloadAction<{
+        user: UserData | null;
+        studentProfile?: StudentProfileData | null;
+      }>
+    ) {
+      state.user = action.payload.user;
+
+      if (action.payload.studentProfile) {
+        state.studentProfile = action.payload.studentProfile;
+      }
     },
+
     logout(state) {
-      state.isAuthenticated = false;
       state.user = null;
+      state.studentProfile = null;
     },
+
     updateUserField(
       state,
-      action: PayloadAction<{ field: keyof UserData; value: string }>
+      action: PayloadAction<{ field: keyof UserData; value: any }>
     ) {
       if (state.user) {
         state.user[action.payload.field] = action.payload.value;
       }
     },
+
+    updateStudentField(
+      state,
+      action: PayloadAction<{ field: keyof StudentProfileData; value: any }>
+    ) {
+      if (state.studentProfile) {
+        state.studentProfile[action.payload.field] = action.payload.value;
+      }
+    },
   },
 });
 
-export const { login, logout, updateUserField } = userSlice.actions;
+export const { login, logout, updateUserField, updateStudentField } =
+  userSlice.actions;
+
 export default userSlice.reducer;

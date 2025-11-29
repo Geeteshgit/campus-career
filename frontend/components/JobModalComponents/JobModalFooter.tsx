@@ -8,7 +8,7 @@ interface JobModalFooterProps {
   isAdmin?: boolean;
   onEdit?: (job: Job) => void;
   onDelete?: (job: Job) => void;
-  onApply?: () => void;
+  onApply?: (job: Job) => void;
 }
 
 const JobModalFooter = ({
@@ -29,7 +29,7 @@ const JobModalFooter = ({
           <DangerButton onClick={() => onDelete && onDelete(job)} className="w-full">Delete Posting</DangerButton>
         </>
       ) : (
-        <PrimaryButton onClick={onApply} className="w-full">Apply Now</PrimaryButton>
+        <PrimaryButton onClick={() => onApply && onApply(job)} className="w-full">Apply Now</PrimaryButton>
       )}
     </div>
   );

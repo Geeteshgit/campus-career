@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Navbar from "@/components/Navbar";
 import PageHeader from "@/components/PageHeader";
 import PrimaryButton from "@/components/ui/PrimaryButton";
@@ -8,44 +9,33 @@ import DangerButton from "@/components/ui/DangerButton";
 import AddModal, { FieldConfig } from "@/components/ui/AddModal";
 import EditModal from "@/components/ui/EditModal";
 import FilterSearchBar from "@/components/ui/FilterSearchBar";
-
-const programs = ["B.Tech", "BCA", "MCA", "BBA", "MBA"];
+import { env } from "@/config/env";
+import { useAppSelector } from "@/redux/hooks";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 type ResourceLink = {
-  id: string;
+  _id: string;
   title: string;
   url: string;
   program: string;
 };
 
+const programs = ["B.Tech", "BCA", "MCA", "BBA", "MBA"];
+
 const PrepareAdminPage = (): React.JSX.Element => {
+  const user = useAppSelector((state) => state.user.user);
+  const isAdmin = user?.role !== "student";
+
+  const [resources, setResources] = useState<ResourceLink[]>([]);
   const [activeProgram, setActiveProgram] = useState("B.Tech");
   const [searchTerm, setSearchTerm] = useState("");
-
-  const [resources, setResources] = useState<ResourceLink[]>([
-    {
-      id: "1",
-      title: "B.Tech Aptitude Test Prep",
-      url: "https://example.com/btech-apt",
-      program: "B.Tech",
-    },
-    {
-      id: "2",
-      title: "BCA Programming Basics",
-      url: "https://example.com/bca-progjfwifiuf23hriurfh23iurh23iurh23iufh23jfkn23fiufv23hfoq3ufhi23iofg2ifg2",
-      program: "BCA",
-    },
-    {
-      id: "3",
-      title: "MBA HR Interview Guide",
-      url: "https://example.com/mba-hr",
-      program: "MBA",
-    },
-  ]);
 
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editResource, setEditResource] = useState<ResourceLink | null>(null);
+
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
   const resourceFields: FieldConfig[] = [
     { name: "title", placeholder: "Resource Title", type: "text" },
@@ -58,32 +48,74 @@ const PrepareAdminPage = (): React.JSX.Element => {
     },
   ];
 
-  const handleAddResource = (data: any) => {
-    const newResource: ResourceLink = {
-      id: Date.now().toString(),
-      title: data.title,
-      url: data.url,
-      program: data.program,
-    };
-
-    setResources((prev) => [...prev, newResource]);
-    setAddModalOpen(false);
+  const fetchResources = async () => {
+    try {
+      const response = await axios.get(
+        `${env.ACADEMIC_CONFIG_SERVICE}/api/resources/admin`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setResources(response.data.resources);
+    } catch (err) {
+      console.error("Error fetching resources:", err);
+    }
   };
 
-  const handleDelete = (id: string) => {
+  useEffect(() => {
+    fetchResources();
+  }, []);
+
+  const handleAddResource = async (data: any) => {
+    try {
+      const response = await axios.post(
+        `${env.ACADEMIC_CONFIG_SERVICE}/api/resources`,
+        data,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setResources((prev) => [...prev, response.data.resource]);
+      setAddModalOpen(false);
+    } catch (err) {
+      console.error("Create resource error:", err);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this resource?")) return;
-    setResources((prev) => prev.filter((r) => r.id !== id));
+
+    try {
+      await axios.delete(`${env.ACADEMIC_CONFIG_SERVICE}/api/resources/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setResources((prev) => prev.filter((r) => r._id !== id));
+    } catch (err) {
+      console.error("Delete resource error:", err);
+    }
   };
 
-  const handleEdit = (updatedData: any) => {
+  const handleEditSave = async (data: any) => {
     if (!editResource) return;
 
-    setResources((prev) =>
-      prev.map((r) => (r.id === editResource.id ? { ...r, ...updatedData } : r))
-    );
+    try {
+      const response = await axios.put(
+        `${env.ACADEMIC_CONFIG_SERVICE}/api/resources/${editResource._id}`,
+        data,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-    setEditModalOpen(false);
-    setEditResource(null);
+      setResources((prev) =>
+        prev.map((r) =>
+          r._id === editResource._id ? response.data.updatedResource : r
+        )
+      );
+
+      setEditModalOpen(false);
+      setEditResource(null);
+    } catch (err) {
+      console.error("Update resource error:", err);
+    }
   };
 
   const filteredResources = resources
@@ -91,79 +123,97 @@ const PrepareAdminPage = (): React.JSX.Element => {
     .filter((r) => r.title.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
-    <>
-      <Navbar />
-      <main className="max-w-7xl mx-auto flex flex-col gap-8 px-4 sm:px-6 py-5 sm:py-10 bg-white">
-        <div className="flex items-center justify-between">
-          <PageHeader
-            title="Preparation Resources"
-            subtitle="Manage interview and placement preparation materials by program"
+    <ProtectedRoute allowedRoles={["admin", "super_admin"]}>
+      <>
+        <Navbar />
+        <main className="max-w-7xl mx-auto flex flex-col gap-8 px-4 sm:px-6 py-5 sm:py-10 bg-white">
+          <div className="flex items-center justify-between">
+            <PageHeader
+              title="Preparation Resources"
+              subtitle="Manage interview and placement preparation materials by program"
+            />
+
+            {isAdmin && (
+              <PrimaryButton onClick={() => setAddModalOpen(true)}>
+                Add Resource
+              </PrimaryButton>
+            )}
+          </div>
+
+          <FilterSearchBar
+            filters={programs}
+            activeFilter={activeProgram}
+            onFilterChange={setActiveProgram}
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            placeholder="Search resources..."
           />
-          <PrimaryButton onClick={() => setAddModalOpen(true)}>
-            Add Resource
-          </PrimaryButton>
-        </div>
 
-        <FilterSearchBar
-          filters={programs}
-          activeFilter={activeProgram}
-          onFilterChange={setActiveProgram}
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          placeholder="Search resources..."
-        />
+          <div className="flex flex-col gap-4">
+            {filteredResources.length > 0 ? (
+              filteredResources.map((item) => (
+                <div
+                  key={item._id}
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition"
+                >
+                  <div>
+                    <p className="font-semibold text-neutral-900">
+                      {item.title}
+                    </p>
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      className="text-blue-600 underline break-all"
+                    >
+                      {item.url}
+                    </a>
+                  </div>
 
-        <div className="flex flex-col gap-4">
-          {filteredResources.length > 0 ? (
-            filteredResources.map((item) => (
-              <div
-                key={item.id}
-                className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition"
-              >
-                <p className="font-semibold text-neutral-900">{item.title}</p>
-                <div className="flex gap-2 justify-end">
-                  <PrimaryButton
-                    onClick={() => {
-                      setEditResource(item);
-                      setEditModalOpen(true);
-                    }}
-                  >
-                    Edit
-                  </PrimaryButton>
-
-                  <DangerButton onClick={() => handleDelete(item.id)}>
-                    Delete
-                  </DangerButton>
+                  {isAdmin && (
+                    <div className="flex gap-2 justify-end">
+                      <PrimaryButton
+                        onClick={() => {
+                          setEditResource(item);
+                          setEditModalOpen(true);
+                        }}
+                      >
+                        Edit
+                      </PrimaryButton>
+                      <DangerButton onClick={() => handleDelete(item._id)}>
+                        Delete
+                      </DangerButton>
+                    </div>
+                  )}
                 </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-neutral-500 text-center py-8">
-              No resources found.
-            </p>
-          )}
-        </div>
-      </main>
+              ))
+            ) : (
+              <p className="text-neutral-500 text-center py-8">
+                No resources found.
+              </p>
+            )}
+          </div>
+        </main>
 
-      {addModalOpen && (
-        <AddModal
-          title="Add New Preparation Resource"
-          fields={resourceFields}
-          onClose={() => setAddModalOpen(false)}
-          onSave={handleAddResource}
-        />
-      )}
+        {addModalOpen && (
+          <AddModal
+            title="Add New Preparation Resource"
+            fields={resourceFields}
+            onClose={() => setAddModalOpen(false)}
+            onSave={handleAddResource}
+          />
+        )}
 
-      {editModalOpen && editResource && (
-        <EditModal
-          title="Edit Preparation Resource"
-          fields={resourceFields}
-          initialValues={editResource}
-          onClose={() => setEditModalOpen(false)}
-          onSave={handleEdit}
-        />
-      )}
-    </>
+        {editModalOpen && editResource && (
+          <EditModal
+            title="Edit Preparation Resource"
+            fields={resourceFields}
+            initialValues={editResource}
+            onClose={() => setEditModalOpen(false)}
+            onSave={handleEditSave}
+          />
+        )}
+      </>
+    </ProtectedRoute>
   );
 };
 

@@ -19,16 +19,23 @@ const ReduxInitializer = () => {
           return;
         }
 
-        const response = await axios.get(
-          `${env.USER_SERVICE}/api/auth/me`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const userResponse = await axios.get(`${env.USER_SERVICE}/api/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-        dispatch(login(response.data.user));
+        const user = userResponse.data.user;
+        let studentProfile = null;
+
+        if (user.role === "student") {
+          const studentResponse = await axios.get(
+            `${env.USER_SERVICE}/api/student/me`,
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+
+          studentProfile = studentResponse.data.profile;
+        }
+
+        dispatch(login({ user, studentProfile }));
       } catch (err) {
         console.error("Auth initialization failed:", err);
         dispatch(logout());

@@ -1,27 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import FormLabel from "@/components/FormComponents/FormLabel";
 import InputField from "@/components/FormComponents/InputField";
-import SaveButton from "@/components/ui/PrimaryButton";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 
 interface ProfileChangePasswordProps {
   onSubmit: (data: {
-    currentPassword: string;
+    oldPassword: string;
     newPassword: string;
     confirmPassword: string;
   }) => void;
 }
 
-const ProfileChangePassword = ({ onSubmit }: ProfileChangePasswordProps) => {
-  const [currentPassword, setCurrentPassword] = useState<string>("");
+const ProfileChangePassword = ({ onSubmit }: ProfileChangePasswordProps): React.JSX.Element => {
+  const [oldPassword, setOldPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
 
   const handleSubmit = () => {
     onSubmit({
-      currentPassword,
+      oldPassword,
       newPassword,
       confirmPassword,
     });
@@ -38,8 +37,8 @@ const ProfileChangePassword = ({ onSubmit }: ProfileChangePasswordProps) => {
           name="currentPassword"
           type="password"
           placeholder="Enter current password"
-          value={currentPassword}
-          onChange={(e) => setCurrentPassword(e.target.value)}
+          value={oldPassword}
+          onChange={(e) => setOldPassword(e.target.value)}
           required={true}
         />
       </div>

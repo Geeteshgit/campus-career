@@ -1,11 +1,9 @@
-"use client";
-
 import React from "react";
 import PrimaryButton from "../ui/PrimaryButton";
 import DangerButton from "../ui/DangerButton";
 
 export type AdminUser = {
-  id: number;
+  _id: string;
   name: string;
   email: string;
   phone: string;
@@ -47,7 +45,6 @@ const AdminCard = ({
         </div>
       </div>
 
-      {/* BUTTONS — only super_admin can see */}
       {isSuperAdmin && (
         <div className="flex justify-end gap-2">
           <PrimaryButton onClick={() => onEdit(admin)}>Edit</PrimaryButton>

@@ -1,10 +1,30 @@
-import { redirect } from 'next/navigation';
-import React from 'react'
+"use client";
 
-const Homepage = (): React.JSX.Element => {
-  const isLoggedIn: boolean = false;
-  if(!isLoggedIn) redirect("/login");
-  else redirect("/home");
-}
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/redux/hooks";
 
-export default Homepage
+const Homepage = () => {
+  const user = useAppSelector((state) => state.user.user);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user) {
+      router.replace("/login");
+    }
+
+    if(user?.role === "student") {
+      router.replace("/student/home");
+    }
+    else if(user?.role === "admin" || user?.role === "super_admin") {
+      router.replace("/admin/dashboard");
+    }
+    else {
+      router.replace("/logout");
+    }
+  }, [user]);
+
+  return null; 
+};
+
+export default Homepage;
