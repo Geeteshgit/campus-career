@@ -16,10 +16,30 @@ export const getAllJobs = async (req: Request, res: Response) => {
   }
 };
 
+export const getJobStats = async (req: Request, res: Response) => {
+  try {
+    const jobs = await Job.find();
+
+    const totalJobs = jobs.length;
+    const activeJobs = jobs.filter((job) => job.status === "Active").length;
+    const inactiveJobs = jobs.filter((job) => job.status === "Inactive").length;
+    const fullTime = jobs.filter((job) => job.type === "Full-Time").length;
+    const internship = jobs.filter((job) => job.type === "Internship").length;
+
+    return res.status(200).json({
+      message: "Fetched job statistics",
+      stats: { totalJobs, activeJobs, inactiveJobs, fullTime, internship },
+    });
+  } catch (err) {
+    console.error("Error Fetching Job Stats:", err);
+    return res.status(500).json({ message: "Failed to fetch job stats" });
+  }
+};
+
 export const createJob = async (req: Request, res: Response) => {
   try {
     const job = await Job.create(req.body);
-    
+
     return res.status(201).json({
       message: "Job created successfully",
       job,
@@ -29,7 +49,6 @@ export const createJob = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Failed to create job" });
   }
 };
-
 
 export const updateJob = async (req: Request, res: Response) => {
   try {

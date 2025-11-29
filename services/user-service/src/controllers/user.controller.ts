@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import { User } from "../models/user.model.js";
 import { env } from "../config/env.js";
 
@@ -22,6 +22,24 @@ export const getMyAccount = async (req: any, res: Response) => {
   } catch (err) {
     console.error("Error Fetching My Profile: ", err);
     return res.status(500).json({ message: "Failed to fetch profile" });
+  }
+};
+
+export const getUserStats = async (req: Request, res: Response) => {
+  try {
+    const totalUsers = await User.countDocuments();
+    const admins = await User.countDocuments({
+      role: { $in: ["admin", "super_admin"] },
+    });
+    const students = await User.countDocuments({ role: "student" });
+
+    return res.status(200).json({
+      message: "Fetched user statistics",
+      stats: { totalUsers, admins, students },
+    });
+  } catch (err) {
+    console.error("Error Fetching User Stats:", err);
+    return res.status(500).json({ message: "Failed to fetch user stats" });
   }
 };
 

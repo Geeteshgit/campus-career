@@ -7,6 +7,7 @@ import {
   getAllStudents,
   getMyStudentProfile,
   getStudentByUserId,
+  getStudentStats,
   updateMyStudentProfile,
   updateStudent,
 } from "../controllers/student.controller.js";
@@ -16,6 +17,7 @@ router.get("/me", checkAuth, restrictTo("student"), getMyStudentProfile);
 router.put("/me", checkAuth, restrictTo("student"), updateMyStudentProfile);
 router.get("/", checkAuth, restrictTo("admin", "super_admin"), getAllStudents);
 router.get("/:userId", checkAuth, restrictTo("admin", "super_admin"), getStudentByUserId);
+router.get("/stats", checkAuth, restrictTo("admin", "super_admin"), getStudentStats);
 router.post("/", checkAuth, restrictTo("admin", "super_admin"), createStudent);
 router.put("/:id", checkAuth, restrictTo("admin", "super_admin"), updateStudent);
 router.delete("/:id", checkAuth, restrictTo("admin", "super_admin"), deleteStudent);

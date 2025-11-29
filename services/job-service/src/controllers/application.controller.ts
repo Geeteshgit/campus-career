@@ -70,3 +70,17 @@ export const getApplicantsForJob = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Failed to fetch applicants" });
   }
 };
+
+export const getApplicationStats = async (req: Request, res: Response) => {
+  try {
+    const totalApplications = await Application.countDocuments();
+
+    return res.status(200).json({
+      message: "Fetched application stats",
+      stats: { totalApplications },
+    });
+  } catch (err) {
+    console.error("Error Fetching Application Stats:", err);
+    return res.status(500).json({ message: "Failed to fetch application stats" });
+  }
+};

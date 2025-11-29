@@ -36,6 +36,20 @@ services:
     depends_on: 
       - mongo
 
+  analytics-service:
+    build: ./analytics-service
+    container_name: analytics-service
+    ports:
+      - 5002:5002
+    env_file:
+      - ./analytics-service/.env
+    volumes:
+      - ./analytics-service:/app
+      - /app/node_modules
+    command: npm run dev
+    depends_on: 
+      - mongo
+
   message-service:
     build: ./message-service
     container_name: message-service
@@ -45,6 +59,20 @@ services:
       - ./message-service/.env
     volumes:
       - ./message-service:/app
+      - /app/node_modules
+    command: npm run dev
+    depends_on: 
+      - mongo
+
+  academic-configuration-service:
+    build: ./academic-configuration-service
+    container_name: academic-configuration-service
+    ports:
+      - 5004:5004
+    env_file:
+      - ./academic-configuration-service/.env
+    volumes:
+      - ./academic-configuration-service:/app
       - /app/node_modules
     command: npm run dev
     depends_on: 

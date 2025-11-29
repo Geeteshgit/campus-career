@@ -63,6 +63,28 @@ export const getStudentByUserId = async (req: Request, res: Response) => {
   }
 };
 
+export const getStudentStats = async (req: Request, res: Response) => {
+  try {
+    const students = await Student.find();
+
+    const byProgram: any = {};
+    const byYear: any = {};
+
+    students.forEach((s) => {
+      byProgram[s.program] = (byProgram[s.program] || 0) + 1;
+      byYear[s.year] = (byYear[s.year] || 0) + 1;
+    });
+
+    return res.status(200).json({
+      message: "Fetched student statistics",
+      stats: { byProgram, byYear },
+    });
+  } catch (err) {
+    console.error("Error Fetching Student Stats:", err);
+    return res.status(500).json({ message: "Failed to fetch student stats" });
+  }
+};
+
 export const createStudent = async (req: Request, res: Response) => {
   try {
     const { name, email, phone, enrollmentNumber, program, year, cgpa } =
