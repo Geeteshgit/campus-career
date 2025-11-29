@@ -24,7 +24,7 @@ const AdminDashboard = (): React.JSX.Element => {
       icon: <FiBriefcase />,
     },
     {
-      title: "Manage Applications",
+      title: "Job Applications",
       subtitle: "View and manage all student job applications",
       href: "/admin/applications",
       icon: <TbChecklist />,
