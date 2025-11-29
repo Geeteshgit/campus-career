@@ -24,14 +24,6 @@ export const getPlatformAnalytics = async (req: any, res: Response) => {
           token
         ),
       ]);
-    const analytics = {
-      users: userStats,
-      students: studentStats,
-      jobs: jobStats,
-      applications: applicationStats,
-      programs: programStats,
-    };
-    console.log(analytics);
 
     return res.status(200).json({
       message: "Platform analytics fetched",
