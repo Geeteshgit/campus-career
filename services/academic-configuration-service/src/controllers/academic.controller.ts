@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Program, Year } from "../models/academic.model.js";
+import { Program } from "../models/academic.model.js";
 
 export const getPrograms = async (req: Request, res: Response) => {
   try {
@@ -70,77 +70,5 @@ export const deleteProgram = async (req: Request, res: Response) => {
   } catch (err) {
     console.error("Error Deleting Program:", err);
     return res.status(500).json({ message: "Failed to delete program" });
-  }
-};
-
-export const getYears = async (req: Request, res: Response) => {
-  try {
-    const years = await Year.find();
-
-    return res.status(200).json({
-      message: "Fetched all years",
-      years,
-    });
-  } catch (err) {
-    console.error("Error Fetching Years:", err);
-    return res.status(500).json({ message: "Failed to fetch years" });
-  }
-};
-
-export const createYear = async (req: Request, res: Response) => {
-  try {
-    const { year } = req.body;
-
-    if (!year)
-      return res.status(400).json({ message: "Year name is required" });
-
-    const newYear = await Year.create({ year });
-
-    return res.status(201).json({
-      message: "Year created successfully",
-      newYear,
-    });
-  } catch (err) {
-    console.error("Error Creating Year:", err);
-    return res.status(500).json({ message: "Failed to create year" });
-  }
-};
-
-export const updateYear = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const updatedYear = await Year.findByIdAndUpdate(
-      id,
-      req.body,
-      { new: true }
-    );
-
-    if (!updatedYear)
-      return res.status(404).json({ message: "Year not found" });
-
-    return res.status(200).json({
-      message: "Year updated successfully",
-      updatedYear,
-    });
-  } catch (err) {
-    console.error("Error Updating Year:", err);
-    return res.status(500).json({ message: "Failed to update year" });
-  }
-};
-
-export const deleteYear = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const deleted = await Year.findByIdAndDelete(id);
-
-    if (!deleted)
-      return res.status(404).json({ message: "Year not found" });
-
-    return res.status(200).json({
-      message: "Year deleted successfully",
-    });
-  } catch (err) {
-    console.error("Error Deleting Year:", err);
-    return res.status(500).json({ message: "Failed to delete year" });
   }
 };

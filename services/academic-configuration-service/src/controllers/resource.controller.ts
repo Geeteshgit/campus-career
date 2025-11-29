@@ -16,6 +16,27 @@ export const getResources = async (req: Request, res: Response) => {
   }
 };
 
+export const getResourcesByProgram = async (req: Request, res: Response) => {
+  try {
+    const { program } = req.query;
+
+    if (!program) {
+      return res.status(400).json({ message: "Program is required" });
+    }
+
+    const resources = await Resource.find({ program });
+
+    return res.status(200).json({
+      message: "Fetched preparation resources",
+      resources,
+    });
+  } catch (err) {
+    console.error("Error Fetching Resources:", err);
+    return res
+      .status(500)
+      .json({ message: "Failed to fetch preparation resources" });
+  }
+};
 export const createResource = async (req: Request, res: Response) => {
   try {
     const { title, url, program } = req.body;

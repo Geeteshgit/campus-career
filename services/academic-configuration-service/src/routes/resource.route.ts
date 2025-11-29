@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   getResources,
+  getResourcesByProgram,
   createResource,
   updateResource,
   deleteResource,
@@ -10,9 +11,10 @@ import { restrictTo } from "../middlewares/restrictTo.middleware.js";
 
 const router = Router();
 
-router.get("/resources", getResources);
-router.post("/resources", checkAuth, restrictTo("admin", "super_admin"), createResource);
-router.put("/resources/:id", checkAuth, restrictTo("admin", "super_admin"), updateResource);
-router.delete("/resources/:id", checkAuth, restrictTo("admin", "super_admin"), deleteResource);
+router.get("/admin", checkAuth, restrictTo("admin", "super_admin"), getResources);
+router.get("/student", checkAuth, restrictTo("student"), getResourcesByProgram);
+router.post("/", checkAuth, restrictTo("admin", "super_admin"), createResource);
+router.put("/:id", checkAuth, restrictTo("admin", "super_admin"), updateResource);
+router.delete("/:id", checkAuth, restrictTo("admin", "super_admin"), deleteResource);
 
 export default router;
