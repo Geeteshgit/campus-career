@@ -34,28 +34,6 @@ export const createProgram = async (req: Request, res: Response) => {
   }
 };
 
-export const updateProgram = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const updatedProgram = await Program.findByIdAndUpdate(
-      id,
-      req.body,
-      { new: true }
-    );
-
-    if (!updatedProgram)
-      return res.status(404).json({ message: "Program not found" });
-
-    return res.status(200).json({
-      message: "Program updated successfully",
-      updatedProgram,
-    });
-  } catch (err) {
-    console.error("Error Updating Program:", err);
-    return res.status(500).json({ message: "Failed to update program" });
-  }
-};
-
 export const deleteProgram = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
