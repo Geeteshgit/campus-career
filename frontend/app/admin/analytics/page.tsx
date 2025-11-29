@@ -1,9 +1,75 @@
-import React from 'react'
+"use client";
+
+import React, { useEffect, useState } from "react";
+import Navbar from "@/components/Navbar";
+import PageHeader from "@/components/PageHeader";
+import UsersAnalytics from "@/components/AnalyticsComponents/UserAnalytics";
+import JobsAnalytics from "@/components/AnalyticsComponents/JobAnalytics";
+import AcademicAnalytics from "@/components/AnalyticsComponents/AcademicAnalytics";
+import axios from "axios";
+import { env } from "@/config/env";
 
 const Analytics = (): React.JSX.Element => {
-  return (
-    <div>Analytics</div>
-  )
-}
+  const [statsData, setStatsData] = useState<any>(null);
 
-export default Analytics
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+  const fetchAllData = async () => {
+    try {
+      const response = await axios.get(
+        `${env.ANALYTICS_SERVICE}/api/analytics`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setStatsData(response.data.analytics);
+    } catch (err) {
+      console.error("Analytics fetch failed:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllData();
+  }, []);
+
+  if (!statsData)
+    return (
+      <div className="p-6 text-center text-neutral-600">
+        Loading analytics...
+      </div>
+    );
+
+  return (
+    <>
+      <Navbar />
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10 bg-white flex flex-col gap-8">
+        <PageHeader
+          title="Platform Analytics"
+          subtitle="Track platform-wide metrics"
+        />
+
+        <UsersAnalytics
+          totalUsers={statsData.users.stats.totalUsers}
+          totalStudents={statsData.users.stats.students}
+          totalAdmins={statsData.users.stats.admins}
+          studentsPerProgram={statsData.students.stats.studentsPerProgram}
+          studentsPerYear={statsData.students.stats.studentsPerYear}
+        />
+
+        <JobsAnalytics
+          totalJobs={statsData.jobs.stats.totalJobs}
+          activeJobs={statsData.jobs.stats.activeJobs}
+          inactiveJobs={statsData.jobs.stats.inactiveJobs}
+          fulltime={statsData.jobs.stats.fullTime}
+          internship={statsData.jobs.stats.internship}
+          application={statsData.applications.stats.totalApplications}
+        />
+
+        <AcademicAnalytics
+          totalPrograms={statsData.programs.stats.totalPrograms}
+        />
+      </main>
+    </>
+  );
+};
+
+export default Analytics;
