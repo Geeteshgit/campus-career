@@ -4,7 +4,7 @@ import { Student } from "../models/student.model.js";
 
 export const getAllAdmins = async (req: Request, res: Response) => {
   try {
-    const admins = await User.find({ role: "admin" });
+    const admins = await User.find({ role: { $in: ["admin", "super_admin"] } });
 
     return res.status(200).json({
       message: "Admins fetched successfully",

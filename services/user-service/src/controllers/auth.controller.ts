@@ -67,7 +67,7 @@ export const getMe = async (req: any, res: Response) => {
       user,
     });
   } catch (err) {
-    console.error("Error fetching current user: ", err);
+    console.error("Error Fetching Current User: ", err);
     return res.status(500).json({ message: "Failed to fetch user" });
   }
 };
