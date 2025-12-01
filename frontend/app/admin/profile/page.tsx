@@ -54,29 +54,6 @@ const AdminProfile = (): React.JSX.Element => {
     }
   };
 
-  const handlePasswordChange = async (data: any) => {
-    if (data.newPassword !== data.confirmPassword) {
-      return alert("Passwords do not match!");
-    }
-
-    try {
-      await axios.put(
-        `${env.USER_SERVICE}/api/auth/change-password`,
-        {
-          oldPassword: data.oldPassword,
-          newPassword: data.newPassword,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      handleLogout();
-      alert("Password updated successfully!");
-    } catch (err: any) {
-      console.error("Password update failed", err);
-      alert(err.response?.data?.message || "Failed to update password");
-    }
-  };
-
   const handleLogout = () => {
     disconnectSocket();
     dispatch(logout());
@@ -126,7 +103,7 @@ const AdminProfile = (): React.JSX.Element => {
 
             <PrimaryButton onClick={handleSave}>Save</PrimaryButton>
 
-            <ProfileChangePassword onSubmit={handlePasswordChange} />
+            <ProfileChangePassword />
           </div>
         </main>
       </>
