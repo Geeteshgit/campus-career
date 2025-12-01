@@ -20,19 +20,20 @@ type ResourceLink = {
   program: string;
 };
 
-const programs = ["B.Tech", "BCA", "MCA", "BBA", "MBA"];
-
 const PrepareAdminPage = (): React.JSX.Element => {
   const user = useAppSelector((state) => state.user.user);
+  const programs = useAppSelector((state) => state.academic.programs);
+  const programNames = programs.map(program => program.name);
   const isAdmin = user?.role !== "student";
 
   const [resources, setResources] = useState<ResourceLink[]>([]);
-  const [activeProgram, setActiveProgram] = useState("B.Tech");
+  const [activeProgram, setActiveProgram] = useState(programNames[0]);
   const [searchTerm, setSearchTerm] = useState("");
 
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editResource, setEditResource] = useState<ResourceLink | null>(null);
+
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -44,7 +45,7 @@ const PrepareAdminPage = (): React.JSX.Element => {
       name: "program",
       placeholder: "Select Program",
       type: "select",
-      options: programs,
+      options: programNames,
     },
   ];
 
@@ -141,7 +142,7 @@ const PrepareAdminPage = (): React.JSX.Element => {
           </div>
 
           <FilterSearchBar
-            filters={programs}
+            filters={programNames}
             activeFilter={activeProgram}
             onFilterChange={setActiveProgram}
             searchTerm={searchTerm}

@@ -9,6 +9,7 @@ import {
   updateUserField,
   updateStudentField,
   login,
+  clearRecommendations,
 } from "@/redux/features/user/userSlice";
 import ReadOnlyField from "@/components/FormComponents/ReadonlyField";
 import InputField from "@/components/FormComponents/InputField";
@@ -64,10 +65,15 @@ const StudentProfile = (): React.JSX.Element => {
         `${env.USER_SERVICE}/api/student/me`,
         {
           cgpa: student?.cgpa,
-          skills: student?.skills
-            ?.split(",")
-            .map((s) => s.trim())
-            .filter((s) => s !== ""),
+          skills:
+            typeof student?.skills === "string"
+              ? student.skills
+                  .split(",")
+                  .map((s) => s.trim())
+                  .filter(Boolean)
+              : Array.isArray(student?.skills)
+              ? student.skills
+              : [],
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -78,6 +84,8 @@ const StudentProfile = (): React.JSX.Element => {
           studentProfile: response.data.updatedStudent,
         })
       );
+      dispatch(clearRecommendations());
+
 
       alert("Academic details updated!");
     } catch (err) {

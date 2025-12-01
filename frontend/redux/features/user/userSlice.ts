@@ -17,14 +17,34 @@ interface StudentProfileData {
   resumeUrl?: string;
 }
 
+interface Job {
+  _id: string;
+  company: string;
+  role: string;
+  location: string;
+  deadline: string;
+  description: string;
+  requirements: string[];
+  eligibility: string;
+  package: string;
+  positions: number;
+  type: string;
+  status: "Active" | "Inactive";
+  createdAt: string;
+}
+
 interface UserState {
   user: UserData | null;
   studentProfile: StudentProfileData | null;
+  recommendations: Job[];
+  recommendationsLoaded: boolean;
 }
 
 const initialState: UserState = {
   user: null,
   studentProfile: null,
+  recommendations: [],
+  recommendationsLoaded: false,
 };
 
 export const userSlice = createSlice({
@@ -48,6 +68,7 @@ export const userSlice = createSlice({
     logout(state) {
       state.user = null;
       state.studentProfile = null;
+      state.recommendations = [];
     },
 
     updateUserField(
@@ -67,10 +88,24 @@ export const userSlice = createSlice({
         state.studentProfile[action.payload.field] = action.payload.value;
       }
     },
+    setRecommendations(state, action: PayloadAction<Job[]>) {
+      state.recommendations = action.payload;
+      state.recommendationsLoaded = true;
+    },
+    clearRecommendations(state) {
+      state.recommendations = [];
+      state.recommendationsLoaded = false;
+    },
   },
 });
 
-export const { login, logout, updateUserField, updateStudentField } =
-  userSlice.actions;
+export const {
+  login,
+  logout,
+  updateUserField,
+  updateStudentField,
+  setRecommendations,
+  clearRecommendations
+} = userSlice.actions;
 
 export default userSlice.reducer;

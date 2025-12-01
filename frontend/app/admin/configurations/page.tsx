@@ -9,15 +9,14 @@ import InputField from "@/components/FormComponents/InputField";
 import axios from "axios";
 import { env } from "@/config/env";
 import ProtectedRoute from "@/components/ProtectedRoute";
-
-interface Program {
-  _id: string;
-  name: string;
-}
+import { useAppSelector } from "@/redux/hooks";
+import { useDispatch } from "react-redux";
+import { setPrograms } from "@/redux/features/academic/academicSlice";
 
 const ConfigurationsPage = (): React.JSX.Element => {
-  const [programs, setPrograms] = useState<Program[]>([]);
   const [newProgram, setNewProgram] = useState("");
+  const dispatch = useDispatch();
+  const programs = useAppSelector((state) => state.academic.programs);
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -31,7 +30,7 @@ const ConfigurationsPage = (): React.JSX.Element => {
         }
       );
 
-      setPrograms(response.data.programs);
+      dispatch(setPrograms(response.data.programs));
     } catch (err) {
       console.error("Failed to fetch programs:", err);
     }
@@ -53,7 +52,11 @@ const ConfigurationsPage = (): React.JSX.Element => {
         }
       );
 
-      setPrograms((prev) => [...prev, response.data.program]);
+      const fetchPrograms = await axios.get(
+        `${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      dispatch(setPrograms(fetchPrograms.data.programs));
       setNewProgram("");
     } catch (err) {
       console.error("Failed to add program:", err);
@@ -70,7 +73,11 @@ const ConfigurationsPage = (): React.JSX.Element => {
         }
       );
 
-      setPrograms((prev) => prev.filter((p) => p._id !== programId));
+      const fetchPrograms = await axios.get(
+        `${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      dispatch(setPrograms(fetchPrograms.data.programs));
     } catch (err) {
       console.error("Failed to delete program:", err);
       alert("Could not delete program");

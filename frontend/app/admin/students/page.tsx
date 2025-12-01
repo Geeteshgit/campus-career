@@ -13,6 +13,7 @@ import EditModal from "@/components/ui/EditModal";
 
 import { env } from "@/config/env";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { useAppSelector } from "@/redux/hooks";
 
 interface Student {
   _id: string;
@@ -28,8 +29,6 @@ interface Student {
   cgpa: number;
 }
 
-const programs = ["All", "B.Tech", "BCA", "MCA", "MBA", "BBA"];
-
 const StudentManagement = (): React.JSX.Element => {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
@@ -40,6 +39,9 @@ const StudentManagement = (): React.JSX.Element => {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
+
+  const programs = useAppSelector((state) => state.academic.programs);
+  const programNames = programs.map(program => program.name);
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -56,7 +58,7 @@ const StudentManagement = (): React.JSX.Element => {
       name: "program",
       placeholder: "Select Program",
       type: "select",
-      options: ["B.Tech", "BCA", "MCA", "MBA", "BBA"],
+      options: programNames,
     },
     {
       name: "year",
@@ -178,7 +180,7 @@ const StudentManagement = (): React.JSX.Element => {
             </PrimaryButton>
           </div>
           <FilterSearchBar
-            filters={programs}
+            filters={["All", ...programNames]}
             activeFilter={selectedProgram}
             onFilterChange={setSelectedProgram}
             searchTerm={searchTerm}

@@ -19,9 +19,6 @@ const Homepage = () => {
     else if(user?.role === "admin" || user?.role === "super_admin") {
       router.replace("/admin/dashboard");
     }
-    else {
-      router.replace("/logout");
-    }
   }, [user]);
 
   return null; 

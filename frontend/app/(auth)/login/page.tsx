@@ -10,6 +10,7 @@ import { env } from "@/config/env";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { login } from "@/redux/features/user/userSlice";
 import { connectSocket, initSocket } from "@/lib/socket";
+import { setPrograms } from "@/redux/features/academic/academicSlice";
 
 const Login = (): React.JSX.Element => {
   const router = useRouter();
@@ -41,14 +42,17 @@ const Login = (): React.JSX.Element => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`${env.USER_SERVICE}/api/auth/login`, {
-        email: formData.email,
-        password: formData.password,
-      });
+      const loginResponse = await axios.post(
+        `${env.USER_SERVICE}/api/auth/login`,
+        {
+          email: formData.email,
+          password: formData.password,
+        }
+      );
 
-      const user = response.data.user;
+      const user = loginResponse.data.user;
 
-      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("token", loginResponse.data.token);
 
       initSocket();
       connectSocket();
@@ -57,11 +61,17 @@ const Login = (): React.JSX.Element => {
 
       if (user.role === "student") {
         const profRes = await axios.get(`${env.USER_SERVICE}/api/student/me`, {
-          headers: { Authorization: `Bearer ${response.data.token}` },
+          headers: { Authorization: `Bearer ${loginResponse.data.token}` },
         });
 
         studentProfile = profRes.data.profile;
       }
+
+      const academicResponse = await axios.get(
+        `${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs`,
+        { headers: { Authorization: `Bearer ${loginResponse.data.token}` } }
+      );
+      dispatch(setPrograms(academicResponse.data.programs));
 
       dispatch(login({ user, studentProfile }));
 

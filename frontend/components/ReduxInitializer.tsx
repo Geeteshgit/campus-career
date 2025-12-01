@@ -1,6 +1,7 @@
 "use client";
 
 import { env } from "@/config/env";
+import { setPrograms } from "@/redux/features/academic/academicSlice";
 import { login, logout } from "@/redux/features/user/userSlice";
 import axios from "axios";
 import { useEffect } from "react";
@@ -11,17 +12,19 @@ const ReduxInitializer = () => {
 
   useEffect(() => {
     const initializeAuth = async () => {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        dispatch(logout());
+        return;
+      }
       try {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-          dispatch(logout());
-          return;
-        }
-
-        const userResponse = await axios.get(`${env.USER_SERVICE}/api/auth/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const userResponse = await axios.get(
+          `${env.USER_SERVICE}/api/auth/me`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
         const user = userResponse.data.user;
         let studentProfile = null;
@@ -36,6 +39,13 @@ const ReduxInitializer = () => {
         }
 
         dispatch(login({ user, studentProfile }));
+
+        const academicResponse = await axios.get(
+          `${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        dispatch(setPrograms(academicResponse.data.programs));
       } catch (err) {
         console.error("Auth initialization failed:", err);
         dispatch(logout());
