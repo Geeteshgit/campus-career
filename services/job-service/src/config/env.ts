@@ -8,6 +8,7 @@ type ENV = {
     MONGO_PASSWORD: string;
     MONGO_DB_NAME: string;
     JWT_SECRET: string;
+    GEMINI_API_KEY: string;
 }
 
 export const env: ENV = {
@@ -17,5 +18,6 @@ export const env: ENV = {
     MONGO_PASSWORD: process.env.MONGO_PASSWORD || "admin",
     MONGO_DB_NAME: process.env.MONGO_DB_NAME || "CampusCareer_JobDB",
     JWT_SECRET: process.env.JWT_SECRET ?? (() => { throw new Error("Missing JWT SECRET environment variable") })(),
+    GEMINI_API_KEY: process.env.GEMINI_API_KEY ?? (() => { throw new Error("Missing GEMINI API KEY environment variable") })(),
 };
 

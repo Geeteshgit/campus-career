@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Job } from "../models/job.model.js";
 import { Application } from "../models/application.model.js";
+import { recommendJobs } from "../lib/recommendJobs.js";
 
 export const getAllJobs = async (req: Request, res: Response) => {
   try {
@@ -47,6 +48,41 @@ export const createJob = async (req: Request, res: Response) => {
   } catch (err) {
     console.error("Error Creating Job:", err);
     return res.status(500).json({ message: "Failed to create job" });
+  }
+};
+
+export const getRecommendedJobs = async (req: Request, res: Response) => {
+  try {
+    const { student } = req.body;
+    if (!student) {
+      return res.status(400).json({ message: "Student data missing" });
+    }
+
+    const jobs = await Job.find({ status: "Active" });
+    if (!jobs.length) {
+      return res.status(404).json({ message: "No jobs available" });
+    }
+
+    const recommendations = await recommendJobs(student, jobs);
+
+    if (!recommendations.length) {
+      return res.status(200).json({
+        message: "No suitable job recommendations found",
+        recommendations: [],
+      });
+    }
+
+    const recommendedJobs = recommendations
+      .sort((a: any, b: any) => b.score - a.score)
+      .map((rec: any) => jobs[rec.jobIndex]);
+
+    return res.status(200).json({
+      message: "Job recommendations generated",
+      recommendations: recommendedJobs,
+    });
+  } catch (err) {
+    console.error("Error Recommending Jobs:", err);
+    return res.status(500).json({ message: "Failed to recommend jobs" });
   }
 };
 
