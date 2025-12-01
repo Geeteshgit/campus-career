@@ -5,6 +5,7 @@ interface PrimaryButtonProps {
   onClick?: () => void;
   type?: "button" | "submit" | "reset";
   className?: string;
+  disabled?: boolean;
 }
 
 const PrimaryButton = ({
@@ -12,6 +13,7 @@ const PrimaryButton = ({
   onClick,
   type = "button",
   className = "",
+  disabled=false,
 }: PrimaryButtonProps): React.JSX.Element => {
   return (
     <button
@@ -20,6 +22,7 @@ const PrimaryButton = ({
       className={`text-sm sm:text-base px-4 py-2 bg-blue-500 text-white font-semibold 
                   rounded-lg hover:bg-blue-600 hover:scale-[1.01] duration-300 
                   transition cursor-pointer ${className}`}
+      disabled={disabled}
     >
       {children}
     </button>

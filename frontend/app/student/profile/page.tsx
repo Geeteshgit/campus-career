@@ -33,6 +33,7 @@ const StudentProfile = (): React.JSX.Element => {
   const student = useAppSelector((state) => state.user.studentProfile);
 
   const [resume, setResume] = useState<File | null>(null);
+  const [uploading, setUploading] = useState<boolean>(false);
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -93,14 +94,52 @@ const StudentProfile = (): React.JSX.Element => {
     }
   };
 
-  const handleResumeUpload = () => {};
+  const handleResumeUpload = async () => {
+    if (!resume) {
+      alert("Please select a resume PDF to upload first.");
+      return;
+    }
 
-    const handleLogout = () => {
-      disconnectSocket();
-      dispatch(logout());
-      localStorage.removeItem("token");
-      router.replace("/login");
-    };
+    try {
+      setUploading(true);
+      const formData = new FormData();
+      formData.append("resume", resume);
+
+      const response = await axios.post(
+        `${env.USER_SERVICE}/api/student/me/resume`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      dispatch(
+        login({
+          user,
+          studentProfile: response.data.updatedStudent,
+        })
+      );
+      dispatch(clearRecommendations());
+
+      alert("Resume uploaded and skills updated successfully!");
+      setResume(null);
+      setUploading(false);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to upload resume and extract skills");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleLogout = () => {
+    disconnectSocket();
+    dispatch(logout());
+    localStorage.removeItem("token");
+    router.replace("/login");
+  };
 
   return (
     <ProtectedRoute allowedRoles={["student"]}>
@@ -213,24 +252,25 @@ const StudentProfile = (): React.JSX.Element => {
                 Save
               </PrimaryButton>
             </div>
-            
+
             <div className="flex flex-col pt-4 border-t border-neutral-200">
-              <FormLabel>
-                Resume Upload
-              </FormLabel>
+              <FormLabel>Resume Upload</FormLabel>
               <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-end">
                 <div className="flex-1">
                   <FileUploadField file={resume} onChange={setResume} />
                 </div>
                 <div>
-                  <PrimaryButton onClick={handleResumeUpload}>
-                    Upload
+                  <PrimaryButton
+                    disabled={uploading}
+                    onClick={handleResumeUpload}
+                  >
+                    {uploading ? "Uploading..." : "Upload"}
                   </PrimaryButton>
                 </div>
               </div>
               <p className="text-sm text-neutral-500 mt-3">
                 Upload a PDF resume — AI will read it and automatically update
-                your skills section above.
+                your skills.
               </p>
             </div>
 
