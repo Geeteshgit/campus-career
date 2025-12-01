@@ -5,11 +5,11 @@ import Navbar from "@/components/Navbar";
 import PageHeader from "@/components/PageHeader";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
-  logout,
   updateUserField,
   updateStudentField,
   login,
   clearRecommendations,
+  logout,
 } from "@/redux/features/user/userSlice";
 import ReadOnlyField from "@/components/FormComponents/ReadonlyField";
 import InputField from "@/components/FormComponents/InputField";
@@ -18,16 +18,16 @@ import FileUploadField from "@/components/FormComponents/FileUploadField";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import ProfileChangePassword from "@/components/ProfileComponents/ProfileChangePassword";
 import FormLabel from "@/components/FormComponents/FormLabel";
-import { useRouter } from "next/navigation";
 import DangerButton from "@/components/ui/DangerButton";
-import { disconnectSocket } from "@/lib/socket";
 import axios from "axios";
 import { env } from "@/config/env";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { disconnectSocket } from "@/lib/socket";
+import { useRouter } from "next/navigation";
 
 const StudentProfile = (): React.JSX.Element => {
-  const router = useRouter();
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const user = useAppSelector((state) => state.user.user);
   const student = useAppSelector((state) => state.user.studentProfile);
@@ -86,7 +86,6 @@ const StudentProfile = (): React.JSX.Element => {
       );
       dispatch(clearRecommendations());
 
-
       alert("Academic details updated!");
     } catch (err) {
       console.error(err);
@@ -94,34 +93,14 @@ const StudentProfile = (): React.JSX.Element => {
     }
   };
 
-  const handlePasswordChange = async (data: any) => {
-    if (data.newPassword !== data.confirmPassword)
-      return alert("Passwords do not match!");
+  const handleResumeUpload = () => {};
 
-    try {
-      await axios.put(
-        `${env.USER_SERVICE}/api/auth/change-password`,
-        {
-          oldPassword: data.oldPassword,
-          newPassword: data.newPassword,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      handleLogout();
-      alert("Password updated successfully!");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to update password");
-    }
-  };
-
-  const handleLogout = () => {
-    disconnectSocket();
-    dispatch(logout());
-    localStorage.removeItem("token");
-    router.replace("/login");
-  };
+    const handleLogout = () => {
+      disconnectSocket();
+      dispatch(logout());
+      localStorage.removeItem("token");
+      router.replace("/login");
+    };
 
   return (
     <ProtectedRoute allowedRoles={["student"]}>
@@ -230,17 +209,32 @@ const StudentProfile = (): React.JSX.Element => {
                 />
               </div>
 
-              <div>
-                <FormLabel>Resume Upload</FormLabel>
-                <FileUploadField file={resume} onChange={setResume} />
-              </div>
-
               <PrimaryButton onClick={handleAcademicInfoSave}>
                 Save
               </PrimaryButton>
             </div>
+            
+            <div className="flex flex-col pt-4 border-t border-neutral-200">
+              <FormLabel>
+                Resume Upload
+              </FormLabel>
+              <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-end">
+                <div className="flex-1">
+                  <FileUploadField file={resume} onChange={setResume} />
+                </div>
+                <div>
+                  <PrimaryButton onClick={handleResumeUpload}>
+                    Upload
+                  </PrimaryButton>
+                </div>
+              </div>
+              <p className="text-sm text-neutral-500 mt-3">
+                Upload a PDF resume — AI will read it and automatically update
+                your skills section above.
+              </p>
+            </div>
 
-            <ProfileChangePassword onSubmit={handlePasswordChange} />
+            <ProfileChangePassword />
           </div>
         </main>
       </>
