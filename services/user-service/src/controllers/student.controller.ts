@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Student } from "../models/student.model.js";
 import { User } from "../models/user.model.js";
+import { extractSkillsFromResume } from "../lib/extractSkillsFromResume.js";
 
 export const getMyStudentProfile = async (req: any, res: Response) => {
   try {
@@ -35,6 +36,34 @@ export const updateMyStudentProfile = async (req: any, res: Response) => {
     return res
       .status(500)
       .json({ message: "Failed to update student profile" });
+  }
+};
+
+export const uploadResumeAndExtractSkills = async (req: any, res: Response) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "No resume file uploaded" });
+    }
+
+    const skills = await extractSkillsFromResume(req.file.buffer);
+
+    if (!skills.length) {
+      return res.status(400).json({ message: "Skill extraction failed" });
+    }
+
+    const updatedStudent = await Student.findOneAndUpdate(
+      { userId: req.user.id },
+      { skills },
+      { new: true }
+    );
+
+    return res.status(200).json({
+      message: "Resume uploaded and skills updated",
+      updatedStudent,
+    });
+  } catch (err) {
+    console.error("Resume upload error:", err);
+    return res.status(500).json({ message: "Failed to process resume" });
   }
 };
 
