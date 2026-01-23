@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
 import { env } from "./env.js";
 
-// const MONGO_URI = `mongodb://${env.MONGO_USERNAME}:${env.MONGO_PASSWORD}@mongo:27017/${env.MONGO_DB_NAME}?authSource=admin`
-const MONGO_URI = "mongodb://127.0.0.1:27017/CampusCareer_UserDB";
+const MONGO_URI = `mongodb://${env.MONGO_USERNAME}:${env.MONGO_PASSWORD}@mongo:27017/${env.MONGO_DB_NAME}?authSource=admin`
 
 export const connectToDB = async() => {
     try {

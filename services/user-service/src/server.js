@@ -7,9 +7,13 @@ import userRoutes from "./routes/user.route.js";
 import studentRoutes from "./routes/student.route.js";
 import adminRoutes from "./routes/admin.route.js";
 import { connectRabbitMQ } from "./utils/rabbitmq.js";
+import { createSuperAdminIfNotExists } from "./bootstrap/superAdmin.bootstrap.js";
 
 const app = express();
-connectToDB();
+
+await connectToDB();
+await createSuperAdminIfNotExists();
+await connectRabbitMQ();
 
 app.use(cors({
     origin: "*"
@@ -26,10 +30,6 @@ app.use("/api/admin", adminRoutes);
 app.get("/api", (req, res) => {
     return res.send("User Server Running");
 });
-
-(async () => {
-    await connectRabbitMQ();
-})();
 
 app.listen(env.PORT, () => {
     console.log(`User Server running on port: ${env.PORT}`);
