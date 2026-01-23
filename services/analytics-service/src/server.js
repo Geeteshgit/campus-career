@@ -6,7 +6,9 @@ import { connectRabbitMQ } from "./utils/rabbitmq.js";
 import analyticsRoutes from "./routes/analytics.route.js";
 
 const app = express();
-connectToDB();
+
+await connectToDB();
+await connectRabbitMQ();
 
 app.use(cors({
     origin: "*",
@@ -20,10 +22,6 @@ app.use("/api/analytics", analyticsRoutes);
 app.get("/api", (req, res) => {
     return res.send("Analytics Server Running");
 });
-
-(async () => {
-    await connectRabbitMQ();
-})();
 
 app.listen(env.PORT, () => {
     console.log(`Analytics Server running on port: ${env.PORT}`);

@@ -9,7 +9,9 @@ import { Server } from "socket.io";
 import { socketHandler } from "./config/socket.js";
 
 const app = express();
-connectToDB();
+
+await connectToDB();
+await connectRabbitMQ();
 
 app.use(cors());
 app.use(express.json());
@@ -35,9 +37,6 @@ const io = new Server(server, {
 
 socketHandler(io);
 
-(async () => {
-  await connectRabbitMQ();
-})()
 
 server.listen(env.PORT, () => {
   console.log(`Message Server running on port: ${env.PORT}`);

@@ -7,7 +7,9 @@ import academicRoutes from "./routes/academic.route.js";
 import resourceRoutes from "./routes/resource.route.js";
 
 const app = express();
-connectToDB();
+
+await connectToDB();
+await connectRabbitMQ();
 
 app.use(cors({
     origin: "*",
@@ -22,10 +24,6 @@ app.use("/api/resources", resourceRoutes);
 app.get("/api", (req, res) => {
   return res.send("Academic Configuration Server Running");
 });
-
-(async () => {
-  await connectRabbitMQ();
-})();
 
 app.listen(env.PORT, () => {
   console.log(`Academic Configuration Server running on port: ${env.PORT}`);
