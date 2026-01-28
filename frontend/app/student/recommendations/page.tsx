@@ -17,8 +17,9 @@ const StudentHomepage = (): React.JSX.Element => {
 
   const user = useAppSelector((state) => state.user.user);
   const studentProfile = useAppSelector((state) => state.user.studentProfile);
-  const recommendations = useAppSelector((state) => state.user.recommendations);
-  const recommendationsLoaded = useAppSelector((state) => state.user.recommendationsLoaded);
+  const recommendations = useAppSelector((state) =>
+    Array.isArray(state.user.recommendations) ? state.user.recommendations : [],
+  );
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -27,7 +28,7 @@ const StudentHomepage = (): React.JSX.Element => {
   const [jobModalOpen, setJobModalOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [filter, setFilter] = useState<"All" | "Full-Time" | "Internship">(
-    "All"
+    "All",
   );
   const [searchTerm, setSearchTerm] = useState<string>("");
 
@@ -43,7 +44,7 @@ const StudentHomepage = (): React.JSX.Element => {
           program: studentProfile?.program,
           cgpa: studentProfile?.cgpa,
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       alert("Applied successfully!");
@@ -66,10 +67,10 @@ const StudentHomepage = (): React.JSX.Element => {
       const response = await axios.post(
         `${env.JOB_SERVICE}/api/jobs/recommendations`,
         { student: studentProfile },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
-      dispatch(setRecommendations(response.data.recommendations));
+      dispatch(setRecommendations(response.data.recommendations || []));
     } catch (err) {
       console.error("Failed to fetch recommended jobs:", err);
       dispatch(setRecommendations([]));
@@ -79,19 +80,13 @@ const StudentHomepage = (): React.JSX.Element => {
   };
 
   useEffect(() => {
-  if (!studentProfile) return;
-
-  if (!recommendationsLoaded) {
+    if (!studentProfile) return;
     fetchRecommendations();
-  } else {
-    setLoading(false); 
-  }
-}, [recommendationsLoaded, studentProfile]);
-
+  }, [studentProfile]);
 
   const filteredJobs = recommendations
     .filter((job) =>
-      filter === "All" ? true : job.type.toLowerCase() === filter.toLowerCase()
+      filter === "All" ? true : job.type.toLowerCase() === filter.toLowerCase(),
     )
     .filter((job) => {
       const term = searchTerm.toLowerCase();
@@ -125,11 +120,14 @@ const StudentHomepage = (): React.JSX.Element => {
             placeholder="Search by company, role, or location..."
           />
 
-          {/* ⭐ Only this section shows loading */}
           {loading ? (
-              <p className="text-center text-neutral-600 py-10">
-                Loading recommended jobs...
-              </p>
+            <p className="text-center text-neutral-600 py-10">
+              Loading recommended jobs...
+            </p>
+          ) : filteredJobs.length === 0 ? (
+            <p className="text-center text-neutral-500 py-10">
+              No job recommendations available right now.
+            </p>
           ) : (
             <PostingsContainer
               title="Recommended Postings"

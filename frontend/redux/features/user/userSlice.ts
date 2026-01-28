@@ -37,14 +37,12 @@ interface UserState {
   user: UserData | null;
   studentProfile: StudentProfileData | null;
   recommendations: Job[];
-  recommendationsLoaded: boolean;
 }
 
 const initialState: UserState = {
   user: null,
   studentProfile: null,
   recommendations: [],
-  recommendationsLoaded: false,
 };
 
 export const userSlice = createSlice({
@@ -90,11 +88,9 @@ export const userSlice = createSlice({
     },
     setRecommendations(state, action: PayloadAction<Job[]>) {
       state.recommendations = action.payload;
-      state.recommendationsLoaded = true;
     },
     clearRecommendations(state) {
       state.recommendations = [];
-      state.recommendationsLoaded = false;
     },
   },
 });

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
 import Navbar from "@/components/Navbar";
@@ -14,6 +14,7 @@ import EditModal from "@/components/ui/EditModal";
 import { env } from "@/config/env";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useAppSelector } from "@/redux/hooks";
+import SuccessButton from "@/components/ui/SuccessButton";
 
 interface Student {
   _id: string;
@@ -41,7 +42,7 @@ const StudentManagement = (): React.JSX.Element => {
   const [editModalOpen, setEditModalOpen] = useState(false);
 
   const programs = useAppSelector((state) => state.academic.programs);
-  const programNames = programs.map(program => program.name);
+  const programNames = programs.map((program) => program.name);
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -88,7 +89,7 @@ const StudentManagement = (): React.JSX.Element => {
       const response = await axios.post(
         `${env.USER_SERVICE}/api/student`,
         data,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       setStudents((prev) => [...prev, response.data.student]);
@@ -106,11 +107,11 @@ const StudentManagement = (): React.JSX.Element => {
       const res = await axios.put(
         `${env.USER_SERVICE}/api/student/${selectedStudent._id}`,
         updatedValues,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       setStudents((prev) =>
-        prev.map((s) => (s._id === selectedStudent._id ? res.data.student : s))
+        prev.map((s) => (s._id === selectedStudent._id ? res.data.student : s)),
       );
 
       setEditModalOpen(false);
@@ -165,6 +166,34 @@ const StudentManagement = (): React.JSX.Element => {
     setEditModalOpen(true);
   };
 
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleExcelUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      await axios.post(
+        `${env.USER_SERVICE}/api/student/bulk-upload`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+
+      alert("Students uploaded successfully");
+      fetchStudents();
+    } catch (err) {
+      alert("Upload failed");
+    }
+  };
+
   return (
     <ProtectedRoute allowedRoles={["admin", "super_admin"]}>
       <>
@@ -175,9 +204,22 @@ const StudentManagement = (): React.JSX.Element => {
               title="Student Management"
               subtitle="View and manage all the students"
             />
-            <PrimaryButton onClick={() => setAddModalOpen(true)}>
-              Add Student
-            </PrimaryButton>
+            <div className="flex gap-2">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".xlsx,.xls"
+                onChange={handleExcelUpload}
+                className="hidden"
+              />
+              <SuccessButton onClick={() => fileInputRef.current?.click()}>
+                Upload Excel
+              </SuccessButton>
+
+              <PrimaryButton onClick={() => setAddModalOpen(true)}>
+                Add Student
+              </PrimaryButton>
+            </div>
           </div>
           <FilterSearchBar
             filters={["All", ...programNames]}

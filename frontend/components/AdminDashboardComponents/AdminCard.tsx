@@ -26,7 +26,7 @@ const AdminCard = ({
   const isSuperAdmin = role === "super_admin";
 
   return (
-    <div className="bg-white border border-neutral-200 rounded-xl p-4 shadow-sm hover:shadow-md transition flex flex-col gap-4">
+    <div className="bg-white border border-neutral-200 rounded-xl p-3 shadow-sm hover:shadow-md transition flex flex-col gap-4">
       {/* INFO GRID */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 w-full">
         <div>

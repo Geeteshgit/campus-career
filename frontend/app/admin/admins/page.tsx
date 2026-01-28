@@ -140,7 +140,7 @@ const AdminManagement = (): React.JSX.Element => {
             </PrimaryButton>
           </div>
 
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
             {admins.length === 0 ? (
               <p className="text-neutral-500 text-center">No admins found</p>
             ) : (

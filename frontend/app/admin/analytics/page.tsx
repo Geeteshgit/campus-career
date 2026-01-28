@@ -12,32 +12,30 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 
 const Analytics = (): React.JSX.Element => {
   const [statsData, setStatsData] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
   const fetchAllData = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(
         `${env.ANALYTICS_SERVICE}/api/analytics`,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
       setStatsData(response.data.analytics);
     } catch (err) {
       console.error("Analytics fetch failed:", err);
+      setStatsData(null);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchAllData();
   }, []);
-
-  if (!statsData)
-    return (
-      <div className="p-6 text-center text-neutral-600">
-        Loading analytics...
-      </div>
-    );
 
   return (
     <ProtectedRoute allowedRoles={["admin", "super_admin"]}>
@@ -49,26 +47,38 @@ const Analytics = (): React.JSX.Element => {
             subtitle="Track platform-wide metrics"
           />
 
-          <UsersAnalytics
-            totalUsers={statsData.users.stats.totalUsers}
-            totalStudents={statsData.users.stats.students}
-            totalAdmins={statsData.users.stats.admins}
-            studentsPerProgram={statsData.students.stats.studentsPerProgram}
-            studentsPerYear={statsData.students.stats.studentsPerYear}
-          />
+          {loading ? (
+            <p className="text-center text-neutral-600 py-10">
+              Loading analytics...
+            </p>
+          ) : !statsData ? (
+            <p className="text-center text-neutral-500 py-10">
+              Analytics data is currently unavailable.
+            </p>
+          ) : (
+            <>
+              <UsersAnalytics
+                totalUsers={statsData.users.stats.totalUsers}
+                totalStudents={statsData.users.stats.students}
+                totalAdmins={statsData.users.stats.admins}
+                studentsPerProgram={statsData.students.stats.studentsPerProgram}
+                studentsPerYear={statsData.students.stats.studentsPerYear}
+              />
 
-          <JobsAnalytics
-            totalJobs={statsData.jobs.stats.totalJobs}
-            activeJobs={statsData.jobs.stats.activeJobs}
-            inactiveJobs={statsData.jobs.stats.inactiveJobs}
-            fulltime={statsData.jobs.stats.fullTime}
-            internship={statsData.jobs.stats.internship}
-            application={statsData.applications.stats.totalApplications}
-          />
+              <JobsAnalytics
+                totalJobs={statsData.jobs.stats.totalJobs}
+                activeJobs={statsData.jobs.stats.activeJobs}
+                inactiveJobs={statsData.jobs.stats.inactiveJobs}
+                fulltime={statsData.jobs.stats.fullTime}
+                internship={statsData.jobs.stats.internship}
+                application={statsData.applications.stats.totalApplications}
+              />
 
-          <AcademicAnalytics
-            totalPrograms={statsData.programs.stats.totalPrograms}
-          />
+              <AcademicAnalytics
+                totalPrograms={statsData.programs.stats.totalPrograms}
+              />
+            </>
+          )}
         </main>
       </>
     </ProtectedRoute>

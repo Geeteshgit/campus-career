@@ -5,10 +5,11 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { IoBookOutline, IoClose, IoMenuOutline } from "react-icons/io5";
 import { usePathname } from "next/navigation";
-import { FiHome, FiBriefcase, FiUser } from "react-icons/fi";
+import { FiBriefcase, FiUser } from "react-icons/fi";
 import { BiComment } from "react-icons/bi";
 import { useAppSelector } from "@/redux/hooks";
 import { RxDashboard } from "react-icons/rx";
+import { TbWand } from "react-icons/tb";
 
 type NavLink = {
   link: string;
@@ -25,14 +26,14 @@ const Navbar = (): React.JSX.Element => {
 
   const studentLinks: NavLink[] = [
     {
-      link: "Home",
-      href: "/student/home",
-      icon: <FiHome className="w-4 h-4" />,
-    },
-    {
       link: "Postings",
       href: "/postings",
       icon: <FiBriefcase className="w-4 h-4" />,
+    },
+    {
+      link: "Recommendations",
+      href: "/student/recommendations",
+      icon: <TbWand className="w-4 h-4" />,
     },
     {
       link: "Prepare",

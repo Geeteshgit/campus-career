@@ -21,7 +21,7 @@ const ProtectedRoute = ({ allowedRoles, children }: ProtectedRouteProps) => {
 
     if (!allowedRoles.includes(user.role)) {
       if (user.role === "student") {
-        router.replace("/student/home");
+        router.replace("/postings");
       } else {
         router.replace("/admin/dashboard");
       }
