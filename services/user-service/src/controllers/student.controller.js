@@ -1,6 +1,8 @@
 import { Student } from "../models/student.model.js";
 import { User } from "../models/user.model.js";
 import { extractSkillsFromResume } from "../lib/extractSkillsFromResume.js";
+import XLSX from "xlsx";
+import { hashPassword } from "../utils/password.js";
 
 export const getMyStudentProfile = async (req, res) => {
   try {
@@ -24,7 +26,7 @@ export const updateMyStudentProfile = async (req, res) => {
     const updatedStudent = await Student.findOneAndUpdate(
       { userId: req.user.id },
       updates,
-      { new: true }
+      { new: true },
     );
 
     return res
@@ -53,7 +55,7 @@ export const uploadResumeAndExtractSkills = async (req, res) => {
     const updatedStudent = await Student.findOneAndUpdate(
       { userId: req.user.id },
       { skills },
-      { new: true }
+      { new: true },
     );
 
     return res.status(200).json({
@@ -68,8 +70,35 @@ export const uploadResumeAndExtractSkills = async (req, res) => {
 
 export const getAllStudents = async (req, res) => {
   try {
-    const students = await Student.find().populate("userId");
-    return res.status(200).json({ message: "Fetched all students", students });
+    const page = parseInt(req.query.page) || 1;
+    const skip = (page - 1) * 50;
+    const filter = {};
+
+    if (req.query.program && req.query.program !== "All") {
+      filter.program = req.query.program;
+    }
+
+    if (req.query.search) {
+      filter.$or = [
+        { "enrollmentNumber": { $regex: req.query.search, $options: "i" } },
+        { "name": { $regex: req.query.search, $options: "i" } },
+      ];
+    }
+
+    const students = await Student.find(filter)
+      .populate("userId")
+      .sort({ enrollmentNumber: 1 })
+      .skip(skip)
+      .limit(50);
+
+    const total = await Student.countDocuments(filter);
+    return res
+      .status(200)
+      .json({
+        message: "Fetched all students",
+        students,
+        hasMore: skip + students.length < total,
+      });
   } catch (err) {
     console.error("Error Fetching Students: ", err);
     return res.status(500).json({ message: "Failed to fetch students" });
@@ -130,6 +159,7 @@ export const createStudent = async (req, res) => {
 
     const newStudentProfile = new Student({
       userId: newUser._id,
+      name,
       enrollmentNumber,
       program,
       year,
@@ -139,7 +169,7 @@ export const createStudent = async (req, res) => {
     await newStudentProfile.save();
 
     const populatedStudent = await Student.findById(
-      newStudentProfile._id
+      newStudentProfile._id,
     ).populate("userId");
 
     return res.status(201).json({
@@ -149,6 +179,70 @@ export const createStudent = async (req, res) => {
   } catch (err) {
     console.error("Error Creating Student: ", err);
     return res.status(500).json({ message: "Failed to create student" });
+  }
+};
+
+export const bulkCreateStudents = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    const workbook = XLSX.read(req.file.buffer, { type: "buffer" });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+
+    const students = XLSX.utils.sheet_to_json(worksheet);
+
+    if (!students.length) {
+      return res.status(400).json({ message: "Excel file is empty" });
+    }
+
+    const emails = students.map((s) => s.email);
+
+    const existingUsers = await User.find(
+      { email: { $in: emails } },
+      { email: 1 },
+    );
+    const existingEmailSet = new Set(existingUsers.map((u) => u.email));
+
+    const usersToInsert = await Promise.all(
+      students
+        .filter((s) => !existingEmailSet.has(s.email))
+        .map(async (s) => ({
+          name: s.name,
+          email: s.email,
+          phone: s.phone,
+          password: await hashPassword(`BUCC@#${s.phone}`),
+          role: "student",
+        })),
+    );
+
+    if (!usersToInsert.length) {
+      return res.status(409).json({ message: "All students already exist" });
+    }
+
+    const createdUsers = await User.insertMany(usersToInsert);
+
+    const studentsToInsert = createdUsers.map((user, index) => ({
+      userId: user._id,
+      name: students[index].name,
+      enrollmentNumber: students[index].enrollmentNumber,
+      program: students[index].program,
+      year: students[index].year,
+      cgpa: students[index].cgpa,
+    }));
+
+    await Student.insertMany(studentsToInsert);
+
+    return res.status(201).json({
+      message: "Bulk upload successful",
+      created: studentsToInsert.length,
+      skipped: students.length - studentsToInsert.length,
+    });
+  } catch (err) {
+    console.error("Bulk upload error:", err);
+    return res.status(500).json({ message: "Bulk upload failed" });
   }
 };
 

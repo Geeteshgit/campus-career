@@ -3,6 +3,7 @@ import multer from "multer";
 import { checkAuth } from "../middlewares/checkAuth.middleware.js";
 import { restrictTo } from "../middlewares/restrictTo.middleware.js";
 import {
+  bulkCreateStudents,
   createStudent,
   deleteStudent,
   getAllStudents,
@@ -17,7 +18,7 @@ const router = express.Router();
 
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 8 * 1024 * 1024 }, 
+  limits: { fileSize: 10 * 1024 * 1024 }, 
 });
 
 router.get("/me", checkAuth, restrictTo("student"), getMyStudentProfile);
@@ -33,6 +34,7 @@ router.get("/", checkAuth, restrictTo("admin", "super_admin"), getAllStudents);
 router.get("/stats", checkAuth, restrictTo("admin", "super_admin"), getStudentStats);
 router.get("/:userId", checkAuth, restrictTo("admin", "super_admin"), getStudentByUserId);
 router.post("/", checkAuth, restrictTo("admin", "super_admin"), createStudent);
+router.post("/bulk-upload", checkAuth, restrictTo("admin", "super_admin"), upload.single("file"), bulkCreateStudents);
 router.put("/:id", checkAuth, restrictTo("admin", "super_admin"), updateStudent);
 router.delete("/:id", checkAuth, restrictTo("admin", "super_admin"), deleteStudent);
 

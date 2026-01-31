@@ -33,7 +33,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
       required: false,
-      match: [/^[0-9]{10}$/, "Phone number must be exactly 10 digits"],
     },
     resetPasswordOtp: {
       type: String,

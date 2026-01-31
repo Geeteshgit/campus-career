@@ -8,7 +8,13 @@ const studentSchema = new mongoose.Schema(
       required: true,
       unique: true,  
     },
-
+    name: {
+      type: String,
+      trim: true,
+      required: [true, "Name is required"],
+      minLength: [2, "Name must be at least 2 characters"],
+      maxLength: [50, "Name must not exceed 50 characters"],
+    },
     enrollmentNumber: {
       type: String,
       required: [true, "Enrollment number is required"],
