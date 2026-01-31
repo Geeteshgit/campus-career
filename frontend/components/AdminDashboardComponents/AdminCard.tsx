@@ -27,30 +27,17 @@ const AdminCard = ({
 
   return (
     <div className="bg-white border border-neutral-200 rounded-xl p-3 shadow-sm hover:shadow-md transition flex flex-col gap-4">
-      {/* INFO GRID */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 w-full">
-        <div>
-          <p className="text-[13px] text-neutral-500">Name</p>
-          <p className="font-semibold text-neutral-900">{admin.name}</p>
-        </div>
-
-        <div>
-          <p className="text-[13px] text-neutral-500">Email</p>
-          <p className="font-semibold text-neutral-900">{admin.email}</p>
-        </div>
-
-        <div>
-          <p className="text-[13px] text-neutral-500">Phone</p>
-          <p className="font-semibold text-neutral-900">{admin.phone}</p>
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 w-full">
+        <p className="font-semibold text-neutral-900">{admin.name}</p>
+        <p className="font-semibold text-neutral-900">{admin.email}</p>
+        <p className="font-semibold text-neutral-900">{admin.phone}</p>
+        {isSuperAdmin && (
+          <div className="flex justify-end gap-2">
+            <PrimaryButton onClick={() => onEdit(admin)}>Edit</PrimaryButton>
+            <DangerButton onClick={() => onDelete(admin)}>Delete</DangerButton>
+          </div>
+        )}
       </div>
-
-      {isSuperAdmin && (
-        <div className="flex justify-end gap-2">
-          <PrimaryButton onClick={() => onEdit(admin)}>Edit</PrimaryButton>
-          <DangerButton onClick={() => onDelete(admin)}>Delete</DangerButton>
-        </div>
-      )}
     </div>
   );
 };

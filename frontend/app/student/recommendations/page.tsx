@@ -70,6 +70,7 @@ const StudentHomepage = (): React.JSX.Element => {
         { headers: { Authorization: `Bearer ${token}` } },
       );
 
+      console.log(response.data.recommendations);
       dispatch(setRecommendations(response.data.recommendations || []));
     } catch (err) {
       console.error("Failed to fetch recommended jobs:", err);
@@ -85,18 +86,22 @@ const StudentHomepage = (): React.JSX.Element => {
   }, [studentProfile]);
 
   const filteredJobs = recommendations
-    .filter((job) =>
-      filter === "All" ? true : job.type.toLowerCase() === filter.toLowerCase(),
-    )
-    .filter((job) => {
-      const term = searchTerm.toLowerCase();
-      return (
-        job.company.toLowerCase().includes(term) ||
-        job.role.toLowerCase().includes(term) ||
-        job.location.toLowerCase().includes(term) ||
-        job.package.toLowerCase().includes(term)
-      );
-    });
+  .filter((job) =>
+    filter === "All"
+      ? true
+      : (job.type ?? "").toLowerCase() === filter.toLowerCase()
+  )
+  .filter((job) => {
+    const term = searchTerm.toLowerCase();
+
+    return (
+      (job.company ?? "").toLowerCase().includes(term) ||
+      (job.role ?? "").toLowerCase().includes(term) ||
+      (job.location ?? "").toLowerCase().includes(term) ||
+      (job.package ?? "").toLowerCase().includes(term)
+    );
+  });
+
 
   return (
     <ProtectedRoute allowedRoles={["student"]}>

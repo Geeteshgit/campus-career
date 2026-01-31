@@ -54,7 +54,7 @@ const AdminManagement = (): React.JSX.Element => {
         payload,
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
 
       setAdmins((prev) => [...prev, response.data.admin]);
@@ -77,13 +77,13 @@ const AdminManagement = (): React.JSX.Element => {
         updatedValues,
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
 
       setAdmins((prev) =>
         prev.map((a) =>
-          a._id === selectedAdmin._id ? response.data.updatedUser : a
-        )
+          a._id === selectedAdmin._id ? response.data.updatedUser : a,
+        ),
       );
 
       setEditAdminModalOpen(false);
@@ -139,21 +139,30 @@ const AdminManagement = (): React.JSX.Element => {
               Add Admin
             </PrimaryButton>
           </div>
+          <div className="flex flex-col gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 rounded-xl bg-neutral-100 p-3">
+              <p className="text-sm font-semibold text-neutral-600">Name</p>
+              <p className="text-sm font-semibold text-neutral-600">Email</p>
+              <p className="text-sm font-semibold text-neutral-600">Phone</p>
+            </div>
 
-          <div className="flex flex-col gap-2">
-            {admins.length === 0 ? (
-              <p className="text-neutral-500 text-center">No admins found</p>
-            ) : (
-              admins.map((admin) => (
-                <AdminCard
-                  key={admin._id}
-                  admin={admin}
-                  role={role}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
-                />
-              ))
-            )}
+            <div className="flex flex-col gap-1">
+              {admins.length === 0 ? (
+                <p className="text-neutral-500 text-center py-4">
+                  No admins found
+                </p>
+              ) : (
+                admins.map((admin) => (
+                  <AdminCard
+                    key={admin._id}
+                    admin={admin}
+                    role={role}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                  />
+                ))
+              )}
+            </div>
           </div>
         </main>
 

@@ -30,21 +30,19 @@ const AdminProfile = (): React.JSX.Element => {
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
-  if (!user) return <div className="p-6">Loading...</div>;
-
   const handleSave = async () => {
     try {
       const response = await axios.put(
         `${env.USER_SERVICE}/api/user`,
-        { phone: user.phone },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { phone: user?.phone },
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       dispatch(
         login({
           user: response.data.updatedUser,
           studentProfile: null,
-        })
+        }),
       );
 
       alert("Profile updated successfully!");
@@ -74,37 +72,44 @@ const AdminProfile = (): React.JSX.Element => {
             <DangerButton onClick={handleLogout}>Logout</DangerButton>
           </div>
 
-          <div className="bg-neutral-50 border border-neutral-300 rounded-xl p-6 flex flex-col gap-6">
-            <div className="flex flex-col md:flex-row gap-6">
-              <div className="w-full">
-                <FormLabel>Name</FormLabel>
-                <ReadOnlyField value={user.name} />
+          {!user ? (
+            <div className="p-6">Loading...</div>
+          ) : (
+            <div className="bg-neutral-50 border border-neutral-300 rounded-xl p-6 flex flex-col gap-6">
+              <div className="flex flex-col md:flex-row gap-6">
+                <div className="w-full">
+                  <FormLabel>Name</FormLabel>
+                  <ReadOnlyField value={user.name} />
+                </div>
+
+                <div className="w-full">
+                  <FormLabel>Email</FormLabel>
+                  <ReadOnlyField value={user.email} />
+                </div>
               </div>
 
-              <div className="w-full">
-                <FormLabel>Email</FormLabel>
-                <ReadOnlyField value={user.email} />
+              <div>
+                <FormLabel>Phone Number</FormLabel>
+                <InputField
+                  name="phone"
+                  placeholder="Phone Number"
+                  value={user.phone}
+                  onChange={(e) =>
+                    dispatch(
+                      updateUserField({
+                        field: "phone",
+                        value: e.target.value,
+                      }),
+                    )
+                  }
+                />
               </div>
+
+              <PrimaryButton onClick={handleSave}>Save</PrimaryButton>
+
+              <ProfileChangePassword />
             </div>
-
-            <div>
-              <FormLabel>Phone Number</FormLabel>
-              <InputField
-                name="phone"
-                placeholder="Phone Number"
-                value={user.phone}
-                onChange={(e) =>
-                  dispatch(
-                    updateUserField({ field: "phone", value: e.target.value })
-                  )
-                }
-              />
-            </div>
-
-            <PrimaryButton onClick={handleSave}>Save</PrimaryButton>
-
-            <ProfileChangePassword />
-          </div>
+          )}
         </main>
       </>
     </ProtectedRoute>
