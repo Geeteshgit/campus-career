@@ -19,6 +19,7 @@ const AdminManagement = (): React.JSX.Element => {
   const role = user?.role ?? "admin";
 
   const [admins, setAdmins] = useState<AdminUser[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [addAdminModalOpen, setAddAdminModalOpen] = useState(false);
   const [editAdminModalOpen, setEditAdminModalOpen] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState<AdminUser | null>(null);
@@ -34,7 +35,10 @@ const AdminManagement = (): React.JSX.Element => {
 
       setAdmins(response.data.admins);
     } catch (err) {
+      setLoading(false);
       console.error("Failed to fetch admins:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -140,19 +144,21 @@ const AdminManagement = (): React.JSX.Element => {
             </PrimaryButton>
           </div>
           <div className="flex flex-col gap-2">
-            <div className="grid grid-cols-4 gap-3 rounded-xl bg-blue-50 p-3">
+            <div className="grid grid-cols-4 gap-3 rounded-xl bg-blue-50 p-4">
               <p className="text-sm font-semibold text-neutral-600">Name</p>
               <p className="text-sm font-semibold text-neutral-600">Email</p>
-              <p className="text-sm font-semibold text-neutral-600">Phone</p>
+              <p className="text-sm font-semibold text-neutral-600 text-center">
+                Phone
+              </p>
+              <p className="text-sm font-semibold text-neutral-600 text-center">
+                Actions
+              </p>
             </div>
-
-            <div className="flex flex-col gap-1">
-              {admins.length === 0 ? (
-                <p className="text-neutral-500 text-center py-4">
-                  No admins found
-                </p>
-              ) : (
-                admins.map((admin) => (
+            {loading ? (
+              <p className="text-center py-10 text-neutral-500">Loading...</p>
+            ) : admins.length > 0 ? (
+              <div className="flex flex-col gap-1">
+                {admins.map((admin) => (
                   <AdminCard
                     key={admin._id}
                     admin={admin}
@@ -160,9 +166,13 @@ const AdminManagement = (): React.JSX.Element => {
                     onEdit={handleEdit}
                     onDelete={handleDelete}
                   />
-                ))
-              )}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-neutral-500 text-center py-10">
+                No admins found
+              </p>
+            )}
           </div>
         </main>
 

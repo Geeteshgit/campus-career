@@ -32,7 +32,7 @@ interface Student {
 
 const StudentManagement = (): React.JSX.Element => {
   const [students, setStudents] = useState<Student[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const [selectedProgram, setSelectedProgram] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
@@ -78,6 +78,7 @@ const StudentManagement = (): React.JSX.Element => {
       });
       setStudents(response.data.students);
     } catch (err) {
+      setLoading(false);
       console.error("Error fetching students:", err);
     } finally {
       setLoading(false);
@@ -234,9 +235,10 @@ const StudentManagement = (): React.JSX.Element => {
               <p className="text-sm font-semibold text-neutral-600">Enrollment No</p>
               <p className="text-sm font-semibold text-neutral-600">Name</p>
               <p className="text-sm font-semibold text-neutral-600">Email</p>
-              <p className="text-sm font-semibold text-neutral-600">Phone</p>
+              <p className="text-sm font-semibold text-neutral-600 text-center">Phone</p>
               <p className="text-sm font-semibold text-neutral-600 text-center">Year</p>
               <p className="text-sm font-semibold text-neutral-600 text-center">CGPA</p>
+              <p className="text-sm font-semibold text-neutral-600 text-center">Actions</p>
             </div>
             {loading ? (
               <p className="text-center py-10 text-neutral-500">Loading...</p>
