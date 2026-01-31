@@ -26,7 +26,7 @@ const JobApplicationsCard = ({
   return (
     <div
       onClick={() => onOpenModal(job)}
-      className="grid grid-cols-1 sm:grid-cols-3 items-center gap-3 p-4 border border-neutral-200 hover:bg-neutral-50 transition cursor-pointer"
+      className="grid grid-cols-1 sm:grid-cols-3 items-center gap-3 p-4 border border-neutral-200 hover:bg-blue-50 transition cursor-pointer"
     >
       <div className="flex flex-col">
         <p className="text-base sm:text-lg font-semibold text-neutral-900">

@@ -17,7 +17,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 
 const Postings = (): React.JSX.Element => {
   const [jobs, setJobs] = useState<Job[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [jobModalOpen, setJobModalOpen] = useState(false);
@@ -71,6 +71,7 @@ const Postings = (): React.JSX.Element => {
 
   const fetchJobs = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(`${env.JOB_SERVICE}/api/jobs`, {
         headers: { Authorization: `Bearer ${token}` },
       });

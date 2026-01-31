@@ -15,6 +15,7 @@ import { env } from "@/config/env";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useAppSelector } from "@/redux/hooks";
 import SuccessButton from "@/components/ui/SuccessButton";
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface Student {
   _id: string;
@@ -32,10 +33,14 @@ interface Student {
 
 const StudentManagement = (): React.JSX.Element => {
   const [students, setStudents] = useState<Student[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [page, setPage] = useState<number>(1);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [selectedProgram, setSelectedProgram] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
+
+  const debouncedSearch = useDebounce(searchTerm, 300);
 
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
@@ -71,14 +76,28 @@ const StudentManagement = (): React.JSX.Element => {
     { name: "cgpa", placeholder: "CGPA", type: "number" },
   ];
 
-  const fetchStudents = async () => {
+  const fetchStudents = async ({
+    reset = false,
+    pageNumber = 1,
+  }: {
+    reset?: boolean;
+    pageNumber?: number;
+  }) => {
     try {
+      setLoading(true);
       const response = await axios.get(`${env.USER_SERVICE}/api/student`, {
+        params: {
+          page: pageNumber,
+          program: selectedProgram,
+          search: debouncedSearch,
+        },
         headers: { Authorization: `Bearer ${token}` },
       });
-      setStudents(response.data.students);
+      setStudents((prev) =>
+        reset ? response.data.students : [...prev, ...response.data.students],
+      );
+      setHasMore(response.data.hasMore);
     } catch (err) {
-      setLoading(false);
       console.error("Error fetching students:", err);
     } finally {
       setLoading(false);
@@ -136,24 +155,9 @@ const StudentManagement = (): React.JSX.Element => {
   };
 
   useEffect(() => {
-    if (token) fetchStudents();
-  }, [token]);
-
-  const filteredByProgram =
-    selectedProgram === "All"
-      ? students
-      : students.filter((s) => s.program === selectedProgram);
-
-  const filteredStudents = loading
-    ? []
-    : filteredByProgram.filter((student) => {
-        const term = searchTerm.toLowerCase();
-        return (
-          (student.userId?.name ?? "").toLowerCase().includes(term) ||
-          (student.enrollmentNumber ?? "").toLowerCase().includes(term) ||
-          (student.program ?? "").toLowerCase().includes(term)
-        );
-      });
+    setPage(1);
+    fetchStudents({ reset: true, pageNumber: 1 });
+  }, [selectedProgram, debouncedSearch]);
 
   const openEditModal = (student: Student) => {
     const flatStudent = {
@@ -189,7 +193,7 @@ const StudentManagement = (): React.JSX.Element => {
       );
 
       alert("Students uploaded successfully");
-      fetchStudents();
+      fetchStudents({ reset: true, pageNumber: 1 });
     } catch (err) {
       alert("Upload failed");
     }
@@ -228,23 +232,33 @@ const StudentManagement = (): React.JSX.Element => {
             onFilterChange={setSelectedProgram}
             searchTerm={searchTerm}
             onSearchChange={setSearchTerm}
-            placeholder="Search by name, enrollment number, or program..."
+            placeholder="Search by name or enrollment number"
           />
           <div className="flex flex-col gap-2">
             <div className="grid grid-cols-7 gap-3 rounded-xl bg-blue-50 p-4">
-              <p className="text-sm font-semibold text-neutral-600">Enrollment No</p>
+              <p className="text-sm font-semibold text-neutral-600">
+                Enrollment No
+              </p>
               <p className="text-sm font-semibold text-neutral-600">Name</p>
               <p className="text-sm font-semibold text-neutral-600">Email</p>
-              <p className="text-sm font-semibold text-neutral-600 text-center">Phone</p>
-              <p className="text-sm font-semibold text-neutral-600 text-center">Year</p>
-              <p className="text-sm font-semibold text-neutral-600 text-center">CGPA</p>
-              <p className="text-sm font-semibold text-neutral-600 text-center">Actions</p>
+              <p className="text-sm font-semibold text-neutral-600 text-center">
+                Phone
+              </p>
+              <p className="text-sm font-semibold text-neutral-600 text-center">
+                Year
+              </p>
+              <p className="text-sm font-semibold text-neutral-600 text-center">
+                CGPA
+              </p>
+              <p className="text-sm font-semibold text-neutral-600 text-center">
+                Actions
+              </p>
             </div>
             {loading ? (
               <p className="text-center py-10 text-neutral-500">Loading...</p>
-            ) : filteredStudents.length > 0 ? (
+            ) : students.length > 0 ? (
               <div className="flex flex-col gap-1">
-                {filteredStudents.map((student) => (
+                {students.map((student) => (
                   <StudentCard
                     key={student._id}
                     student={student}
@@ -252,6 +266,20 @@ const StudentManagement = (): React.JSX.Element => {
                     onDelete={() => handleDelete(student)}
                   />
                 ))}
+                {hasMore && (
+                  <div className="flex justify-center py-6">
+                    <PrimaryButton
+                      disabled={loading}
+                      onClick={() => {
+                        const nextPage = page + 1;
+                        setPage(nextPage);
+                        fetchStudents({ pageNumber: nextPage });
+                      }}
+                    >
+                      {loading ? "Loading..." : "Show More"}
+                    </PrimaryButton>
+                  </div>
+                )}
               </div>
             ) : (
               <p className="text-neutral-500 text-center py-10">

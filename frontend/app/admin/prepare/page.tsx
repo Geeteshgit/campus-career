@@ -28,7 +28,7 @@ const PrepareAdminPage = (): React.JSX.Element => {
 
   const [resources, setResources] = useState<ResourceLink[]>([]);
   const [activeProgram, setActiveProgram] = useState(programNames[0]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState("");
 
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -51,6 +51,7 @@ const PrepareAdminPage = (): React.JSX.Element => {
 
   const fetchResources = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(
         `${env.ACADEMIC_CONFIG_SERVICE}/api/resources/admin`,
         {
@@ -59,7 +60,6 @@ const PrepareAdminPage = (): React.JSX.Element => {
       );
       setResources(response.data.resources);
     } catch (err) {
-      setLoading(false);
       console.error("Error fetching resources:", err);
     } finally {
       setLoading(false);

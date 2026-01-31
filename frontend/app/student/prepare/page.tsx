@@ -20,7 +20,7 @@ const Prepare = (): React.JSX.Element => {
   const studentProgram = student?.program;
 
   const [materials, setMaterials] = useState<Resource[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -30,6 +30,7 @@ const Prepare = (): React.JSX.Element => {
       if (!studentProgram) return;
 
       try {
+        setLoading(true);
         const response = await axios.get(
           `${env.ACADEMIC_CONFIG_SERVICE}/api/resources/student?program=${studentProgram}`,
           {
@@ -38,9 +39,9 @@ const Prepare = (): React.JSX.Element => {
         );
 
         setMaterials(response.data.resources);
-        setLoading(false);
       } catch (err) {
         console.error("Failed to fetch resources:", err);
+      } finally {
         setLoading(false);
       }
     };

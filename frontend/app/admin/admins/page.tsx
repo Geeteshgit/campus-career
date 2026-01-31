@@ -19,7 +19,7 @@ const AdminManagement = (): React.JSX.Element => {
   const role = user?.role ?? "admin";
 
   const [admins, setAdmins] = useState<AdminUser[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [addAdminModalOpen, setAddAdminModalOpen] = useState(false);
   const [editAdminModalOpen, setEditAdminModalOpen] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState<AdminUser | null>(null);
@@ -29,13 +29,13 @@ const AdminManagement = (): React.JSX.Element => {
 
   const fetchAdmins = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(`${env.USER_SERVICE}/api/admin`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       setAdmins(response.data.admins);
     } catch (err) {
-      setLoading(false);
       console.error("Failed to fetch admins:", err);
     } finally {
       setLoading(false);

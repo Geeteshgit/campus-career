@@ -12,7 +12,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 
 const Analytics = (): React.JSX.Element => {
   const [statsData, setStatsData] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;

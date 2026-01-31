@@ -26,7 +26,7 @@ const StudentHomepage = (): React.JSX.Element => {
 
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [jobModalOpen, setJobModalOpen] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [filter, setFilter] = useState<"All" | "Full-Time" | "Internship">(
     "All",
   );
