@@ -23,17 +23,17 @@ type ResourceLink = {
 const PrepareAdminPage = (): React.JSX.Element => {
   const user = useAppSelector((state) => state.user.user);
   const programs = useAppSelector((state) => state.academic.programs);
-  const programNames = programs.map(program => program.name);
+  const programNames = programs.map((program) => program.name);
   const isAdmin = user?.role !== "student";
 
   const [resources, setResources] = useState<ResourceLink[]>([]);
   const [activeProgram, setActiveProgram] = useState(programNames[0]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState("");
 
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editResource, setEditResource] = useState<ResourceLink | null>(null);
-
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -55,11 +55,14 @@ const PrepareAdminPage = (): React.JSX.Element => {
         `${env.ACADEMIC_CONFIG_SERVICE}/api/resources/admin`,
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
       setResources(response.data.resources);
     } catch (err) {
+      setLoading(false);
       console.error("Error fetching resources:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,7 +75,7 @@ const PrepareAdminPage = (): React.JSX.Element => {
       const response = await axios.post(
         `${env.ACADEMIC_CONFIG_SERVICE}/api/resources`,
         data,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       setResources((prev) => [...prev, response.data.resource]);
@@ -103,13 +106,13 @@ const PrepareAdminPage = (): React.JSX.Element => {
       const response = await axios.put(
         `${env.ACADEMIC_CONFIG_SERVICE}/api/resources/${editResource._id}`,
         data,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       setResources((prev) =>
         prev.map((r) =>
-          r._id === editResource._id ? response.data.updatedResource : r
-        )
+          r._id === editResource._id ? response.data.updatedResource : r,
+        ),
       );
 
       setEditModalOpen(false);
@@ -151,7 +154,9 @@ const PrepareAdminPage = (): React.JSX.Element => {
           />
 
           <div className="flex flex-col gap-4">
-            {filteredResources.length > 0 ? (
+            {loading ? (
+              <p className="text-center py-10 text-neutral-500">Loading...</p>
+            ) : filteredResources.length > 0 ? (
               filteredResources.map((item) => (
                 <div
                   key={item._id}
@@ -169,7 +174,6 @@ const PrepareAdminPage = (): React.JSX.Element => {
                       {item.url}
                     </a>
                   </div>
-
                   {isAdmin && (
                     <div className="flex gap-2 justify-end">
                       <PrimaryButton
