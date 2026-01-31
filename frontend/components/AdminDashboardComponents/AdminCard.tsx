@@ -26,11 +26,11 @@ const AdminCard = ({
   const isSuperAdmin = role === "super_admin";
 
   return (
-    <div className="bg-white border border-neutral-200 rounded-xl p-3 shadow-sm hover:shadow-md transition flex flex-col gap-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 w-full">
-        <p className="font-semibold text-neutral-900">{admin.name}</p>
-        <p className="font-semibold text-neutral-900">{admin.email}</p>
-        <p className="font-semibold text-neutral-900">{admin.phone}</p>
+    <div className="bg-white hover:bg-blue-50/70 border border-neutral-200 rounded-xl p-3 shadow-sm transition flex flex-col gap-4">
+      <div className="grid grid-cols-4 gap-3 w-full">
+        <p className="font-semibold text-neutral-900 truncate">{admin.name}</p>
+        <p className="font-semibold text-neutral-900 truncate">{admin.email}</p>
+        <p className="font-semibold text-neutral-900 truncate">{admin.phone}</p>
         {isSuperAdmin && (
           <div className="flex justify-end gap-2">
             <PrimaryButton onClick={() => onEdit(admin)}>Edit</PrimaryButton>

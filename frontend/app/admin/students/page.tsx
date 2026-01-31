@@ -229,24 +229,34 @@ const StudentManagement = (): React.JSX.Element => {
             onSearchChange={setSearchTerm}
             placeholder="Search by name, enrollment number, or program..."
           />
-          {loading ? (
-            <p className="text-center py-10 text-neutral-500">Loading...</p>
-          ) : filteredStudents.length > 0 ? (
-            <div className="flex flex-col gap-4">
-              {filteredStudents.map((student) => (
-                <StudentCard
-                  key={student._id}
-                  student={student}
-                  onEdit={() => openEditModal(student)}
-                  onDelete={() => handleDelete(student)}
-                />
-              ))}
+          <div className="flex flex-col gap-2">
+            <div className="grid grid-cols-7 gap-3 rounded-xl bg-blue-50 p-4">
+              <p className="text-sm font-semibold text-neutral-600">Enrollment No</p>
+              <p className="text-sm font-semibold text-neutral-600">Name</p>
+              <p className="text-sm font-semibold text-neutral-600">Email</p>
+              <p className="text-sm font-semibold text-neutral-600">Phone</p>
+              <p className="text-sm font-semibold text-neutral-600 text-center">Year</p>
+              <p className="text-sm font-semibold text-neutral-600 text-center">CGPA</p>
             </div>
-          ) : (
-            <p className="text-neutral-500 text-center py-10">
-              No students found
-            </p>
-          )}
+            {loading ? (
+              <p className="text-center py-10 text-neutral-500">Loading...</p>
+            ) : filteredStudents.length > 0 ? (
+              <div className="flex flex-col gap-1">
+                {filteredStudents.map((student) => (
+                  <StudentCard
+                    key={student._id}
+                    student={student}
+                    onEdit={() => openEditModal(student)}
+                    onDelete={() => handleDelete(student)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <p className="text-neutral-500 text-center py-10">
+                No students found
+              </p>
+            )}
+          </div>
         </main>
         {addModalOpen && (
           <AddModal

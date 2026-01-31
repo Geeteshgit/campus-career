@@ -139,8 +139,8 @@ const AdminManagement = (): React.JSX.Element => {
               Add Admin
             </PrimaryButton>
           </div>
-          <div className="flex flex-col gap-3">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 rounded-xl bg-neutral-100 p-3">
+          <div className="flex flex-col gap-2">
+            <div className="grid grid-cols-4 gap-3 rounded-xl bg-blue-50 p-3">
               <p className="text-sm font-semibold text-neutral-600">Name</p>
               <p className="text-sm font-semibold text-neutral-600">Email</p>
               <p className="text-sm font-semibold text-neutral-600">Phone</p>
