@@ -35,6 +35,14 @@ const applicationSchema = new mongoose.Schema(
       type: String,
       required: [true, "Year is required"],
     },
+    batch: {
+      type: String,
+      required: [true, "Batch is required"],
+    },
+    specialization: {
+      type: String,
+      required: [true, "Specialization is required"],
+    },
     cgpa: {
       type: Number,
       required: [true, "Student CGPA is required"],

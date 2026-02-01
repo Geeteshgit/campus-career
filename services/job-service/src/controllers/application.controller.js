@@ -3,7 +3,7 @@ import { Application } from "../models/application.model.js";
 export const applyToJob = async (req, res) => {
   try {
     const { jobId } = req.params;
-    const { name, phone, enrollmentNumber, program, year, cgpa } = req.body;
+    const { name, phone, enrollmentNumber, program, year, batch, specialization, cgpa } = req.body;
 
     const email = req.user.email;
 
@@ -25,6 +25,8 @@ export const applyToJob = async (req, res) => {
       enrollmentNumber,
       program,
       year,
+      batch,
+      specialization,
       cgpa
     });
 
