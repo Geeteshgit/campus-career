@@ -78,6 +78,10 @@ export const getAllStudents = async (req, res) => {
       filter.program = req.query.program;
     }
 
+    if(req.query.year) {
+      filter.year = req.query.year;
+    }
+
     if (req.query.search) {
       filter.$or = [
         { "enrollmentNumber": { $regex: req.query.search, $options: "i" } },
