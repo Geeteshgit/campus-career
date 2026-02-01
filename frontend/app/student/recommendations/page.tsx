@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import JobModal, { Job } from "@/components/JobModalComponents/JobModal";
 import PageHeader from "@/components/PageHeader";
-import PostingsContainer from "@/components/PostingsContainer";
+import StudentPostingsContainer from "@/components/StudentPostingsContainer";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import axios from "axios";
@@ -138,7 +138,7 @@ const StudentHomepage = (): React.JSX.Element => {
               No job recommendations available right now.
             </p>
           ) : (
-            <PostingsContainer
+            <StudentPostingsContainer
               title="Recommended Postings"
               jobs={filteredJobs}
               onJobClick={handleJobClick}

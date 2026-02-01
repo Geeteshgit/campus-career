@@ -21,7 +21,7 @@ const AdminDashboard = (): React.JSX.Element => {
     {
       title: "Manage Postings",
       subtitle: "View, create, edit, and remove job postings",
-      href: "/postings",
+      href: "/admin/postings",
       icon: <FiBriefcase />,
     },
     {

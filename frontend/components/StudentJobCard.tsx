@@ -2,12 +2,12 @@ import { FaBuilding, FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
 import { Job } from "./JobModalComponents/JobModal";
 import React from "react";
 
-interface JobCardProps {
+interface StudentJobCardProps {
   job: Job;
   onClick: () => void;
 }
 
-const JobCard = ({ job, onClick }: JobCardProps): React.JSX.Element => {
+const StudentJobCard = ({ job, onClick }: StudentJobCardProps): React.JSX.Element => {
   return (
     <div
       onClick={onClick}
@@ -60,4 +60,4 @@ const JobCard = ({ job, onClick }: JobCardProps): React.JSX.Element => {
   );
 };
 
-export default JobCard;
+export default StudentJobCard;

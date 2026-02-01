@@ -29,7 +29,7 @@ const Login = (): React.JSX.Element => {
   
   useEffect(() => {
     if (user) {
-      if (user.role === "student") router.replace("/postings");
+      if (user.role === "student") router.replace("/student/postings");
       else router.replace("/admin/dashboard");
     }
 

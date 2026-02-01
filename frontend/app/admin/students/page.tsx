@@ -89,7 +89,6 @@ const StudentManagement = (): React.JSX.Element => {
     pageNumber?: number;
   }) => {
     try {
-      setLoading(true);
       const response = await axios.get(`${env.USER_SERVICE}/api/student`, {
         params: {
           page: pageNumber,
@@ -105,8 +104,6 @@ const StudentManagement = (): React.JSX.Element => {
       setHasMore(response.data.hasMore);
     } catch (err) {
       console.error("Error fetching students:", err);
-    } finally {
-      setLoading(false);
     }
   };
 

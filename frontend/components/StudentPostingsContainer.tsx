@@ -1,22 +1,22 @@
 "use client";
 
-import JobCard from "@/components/JobCard";
+import JobCard from "@/components/StudentJobCard";
 import { Job } from "@/components/JobModalComponents/JobModal";
 import React from "react";
 
-interface PostingsContainerProps {
+interface StudentPostingsContainerProps {
   title: string;
   jobs: Job[];
   onJobClick: (job: Job) => void;
   inactive?: boolean;
 }
 
-const PostingsContainer = ({
+const StudentPostingsContainer = ({
   title,
   jobs,
   onJobClick,
   inactive = false,
-}: PostingsContainerProps): React.JSX.Element => {
+}: StudentPostingsContainerProps): React.JSX.Element => {
   return (
     <section className="flex flex-col gap-5">
       <h2 className="text-xl font-semibold text-neutral-800">{title}</h2>
@@ -38,4 +38,4 @@ const PostingsContainer = ({
   );
 };
 
-export default PostingsContainer;
+export default StudentPostingsContainer;

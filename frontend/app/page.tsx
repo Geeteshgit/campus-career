@@ -14,7 +14,7 @@ const Homepage = () => {
     }
 
     if(user?.role === "student") {
-      router.replace("/postings");
+      router.replace("/student/postings");
     }
     else if(user?.role === "admin" || user?.role === "super_admin") {
       router.replace("/admin/dashboard");

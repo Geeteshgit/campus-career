@@ -27,7 +27,7 @@ const Navbar = (): React.JSX.Element => {
   const studentLinks: NavLink[] = [
     {
       link: "Postings",
-      href: "/postings",
+      href: "/student/postings",
       icon: <FiBriefcase className="w-4 h-4" />,
     },
     {
