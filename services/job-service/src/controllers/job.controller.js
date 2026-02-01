@@ -53,35 +53,45 @@ export const createJob = async (req, res) => {
 export const getRecommendedJobs = async (req, res) => {
   try {
     const { student } = req.body;
+
     if (!student) {
-      return res.status(400).json({ message: "Student data missing" });
-    }
-
-    const jobs = await Job.find({ status: "Active" });
-    if (!jobs.length) {
-      return res.status(404).json({ message: "No jobs available" });
-    }
-
-    const recommendations = await recommendJobs(student, jobs);
-
-    if (!recommendations.length) {
-      return res.status(200).json({
-        message: "No suitable job recommendations found",
+      return res.status(400).json({
+        message: "Student data missing",
         recommendations: [],
       });
     }
 
-    const recommendedJobs = recommendations
-      .sort((a, b) => b.score - a.score)
-      .map((rec) => jobs[rec.jobIndex]);
+    const jobs = await Job.find({ status: "Active" }).lean();
 
+    if (!jobs.length) {
+      return res.status(200).json({
+        message: "No jobs available",
+        recommendations: [],
+      });
+    }
+
+    let recommendations;
+    try {
+      recommendations = await recommendJobs(jobs, student);
+    } catch (err) {
+      console.error("AI recommendation failed:", err);
+
+      return res.status(200).json({
+        message: "Recommendations temporarily unavailable",
+        recommendations: [],
+      });
+    }
     return res.status(200).json({
       message: "Job recommendations generated",
-      recommendations: recommendedJobs,
+      recommendations,
     });
   } catch (err) {
-    console.error("Error Recommending Jobs:", err);
-    return res.status(500).json({ message: "Failed to recommend jobs" });
+    console.error("Unexpected recommendation error:", err);
+
+    return res.status(200).json({
+      message: "Recommendations temporarily unavailable",
+      recommendations: [],
+    });
   }
 };
 

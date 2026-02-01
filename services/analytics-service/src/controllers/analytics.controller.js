@@ -12,16 +12,12 @@ export const getPlatformAnalytics = async (req, res) => {
     if (!token)
       return res.status(401).json({ message: "Unauthorized: Token missing" });
 
-    const [userStats, studentStats, jobStats, applicationStats, programStats] =
+    const [userStats, studentStats, jobStats, applicationStats] =
       await Promise.all([
         callService(`${process.env.USER_SERVICE}/api/user/stats`, token),
         callService(`${process.env.USER_SERVICE}/api/student/stats`, token),
         callService(`${process.env.JOB_SERVICE}/api/jobs/stats`, token),
         callService(`${process.env.JOB_SERVICE}/api/applications/stats`, token),
-        callService(
-          `${process.env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs/stats`,
-          token
-        ),
       ]);
 
     return res.status(200).json({
@@ -31,7 +27,6 @@ export const getPlatformAnalytics = async (req, res) => {
         students: studentStats,
         jobs: jobStats,
         applications: applicationStats,
-        programs: programStats,
       },
     });
   } catch (err) {

@@ -1,13 +1,11 @@
 import express from "express";
 import cors from "cors";
 import { env } from "./config/env.js";
-import { connectToDB } from "./config/db.js";
 import { connectRabbitMQ } from "./utils/rabbitmq.js";
 import analyticsRoutes from "./routes/analytics.route.js";
 
 const app = express();
 
-await connectToDB();
 await connectRabbitMQ();
 
 app.use(cors({

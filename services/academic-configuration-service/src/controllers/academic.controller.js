@@ -14,20 +14,6 @@ export const getPrograms = async (req, res) => {
   }
 };
 
-export const getProgramStats = async (req, res) => {
-  try {
-    const totalPrograms = await Program.countDocuments();
-
-    return res.status(200).json({
-      message: "Fetched program stats",
-      stats: { totalPrograms },
-    });
-  } catch (err) {
-    console.error("Error Fetching Program Stats:", err);
-    return res.status(500).json({ message: "Failed to fetch program stats" });
-  }
-};
-
 export const createProgram = async (req, res) => {
   try {
     const { name } = req.body;

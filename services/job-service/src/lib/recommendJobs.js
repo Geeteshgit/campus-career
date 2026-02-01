@@ -4,25 +4,38 @@ const ai = new GoogleGenAI({});
 
 export const recommendJobs = async (jobs, student) => {
   try {
+    const jobSummaries = jobs.map((job, index) => ({
+      jobIndex: index,
+      role: job.role,
+      company: job.company,
+      location: job.location,
+      type: job.type,
+      requirements: job.requirements,
+      eligibility: job.eligibility,
+    }));
+
     const prompt = `
-You are an AI job recommendation engine.
+You are an AI job matching engine.
 
-Your task:
-- Analyze the student's profile
-- Compare it with job details, requirements, and eligibility
-- Recommend ONLY jobs that are truly relevant
-- EXCLUDE jobs with weak or no match.
+TASK:
+Assign a matchScore (0–100) for EACH job.
 
-Scoring rules:
-- 0 = Not relevant
-- 100 = Perfect match
-- You MUST return only jobs with score >= 60
+SCORING:
+- Skills & requirements: 0–40
+- Role relevance: 0–30
+- Eligibility fit: 0–20
+- Location / job type: 0–10
 
-STRICT OUTPUT FORMAT (ONLY JSON, no comments, no markdown):
+RULES:
+- Score EVERY job
+- Scores MUST vary
+- Output ONLY valid JSON
+
+OUTPUT FORMAT:
 {
-  "recommendations": [
-    { "jobIndex": 0, "score": 87 },
-    { "jobIndex": 2, "score": 72 }
+  "scores": [
+    { "jobIndex": 0, "matchScore": 78 },
+    { "jobIndex": 1, "matchScore": 45 }
   ]
 }
 
@@ -30,7 +43,7 @@ Student:
 ${JSON.stringify(student)}
 
 Jobs:
-${JSON.stringify(jobs)}
+${JSON.stringify(jobSummaries)}
 `;
 
     const response = await ai.models.generateContent({
@@ -38,30 +51,36 @@ ${JSON.stringify(jobs)}
       contents: prompt,
     });
 
-    // ⭐ Gemini returns a "text()" function
-    let raw = response.text;
+    const raw = response.text;
+    if (!raw) throw new Error("Gemini returned empty response");
 
-    if (!raw) throw new Error("Gemini returned no response");
+    const cleaned = raw.replace(/```json|```/g, "").trim();
+    const parsed = JSON.parse(cleaned);
 
-    // ⭐ Remove markdown code fences like ```json ... ```
-    raw = raw.replace(/```json/g, "").replace(/```/g, "").trim();
-
-    // ⭐ Parse JSON safely
-    let data;
-    try {
-      data = JSON.parse(raw);
-    } catch (err) {
-      console.error("RAW AI OUTPUT:", raw);
-      throw new Error("AI returned invalid JSON");
+    if (!Array.isArray(parsed.scores)) {
+      throw new Error("Invalid AI response");
     }
 
-    if (!data.recommendations || !Array.isArray(data.recommendations)) {
-      throw new Error("AI returned invalid structure (missing recommendations)");
-    }
+    const scoredJobs = jobs.map((job, index) => {
+      const scoreObj = parsed.scores.find(
+        (s) => s.jobIndex === index
+      );
 
-    return data.recommendations;
+      return {
+        ...job,
+        matchScore: scoreObj ? scoreObj.matchScore : 0,
+      };
+    });
+
+    scoredJobs.sort((a, b) => b.matchScore - a.matchScore);
+
+    return scoredJobs;
   } catch (err) {
     console.error("Error recommending jobs:", err);
-    return [];
+
+    return jobs.map((job) => ({
+      ...job,
+      matchScore: 0,
+    }));
   }
 };
