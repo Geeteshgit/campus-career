@@ -13,13 +13,17 @@ import EditModal from "@/components/ui/EditModal";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { env } from "@/config/env";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import SearchBar from "@/components/ui/SearchBar";
 
 const AdminManagement = (): React.JSX.Element => {
   const user = useAppSelector((state) => state.user.user);
   const role = user?.role ?? "admin";
 
   const [admins, setAdmins] = useState<AdminUser[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
+
+  const [searchTerm, setSearchTerm] = useState("");
+
   const [addAdminModalOpen, setAddAdminModalOpen] = useState(false);
   const [editAdminModalOpen, setEditAdminModalOpen] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState<AdminUser | null>(null);
@@ -58,7 +62,7 @@ const AdminManagement = (): React.JSX.Element => {
         payload,
         {
           headers: { Authorization: `Bearer ${token}` },
-        },
+        }
       );
 
       setAdmins((prev) => [...prev, response.data.admin]);
@@ -81,13 +85,13 @@ const AdminManagement = (): React.JSX.Element => {
         updatedValues,
         {
           headers: { Authorization: `Bearer ${token}` },
-        },
+        }
       );
 
       setAdmins((prev) =>
         prev.map((a) =>
-          a._id === selectedAdmin._id ? response.data.updatedUser : a,
-        ),
+          a._id === selectedAdmin._id ? response.data.updatedUser : a
+        )
       );
 
       setEditAdminModalOpen(false);
@@ -129,6 +133,14 @@ const AdminManagement = (): React.JSX.Element => {
     },
   ];
 
+  // 🔍 SEARCH FILTER
+  const filteredAdmins = admins.filter((admin) =>
+    [admin.name, admin.email, admin.phone]
+      .join(" ")
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
+
   return (
     <ProtectedRoute allowedRoles={["admin", "super_admin"]}>
       <>
@@ -143,22 +155,35 @@ const AdminManagement = (): React.JSX.Element => {
               Add Admin
             </PrimaryButton>
           </div>
+
+          <div className="flex justify-end">
+            <SearchBar
+              value={searchTerm}
+              onChange={setSearchTerm}
+              placeholder="Search by name, email or phone..."
+            />
+          </div>
+
           <div className="flex flex-col gap-2">
-            <div className="grid grid-cols-4 gap-3 rounded-xl bg-blue-50 p-4">
+            <div className="grid grid-cols-5 gap-3 rounded-xl bg-blue-50 p-4">
               <p className="text-sm font-semibold text-neutral-600">Name</p>
               <p className="text-sm font-semibold text-neutral-600">Email</p>
               <p className="text-sm font-semibold text-neutral-600 text-center">
                 Phone
               </p>
               <p className="text-sm font-semibold text-neutral-600 text-center">
+                Role
+              </p>
+              <p className="text-sm font-semibold text-neutral-600 text-center">
                 Actions
               </p>
             </div>
+
             {loading ? (
               <p className="text-center py-10 text-neutral-500">Loading...</p>
-            ) : admins.length > 0 ? (
+            ) : filteredAdmins.length > 0 ? (
               <div className="flex flex-col gap-1">
-                {admins.map((admin) => (
+                {filteredAdmins.map((admin) => (
                   <AdminCard
                     key={admin._id}
                     admin={admin}

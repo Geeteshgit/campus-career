@@ -6,9 +6,10 @@ import Navbar from "@/components/Navbar";
 import PageHeader from "@/components/PageHeader";
 import JobModal, { Job } from "@/components/JobModalComponents/JobModal";
 import JobApplicationsCard from "@/components/JobApplicationsCard";
-import FilterSearchBar from "@/components/ui/FilterSearchBar";
 import { env } from "@/config/env";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import FilterButtons from "@/components/ui/FilterButtons";
+import SearchBar from "@/components/ui/SearchBar";
 
 const ApplicationsPage = (): React.JSX.Element => {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -16,7 +17,7 @@ const ApplicationsPage = (): React.JSX.Element => {
   const [jobModalOpen, setJobModalOpen] = useState(false);
 
   const [filter, setFilter] = useState<"All" | "Full-Time" | "Internship">(
-    "All"
+    "All",
   );
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -29,7 +30,7 @@ const ApplicationsPage = (): React.JSX.Element => {
         `${env.JOB_SERVICE}/api/applications/my`,
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
 
       const applications = response.data.applications;
@@ -75,15 +76,18 @@ const ApplicationsPage = (): React.JSX.Element => {
             title="My Applications"
             subtitle="View all jobs you applied for"
           />
-
-          <FilterSearchBar
-            filters={["All", "Full-Time", "Internship"]}
-            activeFilter={filter}
-            onFilterChange={(f) => setFilter(f as any)}
-            searchTerm={searchTerm}
-            onSearchChange={setSearchTerm}
-            placeholder="Search jobs..."
-          />
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+            <FilterButtons
+              filters={["All", "Full-Time", "Internship"]}
+              activeFilter={filter}
+              onFilterChange={(f) => setFilter(f as any)}
+            />
+            <SearchBar
+              value={searchTerm}
+              onChange={setSearchTerm}
+              placeholder="Search by company or role..."
+            />
+          </div>
 
           <div className="flex flex-col bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden">
             {filteredJobs.map((job) => (

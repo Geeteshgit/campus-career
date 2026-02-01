@@ -10,8 +10,9 @@ import EditModal from "@/components/ui/EditModal";
 import { useAppSelector } from "@/redux/hooks";
 import { env } from "@/config/env";
 import JobApplicationsCard from "@/components/JobApplicationsCard";
-import FilterSearchBar from "@/components/ui/FilterSearchBar";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import FilterButtons from "@/components/ui/FilterButtons";
+import SearchBar from "@/components/ui/SearchBar";
 
 const exportCSV = (data: any[], filename: string) => {
   if (!data || data.length === 0) {
@@ -24,7 +25,7 @@ const exportCSV = (data: any[], filename: string) => {
     .map((row) =>
       Object.values(row)
         .map((v) => `"${v}"`)
-        .join(",")
+        .join(","),
     )
     .join("\n");
 
@@ -54,7 +55,7 @@ const ApplicationsAdminPage = (): React.JSX.Element => {
   const [editingJob, setEditingJob] = useState<Job | null>(null);
 
   const [filter, setFilter] = useState<"All" | "Full-Time" | "Internship">(
-    "All"
+    "All",
   );
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -126,13 +127,13 @@ const ApplicationsAdminPage = (): React.JSX.Element => {
       const response = await axios.put(
         `${env.JOB_SERVICE}/api/jobs/${editingJob._id}`,
         finalData,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       setJobs((prev) =>
         prev.map((j) =>
-          j._id === editingJob._id ? response.data.updatedJob : j
-        )
+          j._id === editingJob._id ? response.data.updatedJob : j,
+        ),
       );
 
       setEditModalOpen(false);
@@ -167,7 +168,7 @@ const ApplicationsAdminPage = (): React.JSX.Element => {
     try {
       const response = await axios.get(
         `${env.JOB_SERVICE}/api/applications/${job._id}`,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       const applicants = response.data.applicants;
@@ -216,15 +217,18 @@ const ApplicationsAdminPage = (): React.JSX.Element => {
             title="Applications Management"
             subtitle="Manage all job postings & view applicants"
           />
-
-          <FilterSearchBar
-            filters={["All", "Full-Time", "Internship"]}
-            activeFilter={filter}
-            onFilterChange={(f) => setFilter(f as any)}
-            searchTerm={searchTerm}
-            onSearchChange={setSearchTerm}
-            placeholder="Search by company or role..."
-          />
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+            <FilterButtons
+              filters={["All", "Full-Time", "Internship"]}
+              activeFilter={filter}
+              onFilterChange={(f) => setFilter(f as any)}
+            />
+            <SearchBar
+              value={searchTerm}
+              onChange={setSearchTerm}
+              placeholder="Search by company or role..."
+            />
+          </div>
 
           <div className="flex flex-col bg-white border border-neutral-200 rounded-xl shadow-sm overflow-hidden">
             {filteredJobs.map((job) => (

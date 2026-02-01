@@ -4,13 +4,14 @@ import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import JobModal, { Job } from "@/components/JobModalComponents/JobModal";
 import PageHeader from "@/components/PageHeader";
-import FilterSearchBar from "@/components/ui/FilterSearchBar";
 import PostingsContainer from "@/components/PostingsContainer";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import axios from "axios";
 import { env } from "@/config/env";
 import { setRecommendations } from "@/redux/features/user/userSlice";
+import FilterButtons from "@/components/ui/FilterButtons";
+import SearchBar from "@/components/ui/SearchBar";
 
 const StudentHomepage = (): React.JSX.Element => {
   const dispatch = useAppDispatch();
@@ -86,22 +87,21 @@ const StudentHomepage = (): React.JSX.Element => {
   }, [studentProfile]);
 
   const filteredJobs = recommendations
-  .filter((job) =>
-    filter === "All"
-      ? true
-      : (job.type ?? "").toLowerCase() === filter.toLowerCase()
-  )
-  .filter((job) => {
-    const term = searchTerm.toLowerCase();
+    .filter((job) =>
+      filter === "All"
+        ? true
+        : (job.type ?? "").toLowerCase() === filter.toLowerCase(),
+    )
+    .filter((job) => {
+      const term = searchTerm.toLowerCase();
 
-    return (
-      (job.company ?? "").toLowerCase().includes(term) ||
-      (job.role ?? "").toLowerCase().includes(term) ||
-      (job.location ?? "").toLowerCase().includes(term) ||
-      (job.package ?? "").toLowerCase().includes(term)
-    );
-  });
-
+      return (
+        (job.company ?? "").toLowerCase().includes(term) ||
+        (job.role ?? "").toLowerCase().includes(term) ||
+        (job.location ?? "").toLowerCase().includes(term) ||
+        (job.package ?? "").toLowerCase().includes(term)
+      );
+    });
 
   return (
     <ProtectedRoute allowedRoles={["student"]}>
@@ -114,16 +114,20 @@ const StudentHomepage = (): React.JSX.Element => {
             subtitle="AI-based internship & placement recommendations"
           />
 
-          <FilterSearchBar
-            filters={["All", "Full-Time", "Internship"]}
-            activeFilter={filter}
-            onFilterChange={(f) =>
-              setFilter(f as "All" | "Full-Time" | "Internship")
-            }
-            searchTerm={searchTerm}
-            onSearchChange={setSearchTerm}
-            placeholder="Search by company, role, or location..."
-          />
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+            <FilterButtons
+              filters={["All", "Full-Time", "Internship"]}
+              activeFilter={filter}
+              onFilterChange={(f) =>
+                setFilter(f as "All" | "Full-Time" | "Internship")
+              }
+            />
+            <SearchBar
+              value={searchTerm}
+              onChange={setSearchTerm}
+              placeholder="Search by company, role, or location..."
+            />
+          </div>
 
           {loading ? (
             <p className="text-center text-neutral-600 py-10">

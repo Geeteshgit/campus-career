@@ -5,7 +5,6 @@ import axios from "axios";
 
 import Navbar from "@/components/Navbar";
 import PageHeader from "@/components/PageHeader";
-import FilterSearchBar from "@/components/ui/FilterSearchBar";
 import StudentCard from "@/components/AdminDashboardComponents/StudentCard";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import AddModal, { FieldConfig } from "@/components/ui/AddModal";
@@ -16,6 +15,8 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import { useAppSelector } from "@/redux/hooks";
 import SuccessButton from "@/components/ui/SuccessButton";
 import { useDebounce } from "@/hooks/useDebounce";
+import FilterButtons from "@/components/ui/FilterButtons";
+import SearchBar from "@/components/ui/SearchBar";
 
 interface Student {
   _id: string;
@@ -36,8 +37,11 @@ const StudentManagement = (): React.JSX.Element => {
   const [page, setPage] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
+  
+  const years = ["1st Year", "2nd Year", "3rd Year", "4th Year", "5th Year"];
 
   const [selectedProgram, setSelectedProgram] = useState("All");
+  const [selectedYear, setSelectedYear] = useState(years[0]);
   const [searchTerm, setSearchTerm] = useState("");
 
   const debouncedSearch = useDebounce(searchTerm, 300);
@@ -48,6 +52,7 @@ const StudentManagement = (): React.JSX.Element => {
 
   const programs = useAppSelector((state) => state.academic.programs);
   const programNames = programs.map((program) => program.name);
+
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -89,6 +94,7 @@ const StudentManagement = (): React.JSX.Element => {
         params: {
           page: pageNumber,
           program: selectedProgram,
+          year: selectedYear,
           search: debouncedSearch,
         },
         headers: { Authorization: `Bearer ${token}` },
@@ -157,7 +163,7 @@ const StudentManagement = (): React.JSX.Element => {
   useEffect(() => {
     setPage(1);
     fetchStudents({ reset: true, pageNumber: 1 });
-  }, [selectedProgram, debouncedSearch]);
+  }, [selectedProgram, selectedYear, debouncedSearch]);
 
   const openEditModal = (student: Student) => {
     const flatStudent = {
@@ -226,14 +232,25 @@ const StudentManagement = (): React.JSX.Element => {
               </PrimaryButton>
             </div>
           </div>
-          <FilterSearchBar
-            filters={["All", ...programNames]}
-            activeFilter={selectedProgram}
-            onFilterChange={setSelectedProgram}
-            searchTerm={searchTerm}
-            onSearchChange={setSearchTerm}
-            placeholder="Search by name or enrollment number"
-          />
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+            <div className="flex flex-col gap-2">
+              <FilterButtons
+                filters={["All", ...programNames]}
+                activeFilter={selectedProgram}
+                onFilterChange={setSelectedProgram}
+              />
+              <FilterButtons
+                filters={[...years]}
+                activeFilter={selectedYear}
+                onFilterChange={setSelectedYear}
+              />
+            </div>
+            <SearchBar
+              value={searchTerm}
+              onChange={setSearchTerm}
+              placeholder="Search by name or enrollment number"
+            />
+          </div>
           <div className="flex flex-col gap-2">
             <div className="grid grid-cols-7 gap-3 rounded-xl bg-blue-50 p-4">
               <p className="text-sm font-semibold text-neutral-600">

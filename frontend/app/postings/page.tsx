@@ -6,7 +6,6 @@ import axios from "axios";
 import Navbar from "@/components/Navbar";
 import JobModal, { Job } from "@/components/JobModalComponents/JobModal";
 import PageHeader from "@/components/PageHeader";
-import FilterSearchBar from "@/components/ui/FilterSearchBar";
 import PostingsContainer from "@/components/PostingsContainer";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import AddModal, { FieldConfig } from "@/components/ui/AddModal";
@@ -14,6 +13,8 @@ import EditModal from "@/components/ui/EditModal";
 import { useAppSelector } from "@/redux/hooks";
 import { env } from "@/config/env";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import FilterButtons from "@/components/ui/FilterButtons";
+import SearchBar from "@/components/ui/SearchBar";
 
 const Postings = (): React.JSX.Element => {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -26,7 +27,7 @@ const Postings = (): React.JSX.Element => {
   const [editModalOpen, setEditModalOpen] = useState(false);
 
   const [filter, setFilter] = useState<"All" | "Full-Time" | "Internship">(
-    "All"
+    "All",
   );
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -99,7 +100,7 @@ const Postings = (): React.JSX.Element => {
           program: student?.program,
           cgpa: student?.cgpa,
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       alert("Applied successfully!");
@@ -125,7 +126,7 @@ const Postings = (): React.JSX.Element => {
         jobData,
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
 
       setJobs((prev) => [...prev, response.data.job]);
@@ -152,13 +153,13 @@ const Postings = (): React.JSX.Element => {
       const response = await axios.put(
         `${env.JOB_SERVICE}/api/jobs/${selectedJob._id}`,
         finalData,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       setJobs((prev) =>
         prev.map((job) =>
-          job._id === selectedJob._id ? response.data.updatedJob : job
-        )
+          job._id === selectedJob._id ? response.data.updatedJob : job,
+        ),
       );
 
       setEditModalOpen(false);
@@ -231,15 +232,18 @@ const Postings = (): React.JSX.Element => {
               </Link>
             )}
           </div>
-
-          <FilterSearchBar
-            filters={["All", "Full-Time", "Internship"]}
-            activeFilter={filter}
-            onFilterChange={(f) => setFilter(f as any)}
-            searchTerm={searchTerm}
-            onSearchChange={setSearchTerm}
-            placeholder="Search by company, role, or location..."
-          />
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+            <FilterButtons
+              filters={["All", "Full-Time", "Internship"]}
+              activeFilter={filter}
+              onFilterChange={(f) => setFilter(f as any)}
+            />
+            <SearchBar
+              value={searchTerm}
+              onChange={setSearchTerm}
+              placeholder="Search by company, role, or location..."
+            />
+          </div>
 
           {loading ? (
             <p className="text-center text-neutral-600 py-10">

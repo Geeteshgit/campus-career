@@ -8,10 +8,11 @@ import PrimaryButton from "@/components/ui/PrimaryButton";
 import DangerButton from "@/components/ui/DangerButton";
 import AddModal, { FieldConfig } from "@/components/ui/AddModal";
 import EditModal from "@/components/ui/EditModal";
-import FilterSearchBar from "@/components/ui/FilterSearchBar";
 import { env } from "@/config/env";
 import { useAppSelector } from "@/redux/hooks";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import FilterButtons from "@/components/ui/FilterButtons";
+import SearchBar from "@/components/ui/SearchBar";
 
 type ResourceLink = {
   _id: string;
@@ -143,16 +144,18 @@ const PrepareAdminPage = (): React.JSX.Element => {
               </PrimaryButton>
             )}
           </div>
-
-          <FilterSearchBar
-            filters={programNames}
-            activeFilter={activeProgram}
-            onFilterChange={setActiveProgram}
-            searchTerm={searchTerm}
-            onSearchChange={setSearchTerm}
-            placeholder="Search resources..."
-          />
-
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+            <FilterButtons
+              filters ={programNames}
+              activeFilter={activeProgram}
+              onFilterChange={(f) => setActiveProgram(f as any)}
+            />
+            <SearchBar
+              value={searchTerm}
+              onChange={setSearchTerm}
+              placeholder="Search resources..."
+            />
+          </div>
           <div className="flex flex-col gap-4">
             {loading ? (
               <p className="text-center py-10 text-neutral-500">Loading...</p>
