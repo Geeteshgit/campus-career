@@ -75,7 +75,7 @@ const StudentManagement = (): React.JSX.Element => {
       name: "year",
       placeholder: "Select Year",
       type: "select",
-      options: ["1st Year", "2nd Year", "3rd Year", "4th Year"],
+      options: years,
     },
     { name: "phone", placeholder: "Phone Number", type: "text" },
     { name: "cgpa", placeholder: "CGPA", type: "number" },

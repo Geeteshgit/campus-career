@@ -31,7 +31,7 @@ const JobModalHeader = ({
       </p>
 
       <div className="flex items-center gap-2 mt-2">
-        <span className="px-3 py-1 text-xs font-semibold rounded-full bg-neutral-100 text-neutral-700">
+        <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-700">
           {job.type}
         </span>
         <span

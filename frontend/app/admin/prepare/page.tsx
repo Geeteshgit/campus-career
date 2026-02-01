@@ -163,7 +163,7 @@ const PrepareAdminPage = (): React.JSX.Element => {
               filteredResources.map((item) => (
                 <div
                   key={item._id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 border border-neutral-200 rounded-lg hover:bg-blue-50 transition"
                 >
                   <div>
                     <p className="font-semibold text-neutral-900">

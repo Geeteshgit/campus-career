@@ -26,7 +26,7 @@ const AdminCard = ({
   const isSuperAdmin = role === "super_admin";
 
   return (
-    <div className="bg-white hover:bg-blue-50/70 border border-neutral-200 rounded-xl p-4 shadow-sm transition flex flex-col gap-4">
+    <div className="bg-white hover:bg-blue-50 border border-neutral-200 rounded-xl p-4 shadow-sm transition flex flex-col gap-4">
       <div className="grid grid-cols-5 gap-3 w-full items-center">
         <p className="font-semibold text-neutral-900 truncate">{admin.name}</p>
         <p className="font-semibold text-neutral-900 truncate">{admin.email}</p>

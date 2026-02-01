@@ -28,7 +28,7 @@ const StudentCard = ({
   onDelete,
 }: StudentCardProps): React.JSX.Element => {
   return (
-    <div className="bg-white hover:bg-blue-50/70 border border-neutral-200 rounded-xl p-4 shadow-sm transition flex flex-col gap-4">
+    <div className="bg-white hover:bg-blue-50 border border-neutral-200 rounded-xl p-4 shadow-sm transition flex flex-col gap-4">
       <div className="grid grid-cols-7 items-center gap-3">
         <p className="font-semibold text-neutral-900 truncate">
           {student.enrollmentNumber}
