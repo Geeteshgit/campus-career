@@ -90,7 +90,7 @@ const Navbar = (): React.JSX.Element => {
         </div>
 
         {/* Desktop Nav Links */}
-        <ul className="hidden md:flex gap-8 text-neutral-800 font-medium">
+        <ul className="hidden lg:flex gap-8 text-neutral-800 font-medium">
           {navLinks.map((link) => {
             const isActive =
               pathname === link.href || pathname.startsWith(link.href + "/");
@@ -115,7 +115,7 @@ const Navbar = (): React.JSX.Element => {
 
         {/* Mobile Menu */}
         <button
-          className="md:hidden text-neutral-800 focus:outline-none"
+          className="lg:hidden text-neutral-800 focus:outline-none"
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? <IoClose size={28} /> : <IoMenuOutline size={28} />}
@@ -123,7 +123,7 @@ const Navbar = (): React.JSX.Element => {
       </nav>
 
       {isOpen && (
-        <div className="md:hidden bg-white shadow-lg border-t border-gray-200">
+        <div className="lg:hidden bg-white shadow-lg border-t border-gray-200">
           <ul className="flex flex-col items-center py-4 gap-4 text-neutral-700 font-medium">
             {navLinks.map((link) => {
               const isActive =

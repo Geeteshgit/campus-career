@@ -5,7 +5,6 @@ import Navbar from "@/components/Navbar";
 import PageHeader from "@/components/PageHeader";
 import UsersAnalytics from "@/components/AnalyticsComponents/UserAnalytics";
 import JobsAnalytics from "@/components/AnalyticsComponents/JobAnalytics";
-import AcademicAnalytics from "@/components/AnalyticsComponents/AcademicAnalytics";
 import axios from "axios";
 import { env } from "@/config/env";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -52,7 +51,7 @@ const Analytics = (): React.JSX.Element => {
               Loading analytics...
             </p>
           ) : !statsData ? (
-            <p className="text-center text-neutral-500 py-10">
+            <p className="text-center text-neutral-600 py-10">
               Analytics data is currently unavailable.
             </p>
           ) : (
@@ -72,10 +71,6 @@ const Analytics = (): React.JSX.Element => {
                 fulltime={statsData.jobs.stats.fullTime}
                 internship={statsData.jobs.stats.internship}
                 application={statsData.applications.stats.totalApplications}
-              />
-
-              <AcademicAnalytics
-                totalPrograms={statsData.programs.stats.totalPrograms}
               />
             </>
           )}
