@@ -78,14 +78,14 @@ export const getAllStudents = async (req, res) => {
       filter.program = req.query.program;
     }
 
-    if(req.query.year) {
+    if (req.query.year) {
       filter.year = req.query.year;
     }
 
     if (req.query.search) {
       filter.$or = [
-        { "enrollmentNumber": { $regex: req.query.search, $options: "i" } },
-        { "name": { $regex: req.query.search, $options: "i" } },
+        { enrollmentNumber: { $regex: req.query.search, $options: "i" } },
+        { name: { $regex: req.query.search, $options: "i" } },
       ];
     }
 
@@ -96,13 +96,11 @@ export const getAllStudents = async (req, res) => {
       .limit(50);
 
     const total = await Student.countDocuments(filter);
-    return res
-      .status(200)
-      .json({
-        message: "Fetched all students",
-        students,
-        hasMore: skip + students.length < total,
-      });
+    return res.status(200).json({
+      message: "Fetched all students",
+      students,
+      hasMore: skip + students.length < total,
+    });
   } catch (err) {
     console.error("Error Fetching Students: ", err);
     return res.status(500).json({ message: "Failed to fetch students" });
@@ -167,6 +165,8 @@ export const createStudent = async (req, res) => {
       enrollmentNumber,
       program,
       year,
+      batch,
+      specialization,
       cgpa,
     });
 
@@ -210,31 +210,29 @@ export const bulkCreateStudents = async (req, res) => {
     );
     const existingEmailSet = new Set(existingUsers.map((u) => u.email));
 
-    const usersToInsert = await Promise.all(
-      students
-        .filter((s) => !existingEmailSet.has(s.email))
-        .map(async (s) => ({
-          name: s.name,
-          email: s.email,
-          phone: s.phone,
-          password: await hashPassword(`BUCC@#${s.phone}`),
-          role: "student",
-        })),
-    );
+    const newStudents = students.filter((s) => !existingEmailSet.has(s.email));
 
-    if (!usersToInsert.length) {
-      return res.status(409).json({ message: "All students already exist" });
-    }
+    const usersToInsert = await Promise.all(
+      newStudents.map(async (s) => ({
+        name: s.name,
+        email: s.email,
+        phone: s.phone,
+        password: await hashPassword(`BUCC@#${s.phone}`),
+        role: "student",
+      })),
+    );
 
     const createdUsers = await User.insertMany(usersToInsert);
 
     const studentsToInsert = createdUsers.map((user, index) => ({
       userId: user._id,
-      name: students[index].name,
-      enrollmentNumber: students[index].enrollmentNumber,
-      program: students[index].program,
-      year: students[index].year,
-      cgpa: students[index].cgpa,
+      name: newStudents[index].name,
+      enrollmentNumber: newStudents[index].enrollmentNumber,
+      program: newStudents[index].program,
+      year: newStudents[index].year,
+      batch: newStudents[index].batch,
+      specialization: newStudents[index].specialization,
+      cgpa: newStudents[index].cgpa,
     }));
 
     await Student.insertMany(studentsToInsert);
@@ -275,6 +273,8 @@ export const updateStudent = async (req, res) => {
       enrollmentNumber: updates.enrollmentNumber,
       program: updates.program,
       year: updates.year,
+      batch: updates.batch,
+      specialization: updates.specialization,
       cgpa: updates.cgpa,
     };
 
