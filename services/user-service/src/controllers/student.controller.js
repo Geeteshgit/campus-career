@@ -78,7 +78,7 @@ export const getAllStudents = async (req, res) => {
       filter.program = req.query.program;
     }
 
-    if (req.query.year && req.query !== "All") {
+    if (req.query.year && req.query.year !== "All") {
       filter.year = req.query.year;
     }
 
