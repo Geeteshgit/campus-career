@@ -71,7 +71,6 @@ const StudentHomepage = (): React.JSX.Element => {
         { headers: { Authorization: `Bearer ${token}` } },
       );
 
-      console.log(response.data.recommendations);
       dispatch(setRecommendations(response.data.recommendations || []));
     } catch (err) {
       console.error("Failed to fetch recommended jobs:", err);

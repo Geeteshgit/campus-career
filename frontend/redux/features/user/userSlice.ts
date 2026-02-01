@@ -12,6 +12,8 @@ interface StudentProfileData {
   enrollmentNumber: string;
   program: string;
   year: string;
+  batch: string;
+  specialization: string;
   cgpa: string;
   skills?: string;
   resumeUrl?: string;

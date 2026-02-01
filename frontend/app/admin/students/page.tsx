@@ -29,6 +29,8 @@ interface Student {
   enrollmentNumber: string;
   program: string;
   year: string;
+  batch: string;
+  specialization: string;
   cgpa: number;
 }
 
@@ -41,7 +43,7 @@ const StudentManagement = (): React.JSX.Element => {
   const years = ["1st Year", "2nd Year", "3rd Year", "4th Year", "5th Year"];
 
   const [selectedProgram, setSelectedProgram] = useState("All");
-  const [selectedYear, setSelectedYear] = useState(years[0]);
+  const [selectedYear, setSelectedYear] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
 
   const debouncedSearch = useDebounce(searchTerm, 300);
@@ -76,6 +78,16 @@ const StudentManagement = (): React.JSX.Element => {
       placeholder: "Select Year",
       type: "select",
       options: years,
+    },
+    {
+      name: "batch",
+      placeholder: "Batch",
+      type: "text",
+    },
+    {
+      name: "specialization",
+      placeholder: "Specialization",
+      type: "text",
     },
     { name: "phone", placeholder: "Phone Number", type: "text" },
     { name: "cgpa", placeholder: "CGPA", type: "number" },
@@ -159,6 +171,7 @@ const StudentManagement = (): React.JSX.Element => {
 
   useEffect(() => {
     setPage(1);
+    setHasMore(true);
     fetchStudents({ reset: true, pageNumber: 1 });
   }, [selectedProgram, selectedYear, debouncedSearch]);
 
@@ -237,7 +250,7 @@ const StudentManagement = (): React.JSX.Element => {
                 onFilterChange={setSelectedProgram}
               />
               <FilterButtons
-                filters={[...years]}
+                filters={["All", ...years]}
                 activeFilter={selectedYear}
                 onFilterChange={setSelectedYear}
               />
@@ -321,6 +334,8 @@ const StudentManagement = (): React.JSX.Element => {
               enrollmentNumber: selectedStudent.enrollmentNumber,
               program: selectedStudent.program,
               year: selectedStudent.year,
+              batch: selectedStudent.batch,
+              specialization: selectedStudent.specialization,
               cgpa: selectedStudent.cgpa,
             }}
             onClose={() => setEditModalOpen(false)}

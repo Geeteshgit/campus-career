@@ -43,14 +43,14 @@ const StudentProfile = (): React.JSX.Element => {
       const response = await axios.put(
         `${env.USER_SERVICE}/api/user`,
         { phone: user?.phone },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       dispatch(
         login({
           user: response.data.updatedUser,
           studentProfile: student,
-        })
+        }),
       );
 
       alert("Account details updated!");
@@ -73,17 +73,17 @@ const StudentProfile = (): React.JSX.Element => {
                   .map((s) => s.trim())
                   .filter(Boolean)
               : Array.isArray(student?.skills)
-              ? student.skills
-              : [],
+                ? student.skills
+                : [],
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       dispatch(
         login({
           user,
           studentProfile: response.data.updatedStudent,
-        })
+        }),
       );
       dispatch(clearRecommendations());
 
@@ -112,14 +112,14 @@ const StudentProfile = (): React.JSX.Element => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       dispatch(
         login({
           user,
           studentProfile: response.data.updatedStudent,
-        })
+        }),
       );
       dispatch(clearRecommendations());
 
@@ -179,7 +179,7 @@ const StudentProfile = (): React.JSX.Element => {
                       updateUserField({
                         field: "phone",
                         value: e.target.value,
-                      })
+                      }),
                     )
                   }
                 />
@@ -208,6 +208,16 @@ const StudentProfile = (): React.JSX.Element => {
                   <FormLabel>Year</FormLabel>
                   <ReadOnlyField value={student?.year ?? ""} />
                 </div>
+                <div className="w-full">
+                  <FormLabel>Batch</FormLabel>
+                  <ReadOnlyField value={student?.batch ?? ""} />
+                </div>
+              </div>
+              <div className="flex flex-col md:flex-row gap-6">
+                <div className="w-full">
+                  <FormLabel>Specialization</FormLabel>
+                  <ReadOnlyField value={student?.specialization ?? ""} />
+                </div>
 
                 <div className="w-full">
                   <FormLabel>CGPA</FormLabel>
@@ -220,13 +230,12 @@ const StudentProfile = (): React.JSX.Element => {
                         updateStudentField({
                           field: "cgpa",
                           value: e.target.value,
-                        })
+                        }),
                       )
                     }
                   />
                 </div>
               </div>
-
               <div>
                 <FormLabel>Skills</FormLabel>
                 <TextAreaField
@@ -234,7 +243,7 @@ const StudentProfile = (): React.JSX.Element => {
                   value={
                     Array.isArray(student?.skills)
                       ? student.skills.join(", ")
-                      : student?.skills ?? ""
+                      : (student?.skills ?? "")
                   }
                   placeholder="Add your skills..."
                   onChange={(e) =>
@@ -242,7 +251,7 @@ const StudentProfile = (): React.JSX.Element => {
                       updateStudentField({
                         field: "skills",
                         value: e.target.value,
-                      })
+                      }),
                     )
                   }
                 />

@@ -61,6 +61,8 @@ const Postings = (): React.JSX.Element => {
           enrollmentNumber: student?.enrollmentNumber,
           year: student?.year,
           program: student?.program,
+          batch: student?.batch,
+          specialization: student?.specialization,
           cgpa: student?.cgpa,
         },
         { headers: { Authorization: `Bearer ${token}` } },

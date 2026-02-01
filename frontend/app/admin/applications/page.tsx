@@ -185,6 +185,8 @@ const ApplicationsAdminPage = (): React.JSX.Element => {
         phone: a.phone,
         program: a.program,
         year: a.year,
+        batch: a.batch,
+        specialization: a.specialization,
         cgpa: a.cgpa,
         appliedOn: new Date(a.createdAt).toLocaleDateString("en-GB"),
       }));
