@@ -87,8 +87,6 @@ export const getRecommendedJobs = async (req, res) => {
       }))
       .sort((a, b) => b.matchScore - a.matchScore);
 
-    console.log(recommendations);
-
     return res.status(200).json({
       message: "Job recommendations generated",
       recommendations,
