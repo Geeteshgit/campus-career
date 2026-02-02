@@ -9,7 +9,6 @@ import { FiBriefcase, FiUser } from "react-icons/fi";
 import { BiComment } from "react-icons/bi";
 import { useAppSelector } from "@/redux/hooks";
 import { RxDashboard } from "react-icons/rx";
-import { TbWand } from "react-icons/tb";
 
 type NavLink = {
   link: string;
@@ -29,11 +28,6 @@ const Navbar = (): React.JSX.Element => {
       link: "Postings",
       href: "/student/postings",
       icon: <FiBriefcase className="w-4 h-4" />,
-    },
-    {
-      link: "Recommendations",
-      href: "/student/recommendations",
-      icon: <TbWand className="w-4 h-4" />,
     },
     {
       link: "Prepare",
@@ -90,7 +84,7 @@ const Navbar = (): React.JSX.Element => {
         </div>
 
         {/* Desktop Nav Links */}
-        <ul className="hidden lg:flex gap-8 text-neutral-800 font-medium">
+        <ul className="hidden md:flex gap-8 text-neutral-800 font-medium">
           {navLinks.map((link) => {
             const isActive =
               pathname === link.href || pathname.startsWith(link.href + "/");
@@ -115,7 +109,7 @@ const Navbar = (): React.JSX.Element => {
 
         {/* Mobile Menu */}
         <button
-          className="lg:hidden text-neutral-800 focus:outline-none"
+          className="md:hidden text-neutral-800 focus:outline-none"
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? <IoClose size={28} /> : <IoMenuOutline size={28} />}
@@ -123,7 +117,7 @@ const Navbar = (): React.JSX.Element => {
       </nav>
 
       {isOpen && (
-        <div className="lg:hidden bg-white shadow-lg border-t border-gray-200">
+        <div className="md:hidden bg-white shadow-lg border-t border-gray-200">
           <ul className="flex flex-col items-center py-4 gap-4 text-neutral-700 font-medium">
             {navLinks.map((link) => {
               const isActive =

@@ -8,14 +8,12 @@ interface AdminPostingsContainerProps {
   title: string;
   jobs: Job[];
   onJobClick: (job: Job) => void;
-  inactive?: boolean;
 }
 
 const AdminPostingsContainer = ({
   title,
   jobs,
   onJobClick,
-  inactive = false,
 }: AdminPostingsContainerProps): React.JSX.Element => {
   return (
     <section className="flex flex-col gap-4">

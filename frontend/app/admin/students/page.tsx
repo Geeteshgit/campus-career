@@ -17,6 +17,7 @@ import SuccessButton from "@/components/ui/SuccessButton";
 import { useDebounce } from "@/hooks/useDebounce";
 import FilterButtons from "@/components/ui/FilterButtons";
 import SearchBar from "@/components/ui/SearchBar";
+import ViewStudentModal from "@/components/ui/ViewStudentModal";
 
 interface Student {
   _id: string;
@@ -39,22 +40,23 @@ const StudentManagement = (): React.JSX.Element => {
   const [page, setPage] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
-  
+
   const years = ["1st Year", "2nd Year", "3rd Year", "4th Year", "5th Year"];
 
-  const [selectedProgram, setSelectedProgram] = useState("All");
-  const [selectedYear, setSelectedYear] = useState("All");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedProgram, setSelectedProgram] = useState<string>("All");
+  const [selectedYear, setSelectedYear] = useState<string>("All");
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const debouncedSearch = useDebounce(searchTerm, 300);
 
-  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [addModalOpen, setAddModalOpen] = useState<boolean>(false);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
+  const [viewStudentModalOpen, setViewStudentModalOpen] =
+    useState<boolean>(false);
 
   const programs = useAppSelector((state) => state.academic.programs);
   const programNames = programs.map((program) => program.name);
-
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -175,6 +177,17 @@ const StudentManagement = (): React.JSX.Element => {
     fetchStudents({ reset: true, pageNumber: 1 });
   }, [selectedProgram, selectedYear, debouncedSearch]);
 
+  const openViewModal = (student: Student) => {
+    const flatStudent = {
+      ...student,
+      name: student.userId.name,
+      email: student.userId.email,
+      phone: student.userId.phone,
+    };
+    setSelectedStudent({ ...student, ...flatStudent });
+    setViewStudentModalOpen(true);
+  };
+
   const openEditModal = (student: Student) => {
     const flatStudent = {
       ...student,
@@ -262,7 +275,7 @@ const StudentManagement = (): React.JSX.Element => {
             />
           </div>
           <div className="flex flex-col gap-2">
-            <div className="grid grid-cols-7 gap-3 rounded-xl bg-blue-50 p-4">
+            <div className="grid grid-cols-6 gap-3 rounded-xl bg-blue-50 p-4">
               <p className="text-sm font-semibold text-neutral-600">
                 Enrollment No
               </p>
@@ -273,9 +286,6 @@ const StudentManagement = (): React.JSX.Element => {
               </p>
               <p className="text-sm font-semibold text-neutral-600 text-center">
                 Year
-              </p>
-              <p className="text-sm font-semibold text-neutral-600 text-center">
-                CGPA
               </p>
               <p className="text-sm font-semibold text-neutral-600 text-center">
                 Actions
@@ -289,6 +299,7 @@ const StudentManagement = (): React.JSX.Element => {
                   <StudentCard
                     key={student._id}
                     student={student}
+                    onView={() => openViewModal(student)}
                     onEdit={() => openEditModal(student)}
                     onDelete={() => handleDelete(student)}
                   />
@@ -340,6 +351,23 @@ const StudentManagement = (): React.JSX.Element => {
             }}
             onClose={() => setEditModalOpen(false)}
             onSave={handleStudentUpdated}
+          />
+        )}
+        {viewStudentModalOpen && selectedStudent && (
+          <ViewStudentModal
+            title="Student Details"
+            student={{
+              name: selectedStudent.userId.name,
+              email: selectedStudent.userId.email,
+              phone: selectedStudent.userId.phone,
+              enrollmentNumber: selectedStudent.enrollmentNumber,
+              program: selectedStudent.program,
+              year: selectedStudent.year,
+              batch: selectedStudent.batch,
+              specialization: selectedStudent.specialization,
+              cgpa: selectedStudent.cgpa,
+            }}
+            onClose={() => setViewStudentModalOpen(false)}
           />
         )}
       </>

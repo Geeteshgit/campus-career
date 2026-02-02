@@ -3,15 +3,18 @@ import { Job } from "./JobModalComponents/JobModal";
 import React from "react";
 
 interface StudentJobCardProps {
-  job: Job;
+  job: Job & { matchScore?: number };
   onClick: () => void;
 }
 
-const StudentJobCard = ({ job, onClick }: StudentJobCardProps): React.JSX.Element => {
+const StudentJobCard = ({
+  job,
+  onClick,
+}: StudentJobCardProps): React.JSX.Element => {
   return (
     <div
       onClick={onClick}
-      className="p-6 rounded-xl border border-neutral-200 cursor-pointer bg-white hover:shadow-lg hover:scale-[1.01] transition-all duration-300 hover:border-blue-500"
+      className={`p-6 rounded-xl border border-neutral-200 cursor-pointer bg-white hover:shadow-lg hover:scale-[1.01] transition-all duration-300 hover:border-blue-500 ${job.status === "Inactive" ? "opacity-70" : ""}`}
     >
       {/* Header Section */}
       <div className="flex items-start justify-between mb-4">
@@ -51,10 +54,16 @@ const StudentJobCard = ({ job, onClick }: StudentJobCardProps): React.JSX.Elemen
       </div>
 
       {/* package Section */}
-      <div className="mt-4 pt-4 border-t border-neutral-200">
+      <div className="flex justify-between items-center gap-2 mt-4 pt-4 border-t border-neutral-200">
         <p className="text-sm font-semibold text-neutral-900">
           Package: <span className="text-blue-500">{job.package}</span>
         </p>
+
+        {job.status === "Active" && (
+          <span className="text-xs font-semibold text-green-700 bg-green-100 px-2 py-1 rounded-full">
+            {job.matchScore}% Match
+          </span>
+        )}
       </div>
     </div>
   );

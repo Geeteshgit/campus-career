@@ -15,7 +15,9 @@ import FilterButtons from "@/components/ui/FilterButtons";
 import SearchBar from "@/components/ui/SearchBar";
 
 const Postings = (): React.JSX.Element => {
-  const [jobs, setJobs] = useState<Job[]>([]);
+  const [activeJobs, setActiveJobs] = useState([]);
+  const [inactiveJobs, setInactiveJobs] = useState([]);
+
   const [loading, setLoading] = useState(false);
 
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
@@ -33,23 +35,49 @@ const Postings = (): React.JSX.Element => {
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
-  const fetchJobs = async () => {
+  const fetchRecommendations = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${env.JOB_SERVICE}/api/jobs`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setJobs(response.data.jobs);
+      const response = await axios.post(
+        `${env.JOB_SERVICE}/api/jobs/recommendations`,
+        {
+          student: {
+            program: student?.program,
+            year: student?.year,
+            specialization: student?.specialization,
+            cgpa: student?.cgpa,
+            skills: student?.skills,
+          },
+        },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+
+      setActiveJobs(response.data.recommendations);
     } catch (err) {
-      console.error("Failed to fetch jobs:", err);
+      console.error("Failed to fetch recommended jobs:", err);
     } finally {
       setLoading(false);
     }
   };
 
+  const fetchInactiveJobs = async () => {
+    try {
+      const response = await axios.get(`${env.JOB_SERVICE}/api/jobs/inactive`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setInactiveJobs(response.data.jobs);
+    } catch (err) {
+      console.error("Failed to fetch inactive jobs:", err);
+    }
+  };
+
   useEffect(() => {
-    fetchJobs();
-  }, []);
+    if (!student) return;
+
+    fetchRecommendations();
+    fetchInactiveJobs();
+  }, [student]);
 
   const handleApply = async (job: Job) => {
     try {
@@ -82,26 +110,23 @@ const Postings = (): React.JSX.Element => {
     setJobModalOpen(true);
   };
 
-  const filteredByType =
-    filter === "All" ? jobs : jobs.filter((job) => job.type === filter);
+  const applyFilters = (jobs: Job[]) => {
+    const filteredByType =
+      filter === "All" ? jobs : jobs.filter((job) => job.type === filter);
 
-  const filteredJobs = filteredByType.filter((job) => {
-    const term = searchTerm.toLowerCase();
-    const company = job.company?.toLowerCase() ?? "";
-    const role = job.role?.toLowerCase() ?? "";
-    const location = job.location?.toLowerCase() ?? "";
-    const pkg = job.package?.toLowerCase() ?? "";
+    return filteredByType.filter((job) => {
+      const term = searchTerm.toLowerCase();
+      return (
+        job.company?.toLowerCase().includes(term) ||
+        job.role?.toLowerCase().includes(term) ||
+        job.location?.toLowerCase().includes(term) ||
+        job.package?.toLowerCase().includes(term)
+      );
+    });
+  };
 
-    return (
-      company.includes(term) ||
-      role.includes(term) ||
-      location.includes(term) ||
-      pkg.includes(term)
-    );
-  });
-
-  const activeJobs = filteredJobs.filter((job) => job.status === "Active");
-  const inactiveJobs = filteredJobs.filter((job) => job.status === "Inactive");
+  const filteredActiveJobs = applyFilters(activeJobs);
+  const filteredInactiveJobs = applyFilters(inactiveJobs);
 
   return (
     <ProtectedRoute allowedRoles={["student"]}>
@@ -134,24 +159,20 @@ const Postings = (): React.JSX.Element => {
 
           {loading ? (
             <p className="text-center text-neutral-600 py-10">
-              Loading jobs...
+              Loading recommendations...
             </p>
           ) : (
-            <>
-              <StudentPostingsContainer
-                title="Active Postings"
-                jobs={activeJobs}
-                onJobClick={handleJobClick}
-              />
-
-              <StudentPostingsContainer
-                title="Inactive Postings"
-                jobs={inactiveJobs}
-                onJobClick={handleJobClick}
-                inactive
-              />
-            </>
+            <StudentPostingsContainer
+              title="Active Postings"
+              jobs={filteredActiveJobs}
+              onJobClick={handleJobClick}
+            />
           )}
+          <StudentPostingsContainer
+            title="Inactive Postings"
+            jobs={filteredInactiveJobs}
+            onJobClick={handleJobClick}
+          />
         </main>
 
         {jobModalOpen && selectedJob && (

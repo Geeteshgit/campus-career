@@ -228,7 +228,6 @@ const Postings = (): React.JSX.Element => {
                 title="Inactive Postings"
                 jobs={inactiveJobs}
                 onJobClick={handleJobClick}
-                inactive
               />
             </>
           )}

@@ -8,7 +8,6 @@ import {
   updateUserField,
   updateStudentField,
   login,
-  clearRecommendations,
   logout,
 } from "@/redux/features/user/userSlice";
 import ReadOnlyField from "@/components/FormComponents/ReadonlyField";
@@ -85,8 +84,6 @@ const StudentProfile = (): React.JSX.Element => {
           studentProfile: response.data.updatedStudent,
         }),
       );
-      dispatch(clearRecommendations());
-
       alert("Academic details updated!");
     } catch (err) {
       console.error(err);
@@ -121,8 +118,6 @@ const StudentProfile = (): React.JSX.Element => {
           studentProfile: response.data.updatedStudent,
         }),
       );
-      dispatch(clearRecommendations());
-
       alert("Resume uploaded and skills updated successfully!");
       setResume(null);
       setUploading(false);

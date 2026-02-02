@@ -16,7 +16,6 @@ interface StudentProfileData {
   specialization: string;
   cgpa: string;
   skills?: string;
-  resumeUrl?: string;
 }
 
 interface Job {
@@ -38,13 +37,11 @@ interface Job {
 interface UserState {
   user: UserData | null;
   studentProfile: StudentProfileData | null;
-  recommendations: Job[];
 }
 
 const initialState: UserState = {
   user: null,
   studentProfile: null,
-  recommendations: [],
 };
 
 export const userSlice = createSlice({
@@ -68,7 +65,6 @@ export const userSlice = createSlice({
     logout(state) {
       state.user = null;
       state.studentProfile = null;
-      state.recommendations = [];
     },
 
     updateUserField(
@@ -88,12 +84,6 @@ export const userSlice = createSlice({
         state.studentProfile[action.payload.field] = action.payload.value;
       }
     },
-    setRecommendations(state, action: PayloadAction<Job[]>) {
-      state.recommendations = action.payload;
-    },
-    clearRecommendations(state) {
-      state.recommendations = [];
-    },
   },
 });
 
@@ -102,8 +92,6 @@ export const {
   logout,
   updateUserField,
   updateStudentField,
-  setRecommendations,
-  clearRecommendations
 } = userSlice.actions;
 
 export default userSlice.reducer;

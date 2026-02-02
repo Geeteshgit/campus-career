@@ -1,6 +1,6 @@
 "use client";
 
-import JobCard from "@/components/StudentJobCard";
+import StudentJobCard from "@/components/StudentJobCard";
 import { Job } from "@/components/JobModalComponents/JobModal";
 import React from "react";
 
@@ -8,14 +8,12 @@ interface StudentPostingsContainerProps {
   title: string;
   jobs: Job[];
   onJobClick: (job: Job) => void;
-  inactive?: boolean;
 }
 
 const StudentPostingsContainer = ({
   title,
   jobs,
   onJobClick,
-  inactive = false,
 }: StudentPostingsContainerProps): React.JSX.Element => {
   return (
     <section className="flex flex-col gap-5">
@@ -24,9 +22,7 @@ const StudentPostingsContainer = ({
       {jobs.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {jobs.map((job) => (
-            <div key={job._id} className={inactive ? "opacity-70" : ""}>
-              <JobCard job={job} onClick={() => onJobClick(job)} />
-            </div>
+            <StudentJobCard key={job._id} job={job} onClick={() => onJobClick(job)} />
           ))}
         </div>
       ) : (
