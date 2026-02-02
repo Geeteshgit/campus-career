@@ -50,6 +50,20 @@ export const createJob = async (req, res) => {
   }
 };
 
+export const getInactiveJobs = async (req, res) => {
+  try {
+    const jobs = await Job.find({ status: "Inactive" }).sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      message: "Fetched inactive jobs",
+      jobs,
+    });
+  } catch (err) {
+    console.error("Error Fetching Jobs:", err);
+    return res.status(500).json({ message: "Failed to fetch jobs" });
+  }
+};
+
 export const getRecommendedJobs = async (req, res) => {
   try {
     const { student } = req.body;
@@ -100,6 +114,7 @@ export const getRecommendedJobs = async (req, res) => {
     });
   }
 };
+
 
 export const updateJob = async (req, res) => {
   try {
