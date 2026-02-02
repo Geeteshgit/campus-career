@@ -4,46 +4,34 @@ const ai = new GoogleGenAI({});
 
 export const recommendJobs = async (jobs, student) => {
   try {
-    const jobSummaries = jobs.map((job, index) => ({
-      jobIndex: index,
-      role: job.role,
-      company: job.company,
-      location: job.location,
-      type: job.type,
-      requirements: job.requirements,
-      eligibility: job.eligibility,
-    }));
-
     const prompt = `
 You are an AI job matching engine.
 
 TASK:
-Assign a matchScore (0–100) for EACH job.
+For EACH job, assign a matchScore between 0 and 100.
 
-SCORING:
-- Skills & requirements: 0–40
-- Role relevance: 0–30
-- Eligibility fit: 0–20
-- Location / job type: 0–10
+MATCHING CRITERIA:
+- Role relevance to student's skills & specialization
+- Job description relevance
+- Requirements vs student skills
+- Eligibility vs program, year, CGPA
 
 RULES:
 - Score EVERY job
 - Scores MUST vary
-- Output ONLY valid JSON
+- DO NOT explain
+- RETURN ONLY VALID JSON ARRAY
 
 OUTPUT FORMAT:
-{
-  "scores": [
-    { "jobIndex": 0, "matchScore": 78 },
-    { "jobIndex": 1, "matchScore": 45 }
-  ]
-}
+[
+  { "jobId": "string", "matchScore": number }
+]
 
-Student:
+Student Profile:
 ${JSON.stringify(student)}
 
 Jobs:
-${JSON.stringify(jobSummaries)}
+${JSON.stringify(jobs)}
 `;
 
     const response = await ai.models.generateContent({
@@ -52,35 +40,18 @@ ${JSON.stringify(jobSummaries)}
     });
 
     const raw = response.text;
-    if (!raw) throw new Error("Gemini returned empty response");
+    if (!raw) throw new Error("Empty AI response");
 
     const cleaned = raw.replace(/```json|```/g, "").trim();
-    const parsed = JSON.parse(cleaned);
+    const scores = JSON.parse(cleaned);
 
-    if (!Array.isArray(parsed.scores)) {
-      throw new Error("Invalid AI response");
+    if (!Array.isArray(scores)) {
+      throw new Error("Invalid AI response format");
     }
 
-    const scoredJobs = jobs.map((job, index) => {
-      const scoreObj = parsed.scores.find(
-        (s) => s.jobIndex === index
-      );
-
-      return {
-        ...job,
-        matchScore: scoreObj ? scoreObj.matchScore : 0,
-      };
-    });
-
-    scoredJobs.sort((a, b) => b.matchScore - a.matchScore);
-
-    return scoredJobs;
+    return scores;
   } catch (err) {
     console.error("Error recommending jobs:", err);
-
-    return jobs.map((job) => ({
-      ...job,
-      matchScore: 0,
-    }));
+    return []
   }
 };

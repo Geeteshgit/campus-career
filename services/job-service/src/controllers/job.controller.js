@@ -70,17 +70,25 @@ export const getRecommendedJobs = async (req, res) => {
       });
     }
 
-    let recommendations;
-    try {
-      recommendations = await recommendJobs(jobs, student);
-    } catch (err) {
-      console.error("AI recommendation failed:", err);
+    const aiJobPayload = jobs.map((job) => ({
+      jobId: job._id.toString(),
+      role: job.role,
+      description: job.description,
+      requirements: job.requirements,
+      eligibility: job.eligibility,
+    }));
 
-      return res.status(200).json({
-        message: "Recommendations temporarily unavailable",
-        recommendations: [],
-      });
-    }
+    const aiScores = await recommendJobs(aiJobPayload, student);
+    const scoreMap = new Map(aiScores.map((s) => [s.jobId, s.matchScore]));
+    const recommendations = jobs
+      .map((job) => ({
+        ...job,
+        matchScore: scoreMap.get(job._id.toString()) ?? 0,
+      }))
+      .sort((a, b) => b.matchScore - a.matchScore);
+
+    console.log(recommendations);
+
     return res.status(200).json({
       message: "Job recommendations generated",
       recommendations,
