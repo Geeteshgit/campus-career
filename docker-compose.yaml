@@ -1,0 +1,99 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+
+  user-service:
+    build: ./services/user-service
+    container_name: user-service
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./services/user-service/.env
+    volumes:
+      - ./services/user-service:/app
+      - /app/node_modules
+    command: npm run dev
+    depends_on:
+      - mongo
+      - rabbitmq
+
+  job-service:
+    build: ./services/job-service
+    container_name: job-service
+    ports:
+      - "5001:5001"
+    env_file:
+      - ./services/job-service/.env
+    volumes:
+      - ./services/job-service:/app
+      - /app/node_modules
+    command: npm run dev
+    depends_on:
+      - mongo
+      - rabbitmq
+
+  analytics-service:
+    build: ./services/analytics-service
+    container_name: analytics-service
+    ports:
+      - "5002:5002"
+    env_file:
+      - ./services/analytics-service/.env
+    volumes:
+      - ./services/analytics-service:/app
+      - /app/node_modules
+    command: npm run dev
+    depends_on:
+      - mongo
+      - rabbitmq
+
+  message-service:
+    build: ./services/message-service
+    container_name: message-service
+    ports:
+      - "5003:5003"
+    env_file:
+      - ./services/message-service/.env
+    volumes:
+      - ./services/message-service:/app
+      - /app/node_modules
+    command: npm run dev
+    depends_on:
+      - mongo
+      - rabbitmq
+
+  academic-configuration-service:
+    build: ./services/academic-configuration-service
+    container_name: academic-configuration-service
+    ports:
+      - "5004:5004"
+    env_file:
+      - ./services/academic-configuration-service/.env
+    volumes:
+      - ./services/academic-configuration-service:/app
+      - /app/node_modules
+    command: npm run dev
+    depends_on:
+      - mongo
+      - rabbitmq
+
+volumes:
+  mongo-data:
