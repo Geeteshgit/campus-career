@@ -5,15 +5,13 @@ let channel;
 
 export const connectRabbitMQ = async () => {
   if (channel) return channel;
-  let retries = 5;
-  while (retries > 0) {
+  while (true) {
     try {
       connection = await amqp.connect("amqp://rabbitmq:5672");
       channel = await connection.createChannel();
       console.log("RabbitMQ connected");
       return channel;
     } catch (err) {
-      retries--;
       console.error("RabbitMQ connection error:", err);
       await new Promise((res) => setTimeout(res, 5000));
     }

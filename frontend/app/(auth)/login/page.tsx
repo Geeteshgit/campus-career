@@ -50,6 +50,7 @@ const Login = (): React.JSX.Element => {
 
   const loginHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("USER SERVICE:", env.USER_SERVICE);
 
     try {
       const loginResponse = await axios.post(

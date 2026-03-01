@@ -146,7 +146,7 @@ export const getStudentStats = async (req, res) => {
 
 export const createStudent = async (req, res) => {
   try {
-    const { name, email, phone, enrollmentNumber, program, year, cgpa } =
+    const { name, email, phone, enrollmentNumber, program, year, batch, specialization, cgpa } =
       req.body;
 
     const newUser = new User({

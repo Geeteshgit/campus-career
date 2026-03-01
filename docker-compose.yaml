@@ -24,7 +24,7 @@ services:
     build: ./services/user-service
     container_name: user-service
     ports:
-      - "5000:5000"
+      - "5001:5001"
     env_file:
       - ./services/user-service/.env
     volumes:
@@ -39,26 +39,11 @@ services:
     build: ./services/job-service
     container_name: job-service
     ports:
-      - "5001:5001"
+      - "5002:5002"
     env_file:
       - ./services/job-service/.env
     volumes:
       - ./services/job-service:/app
-      - /app/node_modules
-    command: npm run dev
-    depends_on:
-      - mongo
-      - rabbitmq
-
-  analytics-service:
-    build: ./services/analytics-service
-    container_name: analytics-service
-    ports:
-      - "5002:5002"
-    env_file:
-      - ./services/analytics-service/.env
-    volumes:
-      - ./services/analytics-service:/app
       - /app/node_modules
     command: npm run dev
     depends_on:
@@ -89,6 +74,21 @@ services:
       - ./services/academic-configuration-service/.env
     volumes:
       - ./services/academic-configuration-service:/app
+      - /app/node_modules
+    command: npm run dev
+    depends_on:
+      - mongo
+      - rabbitmq
+
+  analytics-service:
+    build: ./services/analytics-service
+    container_name: analytics-service
+    ports:
+      - "5005:5005"
+    env_file:
+      - ./services/analytics-service/.env
+    volumes:
+      - ./services/analytics-service:/app
       - /app/node_modules
     command: npm run dev
     depends_on:
