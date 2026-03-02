@@ -34,6 +34,7 @@ services:
     depends_on:
       - mongo
       - rabbitmq
+    restart: unless-stopped
 
   job-service:
     build: ./services/job-service
@@ -49,6 +50,7 @@ services:
     depends_on:
       - mongo
       - rabbitmq
+    restart: unless-stopped
 
   message-service:
     build: ./services/message-service
@@ -64,6 +66,7 @@ services:
     depends_on:
       - mongo
       - rabbitmq
+    restart: unless-stopped
 
   academic-configuration-service:
     build: ./services/academic-configuration-service
@@ -79,6 +82,7 @@ services:
     depends_on:
       - mongo
       - rabbitmq
+    restart: unless-stopped
 
   analytics-service:
     build: ./services/analytics-service
@@ -94,6 +98,7 @@ services:
     depends_on:
       - mongo
       - rabbitmq
+    restart: unless-stopped
 
 volumes:
   mongo-data:
