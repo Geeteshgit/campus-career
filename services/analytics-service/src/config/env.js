@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const env = {
-    NODE_ENV: process.env.NODE_ENV ?? "development",
     PORT: Number(process.env.PORT) || 5005,
     JWT_SECRET: process.env.JWT_SECRET ?? (() => { throw new Error("Missing JWT SECRET environment variable") })(),
     USER_SERVICE: process.env.USER_SERVICE ?? (() => { throw new Error("Missing USER SERVICE environment variable") })(),

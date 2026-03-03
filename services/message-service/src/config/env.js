@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const env= {
-    NODE_ENV: process.env.NODE_ENV ?? "development",
     PORT: Number(process.env.PORT) || 5003,
     MONGO_USERNAME: process.env.MONGO_URI || "admin",
     MONGO_PASSWORD: process.env.MONGO_PASSWORD || "admin",

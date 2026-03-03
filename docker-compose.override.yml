@@ -1,0 +1,62 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  mongo:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+
+  user-service:
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./services/user-service:/app
+      - /app/node_modules
+    command: npm run dev
+
+  job-service:
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./services/job-service:/app
+      - /app/node_modules
+    command: npm run dev
+
+  message-service:
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./services/message-service:/app
+      - /app/node_modules
+    command: npm run dev
+
+  academic-configuration-service:
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./services/academic-configuration-service:/app
+      - /app/node_modules
+    command: npm run dev
+
+  analytics-service:
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./services/analytics-service:/app
+      - /app/node_modules
+    command: npm run dev
+
+volumes:
+  mongo-data:
