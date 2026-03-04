@@ -32,12 +32,7 @@ const Login = (): React.JSX.Element => {
       if (user.role === "student") router.replace("/student/postings");
       else router.replace("/admin/dashboard");
     }
-
-    const token = localStorage.getItem("token");
-    if (token && !user) {
-      router.replace("/");
-    }
-  }, [user]);
+  }, [user, router]);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -53,37 +48,41 @@ const Login = (): React.JSX.Element => {
     console.log("USER SERVICE:", env.USER_SERVICE);
 
     try {
-      const response = await axios.post(`${env.USER_SERVICE}/api/auth/login`, {
-        email: formData.email,
-        password: formData.password,
-      }, {
-        withCredentials: true,
-      });
-
-      const user = response.data.user;
-
-      initSocket();
-      connectSocket();
-
-      let studentProfile = null;
-
-      if (user.role === "student") {
-        const response = await axios.get(`${env.USER_SERVICE}/api/student/me`, {
-          withCredentials: true,
-        });
-
-        studentProfile = response.data.profile;
-      }
-
-      const academicResponse = await axios.get(
-        `${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs`, {
+      const loginResponse = await axios.post(
+        `${env.USER_SERVICE}/api/auth/login`,
+        {
+          email: formData.email,
+          password: formData.password,
+        },
+        {
           withCredentials: true,
         },
       );
-      dispatch(setPrograms(academicResponse.data.programs));
 
-      dispatch(login({ user, studentProfile }));
+      const user = loginResponse.data.user;
 
+      
+      const [studentResponse, academicResponse] = await Promise.all([
+        user.role === "student"
+        ? axios.get(`${env.USER_SERVICE}/api/student/me`, {
+              withCredentials: true,
+            })
+          : Promise.resolve(null),
+          axios.get(`${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs`, {
+          withCredentials: true,
+        }),
+      ]);
+      
+      const studentProfile = studentResponse
+        ? studentResponse.data.profile
+        : null;
+        
+        dispatch(setPrograms(academicResponse.data.programs));
+        dispatch(login({ user, studentProfile }));
+        
+        initSocket();
+        connectSocket();
+        
       if (user.role === "student") {
         router.push("/student/home");
       } else if (user.role === "admin" || user.role === "super_admin") {

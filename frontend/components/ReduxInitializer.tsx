@@ -12,12 +12,6 @@ const ReduxInitializer = () => {
 
   useEffect(() => {
     const initializeAuth = async () => {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        dispatch(logout());
-        return;
-      }
       try {
         const userResponse = await axios.get(
           `${env.USER_SERVICE}/api/auth/me`,
@@ -27,24 +21,19 @@ const ReduxInitializer = () => {
         );
 
         const user = userResponse.data.user;
-        let studentProfile = null;
 
-        if (user.role === "student") {
-          const studentResponse = await axios.get(
-            `${env.USER_SERVICE}/api/student/me`,
-            { withCredentials: true },
-          );
-
-          studentProfile = studentResponse.data.profile;
-        }
-
+        const [studentResponse, academicResponse] = await Promise.all([
+          user.role === "student"
+            ? axios.get(`${env.USER_SERVICE}/api/student/me`, { withCredentials: true })
+            : Promise.resolve(null),
+          axios.get(`${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs`, {
+            withCredentials: true,
+          }),
+        ]);
+        
+        const studentProfile = studentResponse ? studentResponse.data.profile : null;
+        
         dispatch(login({ user, studentProfile }));
-
-        const academicResponse = await axios.get(
-          `${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs`,
-          { withCredentials: true },
-        );
-
         dispatch(setPrograms(academicResponse.data.programs));
       } catch (err) {
         console.error("Auth initialization failed:", err);

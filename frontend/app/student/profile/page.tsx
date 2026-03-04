@@ -124,11 +124,18 @@ const StudentProfile = (): React.JSX.Element => {
     }
   };
 
-  const handleLogout = () => {
-    disconnectSocket();
-    dispatch(logout());
-    localStorage.removeItem("token");
-    router.replace("/login");
+  const handleLogout = async () => {
+    try {
+      await axios.post(`${env.USER_SERVICE}/api/auth/logout`, {}, {
+        withCredentials: true,
+      });
+      
+      dispatch(logout());
+      disconnectSocket();
+      router.push("/login");
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
   };
 
   return (

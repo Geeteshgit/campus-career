@@ -164,6 +164,12 @@ export const changePassword = async (req, res) => {
     user.password = newPassword;
     await user.save();
 
+    res.clearCookie("token", {
+      httpOnly: true,
+      sameSite: "none",
+      secure: "true",
+    });
+
     return res.status(200).json({ message: "Password changed successfully" });
   } catch (err) {
     console.error("Error Updating User Profile: ", err);
