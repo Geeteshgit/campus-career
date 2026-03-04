@@ -19,16 +19,19 @@ export const loginUser = async (req, res) => {
 
     const token = generateToken(user);
 
+    const userObj = user.toObject();
+    delete userObj.password;
+
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
-      sameSite : "none",
+      sameSite: "none",
     });
-    
+
     return res.status(200).json({
       message: "Logged in successfully",
-      user,
+      user: userObj,
     });
   } catch (err) {
     console.error("Error Logging In User: ", err);
@@ -41,7 +44,7 @@ export const logoutUser = async (req, res) => {
     res.clearCookie("token", {
       httpOnly: true,
       sameSite: "none",
-      secure: "true",
+      secure: true,
     });
 
     return res.status(200).json({ message: "Logged out successfully" });
@@ -126,7 +129,7 @@ export const resetPassword = async (req, res) => {
       });
     }
 
-    if(newPassword !== confirmNewPassword) {
+    if (newPassword !== confirmNewPassword) {
       return res.status(400).json({ message: "Passwords do not match" });
     }
 
@@ -167,7 +170,7 @@ export const changePassword = async (req, res) => {
     res.clearCookie("token", {
       httpOnly: true,
       sameSite: "none",
-      secure: "true",
+      secure: true,
     });
 
     return res.status(200).json({ message: "Password changed successfully" });
