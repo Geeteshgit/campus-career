@@ -36,6 +36,21 @@ export const loginUser = async (req, res) => {
   }
 };
 
+export const logoutUser = async (req, res) => {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      sameSite: "none",
+      secure: "true",
+    });
+
+    return res.status(200).json({ message: "Logged out successfully" });
+  } catch (err) {
+    console.error("Error Logging Out User: ", err);
+    return res.status(500).json({ message: "Logout failed" });
+  }
+};
+
 export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
