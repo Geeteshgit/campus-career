@@ -1,5 +1,6 @@
 import express from "express";
 import http from "http";
+import cookieParser from "cookie-parser";
 import { env } from "./config/env.js";
 import { connectToDB } from "./config/db.js";
 import { connectRabbitMQ } from "./utils/rabbitmq.js";
@@ -14,6 +15,7 @@ await connectToDB();
 await connectRabbitMQ();
 
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

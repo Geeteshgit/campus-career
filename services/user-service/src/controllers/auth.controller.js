@@ -19,10 +19,16 @@ export const loginUser = async (req, res) => {
 
     const token = generateToken(user);
 
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+      sameSite : "none",
+    });
+    
     return res.status(200).json({
       message: "Logged in successfully",
       user,
-      token,
     });
   } catch (err) {
     console.error("Error Logging In User: ", err);

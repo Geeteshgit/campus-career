@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import { env } from "./config/env.js";
 import { connectToDB } from "./config/db.js";
 import authRoutes from "./routes/auth.route.js";
@@ -18,6 +19,7 @@ await connectRabbitMQ();
 app.use(cors({
     origin: "*"
 }));
+app.use(cookieParser());
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
