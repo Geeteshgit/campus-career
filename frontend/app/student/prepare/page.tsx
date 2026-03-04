@@ -22,9 +22,6 @@ const Prepare = (): React.JSX.Element => {
   const [materials, setMaterials] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
   useEffect(() => {
     const fetchResources = async () => {
       if (!studentProgram) return;
@@ -34,8 +31,8 @@ const Prepare = (): React.JSX.Element => {
         const response = await axios.get(
           `${env.ACADEMIC_CONFIG_SERVICE}/api/resources/student?program=${studentProgram}`,
           {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+            withCredentials: true,
+          },
         );
 
         setMaterials(response.data.resources);
@@ -47,7 +44,7 @@ const Prepare = (): React.JSX.Element => {
     };
 
     fetchResources();
-  }, [studentProgram, token]);
+  }, [studentProgram]);
 
   return (
     <ProtectedRoute allowedRoles={["student"]}>

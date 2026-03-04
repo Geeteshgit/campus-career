@@ -34,15 +34,12 @@ const StudentProfile = (): React.JSX.Element => {
   const [resume, setResume] = useState<File | null>(null);
   const [uploading, setUploading] = useState<boolean>(false);
 
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
   const handleAccountInfoSave = async () => {
     try {
       const response = await axios.put(
         `${env.USER_SERVICE}/api/user`,
         { phone: user?.phone },
-        { headers: { Authorization: `Bearer ${token}` } },
+        { withCredentials: true },
       );
 
       dispatch(
@@ -75,7 +72,7 @@ const StudentProfile = (): React.JSX.Element => {
                 ? student.skills
                 : [],
         },
-        { headers: { Authorization: `Bearer ${token}` } },
+        { withCredentials: true },
       );
 
       dispatch(
@@ -106,9 +103,7 @@ const StudentProfile = (): React.JSX.Element => {
         `${env.USER_SERVICE}/api/student/me/resume`,
         formData,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
 

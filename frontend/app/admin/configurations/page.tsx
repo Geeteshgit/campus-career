@@ -18,16 +18,13 @@ const ConfigurationsPage = (): React.JSX.Element => {
   const dispatch = useDispatch();
   const programs = useAppSelector((state) => state.academic.programs);
 
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
   const fetchPrograms = async () => {
     try {
       const response = await axios.get(
         `${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs`,
         {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+          withCredentials: true,
+        },
       );
 
       dispatch(setPrograms(response.data.programs));
@@ -48,13 +45,13 @@ const ConfigurationsPage = (): React.JSX.Element => {
         `${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs`,
         { name: newProgram.trim() },
         {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+          withCredentials: true,
+        },
       );
 
       const fetchPrograms = await axios.get(
         `${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs`,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { withCredentials: true },
       );
       dispatch(setPrograms(fetchPrograms.data.programs));
       setNewProgram("");
@@ -69,13 +66,13 @@ const ConfigurationsPage = (): React.JSX.Element => {
       await axios.delete(
         `${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs/${programId}`,
         {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+          withCredentials: true,
+        },
       );
 
       const fetchPrograms = await axios.get(
         `${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs`,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { withCredentials: true },
       );
       dispatch(setPrograms(fetchPrograms.data.programs));
     } catch (err) {

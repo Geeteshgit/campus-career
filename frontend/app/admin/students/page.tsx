@@ -58,9 +58,6 @@ const StudentManagement = (): React.JSX.Element => {
   const programs = useAppSelector((state) => state.academic.programs);
   const programNames = programs.map((program) => program.name);
 
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
   const studentFields: FieldConfig[] = [
     { name: "name", placeholder: "Student Name", type: "text" },
     {
@@ -110,7 +107,7 @@ const StudentManagement = (): React.JSX.Element => {
           year: selectedYear,
           search: debouncedSearch,
         },
-        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       });
       setStudents((prev) =>
         reset ? response.data.students : [...prev, ...response.data.students],
@@ -126,7 +123,7 @@ const StudentManagement = (): React.JSX.Element => {
       const response = await axios.post(
         `${env.USER_SERVICE}/api/student`,
         data,
-        { headers: { Authorization: `Bearer ${token}` } },
+        { withCredentials: true },
       );
 
       setStudents((prev) => [...prev, response.data.student]);
@@ -144,7 +141,7 @@ const StudentManagement = (): React.JSX.Element => {
       const res = await axios.put(
         `${env.USER_SERVICE}/api/student/${selectedStudent._id}`,
         updatedValues,
-        { headers: { Authorization: `Bearer ${token}` } },
+        { withCredentials: true },
       );
 
       setStudents((prev) =>
@@ -161,7 +158,7 @@ const StudentManagement = (): React.JSX.Element => {
   const handleDelete = async (student: Student) => {
     try {
       await axios.delete(`${env.USER_SERVICE}/api/student/${student._id}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       });
 
       setStudents((prev) => prev.filter((s) => s._id !== student._id));
@@ -215,9 +212,9 @@ const StudentManagement = (): React.JSX.Element => {
         formData,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
           },
+          withCredentials: true,
         },
       );
 

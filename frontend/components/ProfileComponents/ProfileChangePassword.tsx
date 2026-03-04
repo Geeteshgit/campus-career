@@ -19,9 +19,6 @@ const ProfileChangePassword = (): React.JSX.Element => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
   const handlePasswordChange = async (data: any) => {
     if (data.newPassword !== data.confirmPassword)
       return alert("Passwords do not match!");
@@ -33,7 +30,7 @@ const ProfileChangePassword = (): React.JSX.Element => {
           oldPassword: data.oldPassword,
           newPassword: data.newPassword,
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { withCredentials: true },
       );
 
       handleLogout();

@@ -13,15 +13,14 @@ const Analytics = (): React.JSX.Element => {
   const [statsData, setStatsData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
   const fetchAllData = async () => {
     try {
       setLoading(true);
       const response = await axios.get(
         `${env.ANALYTICS_SERVICE}/api/analytics`,
-        { headers: { Authorization: `Bearer ${token}` } },
+        {
+          withCredentials: true,
+        },
       );
       setStatsData(response.data.analytics);
     } catch (err) {

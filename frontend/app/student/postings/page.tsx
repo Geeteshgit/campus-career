@@ -32,9 +32,6 @@ const Postings = (): React.JSX.Element => {
   const student = useAppSelector((state) => state.user.studentProfile);
   const isAdmin = user?.role !== "student";
 
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
   const fetchRecommendations = async () => {
     try {
       setLoading(true);
@@ -49,7 +46,7 @@ const Postings = (): React.JSX.Element => {
             skills: student?.skills,
           },
         },
-        { headers: { Authorization: `Bearer ${token}` } },
+        { withCredentials: true },
       );
 
       setActiveJobs(response.data.recommendations);
@@ -63,7 +60,7 @@ const Postings = (): React.JSX.Element => {
   const fetchInactiveJobs = async () => {
     try {
       const response = await axios.get(`${env.JOB_SERVICE}/api/jobs/inactive`, {
-        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       });
 
       setInactiveJobs(response.data.jobs);
@@ -93,7 +90,7 @@ const Postings = (): React.JSX.Element => {
           specialization: student?.specialization,
           cgpa: student?.cgpa,
         },
-        { headers: { Authorization: `Bearer ${token}` } },
+        { withCredentials: true },
       );
 
       alert("Applied successfully!");

@@ -27,15 +27,12 @@ const AdminProfile = (): React.JSX.Element => {
   const router = useRouter();
   const user = useAppSelector((state) => state.user.user);
 
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
   const handleSave = async () => {
     try {
       const response = await axios.put(
         `${env.USER_SERVICE}/api/user`,
         { phone: user?.phone },
-        { headers: { Authorization: `Bearer ${token}` } },
+        { withCredentials: true },
       );
 
       dispatch(

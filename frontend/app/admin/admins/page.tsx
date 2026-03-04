@@ -28,14 +28,11 @@ const AdminManagement = (): React.JSX.Element => {
   const [editAdminModalOpen, setEditAdminModalOpen] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState<AdminUser | null>(null);
 
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
   const fetchAdmins = async () => {
     try {
       setLoading(true);
       const response = await axios.get(`${env.USER_SERVICE}/api/admin`, {
-        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       });
 
       setAdmins(response.data.admins);
@@ -61,8 +58,8 @@ const AdminManagement = (): React.JSX.Element => {
         `${env.USER_SERVICE}/api/admin`,
         payload,
         {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+          withCredentials: true,
+        },
       );
 
       setAdmins((prev) => [...prev, response.data.admin]);
@@ -84,14 +81,14 @@ const AdminManagement = (): React.JSX.Element => {
         `${env.USER_SERVICE}/api/admin/${selectedAdmin._id}`,
         updatedValues,
         {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+          withCredentials: true,
+        },
       );
 
       setAdmins((prev) =>
         prev.map((a) =>
-          a._id === selectedAdmin._id ? response.data.updatedUser : a
-        )
+          a._id === selectedAdmin._id ? response.data.updatedUser : a,
+        ),
       );
 
       setEditAdminModalOpen(false);
@@ -103,7 +100,7 @@ const AdminManagement = (): React.JSX.Element => {
   const handleDelete = async (admin: AdminUser) => {
     try {
       await axios.delete(`${env.USER_SERVICE}/api/admin/${admin._id}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       });
 
       setAdmins((prev) => prev.filter((a) => a._id !== admin._id));
@@ -138,7 +135,7 @@ const AdminManagement = (): React.JSX.Element => {
     [admin.name, admin.email, admin.phone]
       .join(" ")
       .toLowerCase()
-      .includes(searchTerm.toLowerCase())
+      .includes(searchTerm.toLowerCase()),
   );
 
   return (

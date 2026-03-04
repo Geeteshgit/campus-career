@@ -60,9 +60,6 @@ const ApplicationsAdminPage = (): React.JSX.Element => {
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
   const jobFields: FieldConfig[] = [
     { name: "company", placeholder: "Company" },
     { name: "role", placeholder: "Job Role" },
@@ -98,7 +95,7 @@ const ApplicationsAdminPage = (): React.JSX.Element => {
   const fetchJobs = async () => {
     try {
       const response = await axios.get(`${env.JOB_SERVICE}/api/jobs`, {
-        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       });
       setJobs(response.data.jobs);
     } catch (err) {
@@ -127,7 +124,9 @@ const ApplicationsAdminPage = (): React.JSX.Element => {
       const response = await axios.put(
         `${env.JOB_SERVICE}/api/jobs/${editingJob._id}`,
         finalData,
-        { headers: { Authorization: `Bearer ${token}` } },
+        {
+          withCredentials: true,
+        }
       );
 
       setJobs((prev) =>
@@ -147,7 +146,7 @@ const ApplicationsAdminPage = (): React.JSX.Element => {
   const handleDelete = async (job: Job) => {
     try {
       await axios.delete(`${env.JOB_SERVICE}/api/jobs/${job._id}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       });
 
       setJobs((prev) => prev.filter((j) => j._id !== job._id));
@@ -168,7 +167,7 @@ const ApplicationsAdminPage = (): React.JSX.Element => {
     try {
       const response = await axios.get(
         `${env.JOB_SERVICE}/api/applications/${job._id}`,
-        { headers: { Authorization: `Bearer ${token}` } },
+        { withCredentials: true },
       );
 
       const applicants = response.data.applicants;

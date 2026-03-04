@@ -36,9 +36,6 @@ const PrepareAdminPage = (): React.JSX.Element => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editResource, setEditResource] = useState<ResourceLink | null>(null);
 
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
   const resourceFields: FieldConfig[] = [
     { name: "title", placeholder: "Resource Title", type: "text" },
     { name: "url", placeholder: "Resource URL", type: "text" },
@@ -56,7 +53,7 @@ const PrepareAdminPage = (): React.JSX.Element => {
       const response = await axios.get(
         `${env.ACADEMIC_CONFIG_SERVICE}/api/resources/admin`,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
         },
       );
       setResources(response.data.resources);
@@ -76,7 +73,7 @@ const PrepareAdminPage = (): React.JSX.Element => {
       const response = await axios.post(
         `${env.ACADEMIC_CONFIG_SERVICE}/api/resources`,
         data,
-        { headers: { Authorization: `Bearer ${token}` } },
+        { withCredentials: true },
       );
 
       setResources((prev) => [...prev, response.data.resource]);
@@ -91,7 +88,7 @@ const PrepareAdminPage = (): React.JSX.Element => {
 
     try {
       await axios.delete(`${env.ACADEMIC_CONFIG_SERVICE}/api/resources/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       });
 
       setResources((prev) => prev.filter((r) => r._id !== id));
@@ -107,7 +104,7 @@ const PrepareAdminPage = (): React.JSX.Element => {
       const response = await axios.put(
         `${env.ACADEMIC_CONFIG_SERVICE}/api/resources/${editResource._id}`,
         data,
-        { headers: { Authorization: `Bearer ${token}` } },
+        { withCredentials: true },
       );
 
       setResources((prev) =>

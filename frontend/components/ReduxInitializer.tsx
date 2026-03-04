@@ -22,8 +22,8 @@ const ReduxInitializer = () => {
         const userResponse = await axios.get(
           `${env.USER_SERVICE}/api/auth/me`,
           {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+            withCredentials: true,
+          },
         );
 
         const user = userResponse.data.user;
@@ -32,7 +32,7 @@ const ReduxInitializer = () => {
         if (user.role === "student") {
           const studentResponse = await axios.get(
             `${env.USER_SERVICE}/api/student/me`,
-            { headers: { Authorization: `Bearer ${token}` } }
+            { withCredentials: true },
           );
 
           studentProfile = studentResponse.data.profile;
@@ -42,7 +42,7 @@ const ReduxInitializer = () => {
 
         const academicResponse = await axios.get(
           `${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          { withCredentials: true },
         );
 
         dispatch(setPrograms(academicResponse.data.programs));

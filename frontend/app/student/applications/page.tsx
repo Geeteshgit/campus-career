@@ -21,15 +21,12 @@ const ApplicationsPage = (): React.JSX.Element => {
   );
   const [searchTerm, setSearchTerm] = useState("");
 
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
   const fetchAppliedJobs = async () => {
     try {
       const response = await axios.get(
         `${env.JOB_SERVICE}/api/applications/my`,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
         },
       );
 

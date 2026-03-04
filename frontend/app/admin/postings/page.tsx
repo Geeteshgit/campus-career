@@ -33,9 +33,6 @@ const Postings = (): React.JSX.Element => {
   const user = useAppSelector((state) => state.user.user);
   const isAdmin = user?.role !== "student";
 
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
   const jobFields: FieldConfig[] = [
     { name: "company", placeholder: "Company" },
     { name: "role", placeholder: "Job Role" },
@@ -72,7 +69,7 @@ const Postings = (): React.JSX.Element => {
     try {
       setLoading(true);
       const response = await axios.get(`${env.JOB_SERVICE}/api/jobs`, {
-        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       });
       setJobs(response.data.jobs);
     } catch (err) {
@@ -99,7 +96,7 @@ const Postings = (): React.JSX.Element => {
         `${env.JOB_SERVICE}/api/jobs`,
         jobData,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
         },
       );
 
@@ -127,7 +124,7 @@ const Postings = (): React.JSX.Element => {
       const response = await axios.put(
         `${env.JOB_SERVICE}/api/jobs/${selectedJob._id}`,
         finalData,
-        { headers: { Authorization: `Bearer ${token}` } },
+        { withCredentials: true },
       );
 
       setJobs((prev) =>
@@ -147,7 +144,7 @@ const Postings = (): React.JSX.Element => {
   const handleDelete = async (job: Job) => {
     try {
       await axios.delete(`${env.JOB_SERVICE}/api/jobs/${job._id}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       });
 
       setJobs((prev) => prev.filter((j) => j._id !== job._id));

@@ -26,7 +26,7 @@ const Login = (): React.JSX.Element => {
   const [confirmNewPassword, setConfirmNewPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
-  
+
   useEffect(() => {
     if (user) {
       if (user.role === "student") router.replace("/student/postings");
@@ -53,17 +53,14 @@ const Login = (): React.JSX.Element => {
     console.log("USER SERVICE:", env.USER_SERVICE);
 
     try {
-      const loginResponse = await axios.post(
-        `${env.USER_SERVICE}/api/auth/login`,
-        {
-          email: formData.email,
-          password: formData.password,
-        },
-      );
+      const response = await axios.post(`${env.USER_SERVICE}/api/auth/login`, {
+        email: formData.email,
+        password: formData.password,
+      }, {
+        withCredentials: true,
+      });
 
-      const user = loginResponse.data.user;
-
-      localStorage.setItem("token", loginResponse.data.token);
+      const user = response.data.user;
 
       initSocket();
       connectSocket();
@@ -71,16 +68,17 @@ const Login = (): React.JSX.Element => {
       let studentProfile = null;
 
       if (user.role === "student") {
-        const profRes = await axios.get(`${env.USER_SERVICE}/api/student/me`, {
-          headers: { Authorization: `Bearer ${loginResponse.data.token}` },
+        const response = await axios.get(`${env.USER_SERVICE}/api/student/me`, {
+          withCredentials: true,
         });
 
-        studentProfile = profRes.data.profile;
+        studentProfile = response.data.profile;
       }
 
       const academicResponse = await axios.get(
-        `${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs`,
-        { headers: { Authorization: `Bearer ${loginResponse.data.token}` } },
+        `${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs`, {
+          withCredentials: true,
+        },
       );
       dispatch(setPrograms(academicResponse.data.programs));
 
@@ -208,7 +206,10 @@ const Login = (): React.JSX.Element => {
               <button
                 type="button"
                 onClick={() => {
-                  (setShowForgotModal(true), setFpEmail(""), setStep(1), setMessage(""));
+                  (setShowForgotModal(true),
+                    setFpEmail(""),
+                    setStep(1),
+                    setMessage(""));
                 }}
                 className="text-blue-500 font-medium cursor-pointer hover:underline"
               >

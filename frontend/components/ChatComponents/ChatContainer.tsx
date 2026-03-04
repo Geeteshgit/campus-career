@@ -23,15 +23,11 @@ const ChatContainer = (): React.JSX.Element => {
   const user = useAppSelector((state) => state.user.user);
   const userId = user?._id;
   const username = user?.name;
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
   const loadMessages = async () => {
     try {
       const response = await axios.get(`${env.MESSAGE_SERVICE}/api/message`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        withCredentials: true,
       });
       setMessages(response.data.messages);
     } catch (err) {
