@@ -2,13 +2,8 @@ import { callService } from "../utils/serviceCaller.js";
 
 export const getPlatformAnalytics = async (req, res) => {
   try {
-    let token;
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer")
-    ) {
-      token = req.headers.authorization.split(" ")[1];
-    }
+    const token = req.cookies?.token;
+
     if (!token)
       return res.status(401).json({ message: "Unauthorized: Token missing" });
 

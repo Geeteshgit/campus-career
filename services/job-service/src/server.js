@@ -13,7 +13,8 @@ await connectToDB();
 await connectRabbitMQ();
 
 app.use(cors({
-    origin: "*",
+    origin: "http://localhost:3000",
+    credentials: true,
 }));
 app.use(cookieParser());
 
