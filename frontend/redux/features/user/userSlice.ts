@@ -18,30 +18,16 @@ interface StudentProfileData {
   skills?: string;
 }
 
-interface Job {
-  _id: string;
-  company: string;
-  role: string;
-  location: string;
-  deadline: string;
-  description: string;
-  requirements: string[];
-  eligibility: string;
-  package: string;
-  positions: number;
-  type: string;
-  status: "Active" | "Inactive";
-  createdAt: string;
-}
-
 interface UserState {
   user: UserData | null;
   studentProfile: StudentProfileData | null;
+  authLoading: boolean;
 }
 
 const initialState: UserState = {
   user: null,
   studentProfile: null,
+  authLoading: true,
 };
 
 export const userSlice = createSlice({
@@ -53,23 +39,22 @@ export const userSlice = createSlice({
       action: PayloadAction<{
         user: UserData | null;
         studentProfile?: StudentProfileData | null;
-      }>
+      }>,
     ) {
       state.user = action.payload.user;
-
-      if (action.payload.studentProfile) {
-        state.studentProfile = action.payload.studentProfile;
-      }
+      state.studentProfile = action.payload.studentProfile ?? null;
+      state.authLoading = false;
     },
 
     logout(state) {
       state.user = null;
       state.studentProfile = null;
+      state.authLoading = false;
     },
 
     updateUserField(
       state,
-      action: PayloadAction<{ field: keyof UserData; value: any }>
+      action: PayloadAction<{ field: keyof UserData; value: any }>,
     ) {
       if (state.user) {
         state.user[action.payload.field] = action.payload.value;
@@ -78,7 +63,7 @@ export const userSlice = createSlice({
 
     updateStudentField(
       state,
-      action: PayloadAction<{ field: keyof StudentProfileData; value: any }>
+      action: PayloadAction<{ field: keyof StudentProfileData; value: any }>,
     ) {
       if (state.studentProfile) {
         state.studentProfile[action.payload.field] = action.payload.value;
@@ -87,11 +72,7 @@ export const userSlice = createSlice({
   },
 });
 
-export const {
-  login,
-  logout,
-  updateUserField,
-  updateStudentField,
-} = userSlice.actions;
+export const { login, logout, updateUserField, updateStudentField } =
+  userSlice.actions;
 
 export default userSlice.reducer;

@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/redux/hooks";
+import Loader from "@/components/ui/Loader";
 
 interface ProtectedRouteProps {
   allowedRoles: string[];
@@ -11,9 +12,11 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ allowedRoles, children }: ProtectedRouteProps) => {
   const router = useRouter();
-  const user = useAppSelector((state) => state.user.user);
+  const { user, authLoading } = useAppSelector((state) => state.user);
 
   useEffect(() => {
+    if (authLoading) return;
+
     if (!user) {
       router.replace("/login");
       return;
@@ -26,7 +29,11 @@ const ProtectedRoute = ({ allowedRoles, children }: ProtectedRouteProps) => {
         router.replace("/admin/dashboard");
       }
     }
-  }, [user, allowedRoles, router]);
+  }, [user, authLoading, allowedRoles, router]);
+
+  if (authLoading) {
+    return <Loader />;
+  }
 
   if (!user) return null;
 
