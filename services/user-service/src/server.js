@@ -26,9 +26,9 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 app.use("/api/auth", authRoutes);
-app.use("/api/user", userRoutes);
-app.use("/api/student", studentRoutes);
-app.use("/api/admin", adminRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/students", studentRoutes);
+app.use("/api/admins", adminRoutes);
 
 app.get("/api", (req, res) => {
     return res.send("User Server Running");
