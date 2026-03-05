@@ -24,7 +24,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/message", messageRoutes);
+app.use("/api/messages", messageRoutes);
 
 app.get("/api", (req, res) => {
   return res.send("Message Server Running");
