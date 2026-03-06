@@ -19,7 +19,13 @@ export const createAdmin = async (payload: {
   return data;
 };
 
-export const updateAdminById = async (id: string, payload: any) => {
+export const updateAdminById = async ({
+  id,
+  payload,
+}: {
+  id: string;
+  payload: any;
+}) => {
   const { data } = await usersApi.put(`/admins/${id}`, payload);
   return data;
 };
