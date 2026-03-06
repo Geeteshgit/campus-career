@@ -1,12 +1,12 @@
 import { usersApi } from "@/lib/axios";
 
 export const getAllAdmins = async () => {
-  const { data } = await usersApi.get("/api/admins");
+  const { data } = await usersApi.get("/admins");
   return data;
 };
 
 export const getAdminById = async (id: string) => {
-  const { data } = await usersApi.get(`/api/admins/${id}`);
+  const { data } = await usersApi.get(`/admins/${id}`);
   return data;
 };
 
@@ -15,16 +15,16 @@ export const createAdmin = async (payload: {
   email: string;
   phone: string;
 }) => {
-  const { data } = await usersApi.post("/api/admins", payload);
+  const { data } = await usersApi.post("/admins", payload);
   return data;
 };
 
 export const updateAdminById = async (id: string, payload: any) => {
-  const { data } = await usersApi.put(`/api/admins/${id}`, payload);
+  const { data } = await usersApi.put(`/admins/${id}`, payload);
   return data;
 };
 
 export const deleteAdminById = async (id: string) => {
-  const { data } = await usersApi.delete(`/api/admins/${id}`);
+  const { data } = await usersApi.delete(`/admins/${id}`);
   return data;
 };

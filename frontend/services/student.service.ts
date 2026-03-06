@@ -28,22 +28,22 @@ export const uploadStudentResume = async (file: File) => {
 };
 
 export const getAllStudents = async () => {
-  const { data } = await usersApi.get("/api/students");
+  const { data } = await usersApi.get("/students");
   return data;
 };
 
 export const getStudentStats = async () => {
-  const { data } = await usersApi.get("/api/students/stats");
+  const { data } = await usersApi.get("/students/stats");
   return data;
 };
 
 export const getStudentByUserId = async (userId: string) => {
-  const { data } = await usersApi.get(`/api/students/${userId}`);
+  const { data } = await usersApi.get(`/students/${userId}`);
   return data;
 };
 
 export const createStudent = async (payload: Record<string, any>) => {
-  const { data } = await usersApi.post("/api/students", payload);
+  const { data } = await usersApi.post("/students", payload);
   return data;
 };
 
@@ -51,7 +51,7 @@ export const bulkCreateStudents = async (file: File) => {
   const formData = new FormData();
   formData.append("file", file);
 
-  const { data } = await usersApi.post("/api/students/bulk-upload", formData, {
+  const { data } = await usersApi.post("/students/bulk-upload", formData, {
     headers: {
       "Content-Type": "multipart/form-data"
     }
@@ -61,11 +61,11 @@ export const bulkCreateStudents = async (file: File) => {
 };
 
 export const updateStudent = async (id: string, payload: Record<string, any>) => {
-  const { data } = await usersApi.put(`/api/students/${id}`, payload);
+  const { data } = await usersApi.put(`/students/${id}`, payload);
   return data;
 };
 
 export const deleteStudent = async (id: string) => {
-  const { data } = await usersApi.delete(`/api/students/${id}`);
+  const { data } = await usersApi.delete(`/students/${id}`);
   return data;
 };
