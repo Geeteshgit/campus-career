@@ -21,13 +21,7 @@ export const createResource = async (payload: {
   return data;
 };
 
-export const updateResource = async ({
-  id,
-  payload,
-}: {
-  id: string;
-  payload: any;
-}) => {
+export const updateResource = async (id: string, payload: any) => {
   const { data } = await academicsApi.put(`/resources/${id}`, payload);
   return data;
 };

@@ -1,12 +1,19 @@
 import { usersApi } from "@/lib/axios";
 
+export interface PaginationParams {
+  page?: number;
+  program?: string;
+  year?: string;
+  search?: string;
+}
+
 export const getMyStudentProfile = async () => {
-  const { data } = await usersApi.get("/api/students/me");
+  const { data } = await usersApi.get("/students/me");
   return data;
 };
 
 export const updateMyStudentProfile = async (payload: any) => {
-  const { data } = await usersApi.put("/api/students/me", payload);
+  const { data } = await usersApi.put("/students/me", payload);
   return data;
 };
 
@@ -27,8 +34,8 @@ export const uploadStudentResume = async (file: File) => {
   return data;
 };
 
-export const getAllStudents = async () => {
-  const { data } = await usersApi.get("/students");
+export const getAllStudents = async (params: PaginationParams = {}) => {
+  const { data } = await usersApi.get("/students", { params });
   return data;
 };
 
