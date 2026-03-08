@@ -18,9 +18,7 @@ export const useStudentResources = (program: string) => {
   return useQuery({
     queryKey: ["resources", "student", program],
     queryFn: () => getStudentResources(program),
-    enabled: !!program,
-    staleTime: STALE_TIME,
-    gcTime: CACHE_TIME,
+    enabled: !!program
   });
 };
 
@@ -48,8 +46,7 @@ export const useUpdateResource = () => {
       updateResource(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["resources"] });
-    },
-    retry: 1,
+    }
   });
 
   return {
@@ -65,8 +62,7 @@ export const useDeleteResource = () => {
     mutationFn: deleteResource,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["resources"] });
-    },
-    retry: 1,
+    }
   });
 
   return {

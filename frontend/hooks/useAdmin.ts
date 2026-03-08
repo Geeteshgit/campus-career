@@ -7,15 +7,10 @@ import {
   deleteAdminById
 } from "@/services/admin.service";
 
-const STALE_TIME = 1000 * 60 * 5; // 5 minutes
-const CACHE_TIME = 1000 * 60 * 10; // 10 minutes
-
 export const useAdmins = () => {
   return useQuery({
     queryKey: ["admins"],
     queryFn: getAllAdmins,
-    staleTime: STALE_TIME,
-    gcTime: CACHE_TIME,
   });
 };
 
@@ -23,9 +18,7 @@ export const useAdmin = (id: string) => {
   return useQuery({
     queryKey: ["admins", id],
     queryFn: () => getAdminById(id),
-    enabled: !!id,
-    staleTime: STALE_TIME,
-    gcTime: CACHE_TIME,
+    enabled: !!id
   });
 };
 

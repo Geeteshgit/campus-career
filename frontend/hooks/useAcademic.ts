@@ -25,7 +25,6 @@ export const useCreateProgram = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["programs"] });
     },
-    retry: 1,
   });
 
   return {
@@ -42,7 +41,6 @@ export const useDeleteProgram = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["programs"] });
     },
-    retry: 1,
   });
 
   return {

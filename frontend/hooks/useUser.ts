@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateMyAccount, getUserStats } from "@/services/user.service";
 
-const STALE_TIME = 1000 * 60 * 5; // 5 minutes
+const STALE_TIME = 1000 * 60 * 2; // 2 minutes
 const CACHE_TIME = 1000 * 60 * 10; // 10 minutes
 
 export const useUserStats = () => {
@@ -22,7 +22,6 @@ export const useUpdateMyAccount = () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
     },
-    retry: 1,
   });
 
   return {

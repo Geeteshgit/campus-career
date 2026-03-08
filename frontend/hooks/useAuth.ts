@@ -10,15 +10,13 @@ import {
 } from "@/services/auth.service";
 
 const STALE_TIME = 1000 * 60 * 1; // 1 minute
-const CACHE_TIME = 1000 * 60 * 5; // 5 minutes
 
 export const useMe = () => {
   return useQuery({
     queryKey: ["auth", "me"],
     queryFn: getMe,
     retry: false,
-    staleTime: STALE_TIME,
-    gcTime: CACHE_TIME,
+    staleTime: STALE_TIME, 
   });
 };
 
