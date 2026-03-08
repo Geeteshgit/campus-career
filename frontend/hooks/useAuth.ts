@@ -9,12 +9,16 @@ import {
   getMe,
 } from "@/services/auth.service";
 
+const STALE_TIME = 1000 * 60 * 1; // 1 minute
+const CACHE_TIME = 1000 * 60 * 5; // 5 minutes
+
 export const useMe = () => {
   return useQuery({
     queryKey: ["auth", "me"],
     queryFn: getMe,
     retry: false,
-    staleTime: 1000 * 60 * 1, // 1 minute
+    staleTime: STALE_TIME,
+    gcTime: CACHE_TIME,
   });
 };
 
@@ -26,6 +30,7 @@ export const useLogin = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
     },
+    retry: false,
   });
 
   return {
@@ -42,6 +47,7 @@ export const useLogout = () => {
     onSuccess: () => {
       queryClient.clear();
     },
+    retry: false,
   });
 
   return {
@@ -53,6 +59,7 @@ export const useLogout = () => {
 export const useForgotPassword = () => {
   const mutation = useMutation({
     mutationFn: forgotPassword,
+    retry: 1,
   });
 
   return {
@@ -64,6 +71,7 @@ export const useForgotPassword = () => {
 export const useVerifyResetOtp = () => {
   const mutation = useMutation({
     mutationFn: verifyResetOtp,
+    retry: 1,
   });
 
   return {
@@ -75,6 +83,7 @@ export const useVerifyResetOtp = () => {
 export const useResetPassword = () => {
   const mutation = useMutation({
     mutationFn: resetPassword,
+    retry: 1,
   });
 
   return {
@@ -91,6 +100,7 @@ export const useChangePassword = () => {
     onSuccess: () => {
       queryClient.clear();
     },
+    retry: 1,
   });
 
   return {

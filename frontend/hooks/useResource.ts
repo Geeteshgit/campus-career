@@ -4,13 +4,13 @@ import {
   getStudentResources,
   createResource,
   updateResource,
-  deleteResource
+  deleteResource,
 } from "@/services/resource.service";
 
 export const useResources = () => {
   return useQuery({
     queryKey: ["resources", "admin"],
-    queryFn: getResources
+    queryFn: getResources,
   });
 };
 
@@ -18,7 +18,9 @@ export const useStudentResources = (program: string) => {
   return useQuery({
     queryKey: ["resources", "student", program],
     queryFn: () => getStudentResources(program),
-    enabled: !!program
+    enabled: !!program,
+    staleTime: STALE_TIME,
+    gcTime: CACHE_TIME,
   });
 };
 
@@ -29,12 +31,12 @@ export const useCreateResource = () => {
     mutationFn: createResource,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["resources"] });
-    }
+    },
   });
 
   return {
     createResource: mutation.mutateAsync,
-    ...mutation
+    ...mutation,
   };
 };
 
@@ -42,15 +44,17 @@ export const useUpdateResource = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: updateResource,
+    mutationFn: ({ id, payload }: { id: string; payload: any }) =>
+      updateResource(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["resources"] });
-    }
+    },
+    retry: 1,
   });
 
   return {
     updateResource: mutation.mutateAsync,
-    ...mutation
+    ...mutation,
   };
 };
 
@@ -61,11 +65,12 @@ export const useDeleteResource = () => {
     mutationFn: deleteResource,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["resources"] });
-    }
+    },
+    retry: 1,
   });
 
   return {
     deleteResource: mutation.mutateAsync,
-    ...mutation
+    ...mutation,
   };
 };
