@@ -24,7 +24,7 @@ services:
     volumes:
       - ./services/user-service:/app
       - /app/node_modules
-    command: npm run dev
+    command: pnpm run dev
 
   job-service:
     environment:
@@ -32,7 +32,7 @@ services:
     volumes:
       - ./services/job-service:/app
       - /app/node_modules
-    command: npm run dev
+    command: pnpm run dev
 
   message-service:
     environment:
@@ -40,7 +40,7 @@ services:
     volumes:
       - ./services/message-service:/app
       - /app/node_modules
-    command: npm run dev
+    command: pnpm run dev
 
   academic-configuration-service:
     environment:
@@ -48,7 +48,7 @@ services:
     volumes:
       - ./services/academic-configuration-service:/app
       - /app/node_modules
-    command: npm run dev
+    command: pnpm run dev
 
   analytics-service:
     environment:
@@ -56,7 +56,7 @@ services:
     volumes:
       - ./services/analytics-service:/app
       - /app/node_modules
-    command: npm run dev
+    command: pnpm run dev
 
 volumes:
   mongo-data:

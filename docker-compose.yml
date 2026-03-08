@@ -11,7 +11,7 @@ services:
       - ./services/user-service/.env
     environment:
       NODE_ENV: production
-    command: npm start
+    command: pnpm start
     depends_on:
       - rabbitmq
     restart: unless-stopped
@@ -24,7 +24,7 @@ services:
       - ./services/job-service/.env
     environment:
       NODE_ENV: production
-    command: npm start
+    command: pnpm start
     depends_on:
       - rabbitmq
     restart: unless-stopped
@@ -37,7 +37,7 @@ services:
       - ./services/message-service/.env
     environment:
       NODE_ENV: production
-    command: npm start
+    command: pnpm start
     depends_on:
       - rabbitmq
     restart: unless-stopped
@@ -50,7 +50,7 @@ services:
       - ./services/academic-configuration-service/.env
     environment:
       NODE_ENV: production
-    command: npm start
+    command: pnpm start
     depends_on:
       - rabbitmq
     restart: unless-stopped
@@ -63,7 +63,7 @@ services:
       - ./services/analytics-service/.env
     environment:
       NODE_ENV: production
-    command: npm start
+    command: pnpm start
     depends_on:
       - rabbitmq
     restart: unless-stopped
