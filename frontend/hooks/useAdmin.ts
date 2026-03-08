@@ -1,0 +1,71 @@
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  getAllAdmins,
+  getAdminById,
+  createAdmin,
+  updateAdminById,
+  deleteAdminById
+} from "@/services/admin.service";
+
+export const useAdmins = () => {
+  return useQuery({
+    queryKey: ["admins"],
+    queryFn: getAllAdmins,
+  });
+};
+
+export const useAdmin = (id: string) => {
+  return useQuery({
+    queryKey: ["admins", id],
+    queryFn: () => getAdminById(id),
+    enabled: !!id
+  });
+};
+
+export const useCreateAdmin = () => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: createAdmin,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admins"] });
+    },
+  });
+
+  return {
+    createAdmin: mutation.mutateAsync,
+    ...mutation,
+  };
+};
+
+export const useUpdateAdmin = () => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: updateAdminById,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admins"] });
+    },
+  });
+
+  return {
+    updateAdmin: mutation.mutateAsync,
+    ...mutation,
+  };
+};
+
+export const useDeleteAdmin = () => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: deleteAdminById,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admins"] });
+    },
+  });
+
+  return {
+    deleteAdmin: mutation.mutateAsync,
+    ...mutation,
+  };
+};
