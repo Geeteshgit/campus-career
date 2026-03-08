@@ -1,16 +1,11 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { env } from "./config/env.js";
-import { connectToDB } from "./config/db.js";
-import { connectRabbitMQ } from "./utils/rabbitmq.js";
+
 import academicRoutes from "./routes/academic.route.js";
 import resourceRoutes from "./routes/resource.route.js";
 
 const app = express();
-
-await connectToDB();
-await connectRabbitMQ();
 
 app.use(cors({
     origin: "http://localhost:3000",
@@ -28,6 +23,4 @@ app.get("/api", (req, res) => {
   return res.send("Academic Configuration Server Running");
 });
 
-app.listen(env.PORT, () => {
-  console.log(`Academic Configuration Server running on port: ${env.PORT}`);
-});
+export default app;

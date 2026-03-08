@@ -1,20 +1,13 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { env } from "./config/env.js";
-import { connectToDB } from "./config/db.js";
+
 import authRoutes from "./routes/auth.route.js";
 import userRoutes from "./routes/user.route.js";
 import studentRoutes from "./routes/student.route.js";
 import adminRoutes from "./routes/admin.route.js";
-import { connectRabbitMQ } from "./utils/rabbitmq.js";
-import { createSuperAdminIfNotExists } from "./bootstrap/superAdmin.bootstrap.js";
 
 const app = express();
-
-await connectToDB();
-await createSuperAdminIfNotExists();
-await connectRabbitMQ();
 
 app.use(cors({
     origin: "http://localhost:3000",
@@ -34,6 +27,4 @@ app.get("/api", (req, res) => {
     return res.send("User Server Running");
 });
 
-app.listen(env.PORT, () => {
-    console.log(`User Server running on port: ${env.PORT}`);
-});
+export default app;
