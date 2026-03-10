@@ -2,34 +2,23 @@
 
 import MessageList from "./MessageList";
 import ChatInput from "./ChatInput";
-import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
-import { env } from "@/config/env";
+import React, { useEffect, useRef } from "react";
 import { useAppSelector } from "@/redux/hooks";
 import { connectSocket, getSocket, initSocket } from "@/lib/socket";
 import { Message } from "../types/message";
+import { useQueryClient } from "@tanstack/react-query";
+import { useMessages } from "../hooks/useMessages";
+import Loader from "@/shared/ui/Loader";
 
 const ChatContainer = (): React.JSX.Element => {
-  const [messages, setMessages] = useState<Message[]>([]);
   const chatEndRef = useRef<HTMLDivElement | null>(null);
+  const queryClient = useQueryClient();
+  const { data, isPending, isError, error } = useMessages();
+  const messages = data?.messages ?? [];
 
   const user = useAppSelector((state) => state.user.user);
   const userId = user?._id;
   const username = user?.name;
-
-  const loadMessages = async () => {
-    try {
-      const response = await axios.get(`${env.MESSAGE_SERVICE}/api/message`, {
-        withCredentials: true,
-      });
-      setMessages(response.data.messages);
-    } catch (err) {
-      console.error("Error loading messages:", err);
-    }
-  };
-  useEffect(() => {
-    loadMessages();
-  }, []);
 
   useEffect(() => {
     if (!userId || !username) return;
@@ -39,13 +28,20 @@ const ChatContainer = (): React.JSX.Element => {
     if (!socket) return;
 
     socket.on("receiveMessage", (msg: Message) => {
-      setMessages((prev) => [...prev, msg]);
+      queryClient.setQueryData(["messages"], (old: any) => {
+        if (!old) return old;
+
+        return {
+          ...old,
+          messages: [...old.messages, msg],
+        };
+      });
     });
 
     return () => {
       socket.off("receiveMessage");
     };
-  }, [userId, username]);
+  }, [userId, username, queryClient]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -64,6 +60,16 @@ const ChatContainer = (): React.JSX.Element => {
       message,
     });
   };
+
+  if (isPending) return <Loader />;
+
+  if (isError) {
+  return (
+    <div className="text-red-500 text-center p-4">
+      {(error as any)?.response?.data?.message || "Failed to load messages"}
+    </div>
+  );
+}
 
   return (
     <div className="flex flex-col border border-neutral-300 rounded-lg overflow-hidden shadow-sm h-[70vh] bg-neutral-50/50">
