@@ -14,7 +14,7 @@ const ChatContainer = (): React.JSX.Element => {
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const queryClient = useQueryClient();
   const { data, isPending, isError, error } = useMessages();
-  const messages = data?.messages ?? [];
+  const messages: Message[] = data?.messages ?? [];
 
   const user = useAppSelector((state) => state.user.user);
   const userId = user?._id;
