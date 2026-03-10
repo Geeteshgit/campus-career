@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "@/components/Navbar";
-import PageHeader from "@/components/PageHeader";
+import PageHeader from "@/shared/ui/PageHeader";
 import { useAppSelector } from "@/redux/hooks";
 import { env } from "@/config/env";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import { ProtectedRoute } from "@/features/auth";
 
 interface Resource {
   _id: string;

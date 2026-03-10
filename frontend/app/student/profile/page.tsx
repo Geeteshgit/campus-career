@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
-import PageHeader from "@/components/PageHeader";
+import PageHeader from "@/shared/ui/PageHeader";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   updateUserField,
@@ -10,17 +10,17 @@ import {
   login,
   logout,
 } from "@/redux/features/user/userSlice";
-import ReadOnlyField from "@/components/FormComponents/ReadonlyField";
-import InputField from "@/components/FormComponents/InputField";
-import TextAreaField from "@/components/FormComponents/TextareaField";
-import FileUploadField from "@/components/FormComponents/FileUploadField";
-import PrimaryButton from "@/components/ui/PrimaryButton";
-import ProfileChangePassword from "@/components/ProfileComponents/ProfileChangePassword";
-import FormLabel from "@/components/FormComponents/FormLabel";
-import DangerButton from "@/components/ui/DangerButton";
+import ReadOnlyField from "@/shared/ui/ReadonlyField";
+import InputField from "@/shared/ui/InputField";
+import TextAreaField from "@/shared/ui/TextareaField";
+import FileUploadField from "@/shared/ui/FileUploadField";
+import PrimaryButton from "@/shared/ui/PrimaryButton";
+import { ProfileChangePassword } from "@/features/user";
+import FormLabel from "@/shared/ui/FormLabel";
+import DangerButton from "@/shared/ui/DangerButton";
 import axios from "axios";
 import { env } from "@/config/env";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import { ProtectedRoute } from "@/features/auth";
 import { disconnectSocket } from "@/lib/socket";
 import { useRouter } from "next/navigation";
 

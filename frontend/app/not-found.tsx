@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import PrimaryButton from "@/components/ui/PrimaryButton";
+import PrimaryButton from "@/shared/ui/PrimaryButton";
 import { useRouter } from "next/navigation";
 
 const NotFound = (): React.JSX.Element => {

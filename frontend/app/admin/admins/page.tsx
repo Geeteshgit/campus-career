@@ -3,30 +3,29 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "@/components/Navbar";
-import PageHeader from "@/components/PageHeader";
-import AdminCard, {
-  AdminUser,
-} from "@/components/AdminDashboardComponents/AdminCard";
+import PageHeader from "@/shared/ui/PageHeader";
+import { AdminCard, Admin } from "@/features/admin";
 import { useAppSelector } from "@/redux/hooks";
-import AddModal, { FieldConfig } from "@/components/ui/AddModal";
-import EditModal from "@/components/ui/EditModal";
-import PrimaryButton from "@/components/ui/PrimaryButton";
+import AddModal from "@/shared/ui/AddModal";
+import EditModal from "@/shared/ui/EditModal";
+import { FieldConfig } from "@/shared/types/modal";
+import PrimaryButton from "@/shared/ui/PrimaryButton";
 import { env } from "@/config/env";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import SearchBar from "@/components/ui/SearchBar";
+import { ProtectedRoute } from "@/features/auth";
+import SearchBar from "@/shared/ui/SearchBar";
 
 const AdminManagement = (): React.JSX.Element => {
   const user = useAppSelector((state) => state.user.user);
   const role = user?.role ?? "admin";
 
-  const [admins, setAdmins] = useState<AdminUser[]>([]);
+  const [admins, setAdmins] = useState<Admin[]>([]);
   const [loading, setLoading] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
 
   const [addAdminModalOpen, setAddAdminModalOpen] = useState(false);
   const [editAdminModalOpen, setEditAdminModalOpen] = useState(false);
-  const [selectedAdmin, setSelectedAdmin] = useState<AdminUser | null>(null);
+  const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
 
   const fetchAdmins = async () => {
     try {
@@ -97,7 +96,7 @@ const AdminManagement = (): React.JSX.Element => {
     }
   };
 
-  const handleDelete = async (admin: AdminUser) => {
+  const handleDelete = async (admin: Admin) => {
     try {
       await axios.delete(`${env.USER_SERVICE}/api/admin/${admin._id}`, {
         withCredentials: true,
@@ -109,7 +108,7 @@ const AdminManagement = (): React.JSX.Element => {
     }
   };
 
-  const handleEdit = (admin: AdminUser) => {
+  const handleEdit = (admin: Admin) => {
     setSelectedAdmin(admin);
     setEditAdminModalOpen(true);
   };

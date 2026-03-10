@@ -3,16 +3,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "@/components/Navbar";
-import PageHeader from "@/components/PageHeader";
-import PrimaryButton from "@/components/ui/PrimaryButton";
-import DangerButton from "@/components/ui/DangerButton";
-import AddModal, { FieldConfig } from "@/components/ui/AddModal";
-import EditModal from "@/components/ui/EditModal";
+import PageHeader from "@/shared/ui/PageHeader";
+import PrimaryButton from "@/shared/ui/PrimaryButton";
+import DangerButton from "@/shared/ui/DangerButton";
+import AddModal from "@/shared/ui/AddModal";
+import EditModal from "@/shared/ui/EditModal";
+import { FieldConfig } from "@/shared/types/modal";
 import { env } from "@/config/env";
 import { useAppSelector } from "@/redux/hooks";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import FilterButtons from "@/components/ui/FilterButtons";
-import SearchBar from "@/components/ui/SearchBar";
+import { ProtectedRoute } from "@/features/auth";
+import FilterButtons from "@/shared/ui/FilterButtons";
+import SearchBar from "@/shared/ui/SearchBar";
 
 type ResourceLink = {
   _id: string;

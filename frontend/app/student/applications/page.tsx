@@ -3,13 +3,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "@/components/Navbar";
-import PageHeader from "@/components/PageHeader";
-import JobModal, { Job } from "@/components/JobModalComponents/JobModal";
-import JobApplicationsCard from "@/components/JobApplicationsCard";
+import PageHeader from "@/shared/ui/PageHeader";
+import { Job, JobModal } from "@/features/job";
+import { JobApplicationsCard } from "@/features/application";
 import { env } from "@/config/env";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import FilterButtons from "@/components/ui/FilterButtons";
-import SearchBar from "@/components/ui/SearchBar";
+import { ProtectedRoute } from "@/features/auth";
+import FilterButtons from "@/shared/ui/FilterButtons";
+import SearchBar from "@/shared/ui/SearchBar";
 
 const ApplicationsPage = (): React.JSX.Element => {
   const [jobs, setJobs] = useState<Job[]>([]);

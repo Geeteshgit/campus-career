@@ -2,13 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
-import PageHeader from "@/components/PageHeader";
-import PrimaryButton from "@/components/ui/PrimaryButton";
-import DangerButton from "@/components/ui/DangerButton";
-import InputField from "@/components/FormComponents/InputField";
+import PageHeader from "@/shared/ui/PageHeader";
+import PrimaryButton from "@/shared/ui/PrimaryButton";
+import DangerButton from "@/shared/ui/DangerButton";
+import InputField from "@/shared/ui/InputField";
 import axios from "axios";
 import { env } from "@/config/env";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import { ProtectedRoute } from "@/features/auth";
 import { useAppSelector } from "@/redux/hooks";
 import { useDispatch } from "react-redux";
 import { setPrograms } from "@/redux/features/academic/academicSlice";

@@ -3,17 +3,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "@/components/Navbar";
-import JobModal, { Job } from "@/components/JobModalComponents/JobModal";
-import PageHeader from "@/components/PageHeader";
-import PrimaryButton from "@/components/ui/PrimaryButton";
-import AddModal, { FieldConfig } from "@/components/ui/AddModal";
-import EditModal from "@/components/ui/EditModal";
+import { Job, JobModal, AdminPostingsContainer } from "@/features/job";
+import PageHeader from "@/shared/ui/PageHeader";
+import PrimaryButton from "@/shared/ui/PrimaryButton";
+import AddModal from "@/shared/ui/AddModal";
+import EditModal from "@/shared/ui/EditModal";
+import { FieldConfig } from "@/shared/types/modal";
 import { useAppSelector } from "@/redux/hooks";
 import { env } from "@/config/env";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import FilterButtons from "@/components/ui/FilterButtons";
-import SearchBar from "@/components/ui/SearchBar";
-import AdminPostingsContainer from "@/components/AdminDashboardComponents/AdminPostingsContainer";
+import { ProtectedRoute } from "@/features/auth";
+import FilterButtons from "@/shared/ui/FilterButtons";
+import SearchBar from "@/shared/ui/SearchBar";
 
 const Postings = (): React.JSX.Element => {
   const [jobs, setJobs] = useState<Job[]>([]);

@@ -3,24 +3,22 @@
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Navbar from "@/components/Navbar";
-import PageHeader from "@/components/PageHeader";
-import FormLabel from "@/components/FormComponents/FormLabel";
-import ReadOnlyField from "@/components/FormComponents/ReadonlyField";
-import InputField from "@/components/FormComponents/InputField";
-import PrimaryButton from "@/components/ui/PrimaryButton";
-import DangerButton from "@/components/ui/DangerButton";
-import ProfileChangePassword from "@/components/ProfileComponents/ProfileChangePassword";
-
+import PageHeader from "@/shared/ui/PageHeader";
+import FormLabel from "@/shared/ui/FormLabel";
+import ReadOnlyField from "@/shared/ui/ReadonlyField";
+import InputField from "@/shared/ui/InputField";
+import PrimaryButton from "@/shared/ui/PrimaryButton";
+import DangerButton from "@/shared/ui/DangerButton";
+import { ProfileChangePassword } from "@/features/user";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   login,
   logout,
   updateUserField,
 } from "@/redux/features/user/userSlice";
-
 import { env } from "@/config/env";
 import { disconnectSocket } from "@/lib/socket";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import { ProtectedRoute } from "@/features/auth";
 
 const AdminProfile = (): React.JSX.Element => {
   const dispatch = useAppDispatch();

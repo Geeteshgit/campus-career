@@ -1,7 +1,7 @@
-import AdminDashboardCard from "@/components/AdminDashboardComponents/AdminDashboardCard";
+import { AdminDashboardCard } from "@/features/admin";
 import Navbar from "@/components/Navbar";
-import PageHeader from "@/components/PageHeader";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import PageHeader from "@/shared/ui/PageHeader";
+import { ProtectedRoute } from "@/features/auth";
 import React from "react";
 import { BiBarChartAlt2 } from "react-icons/bi";
 import { FiBriefcase, FiSettings, FiUsers } from "react-icons/fi";

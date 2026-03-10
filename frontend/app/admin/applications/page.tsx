@@ -3,16 +3,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "@/components/Navbar";
-import PageHeader from "@/components/PageHeader";
-import JobModal, { Job } from "@/components/JobModalComponents/JobModal";
-import { FieldConfig } from "@/components/ui/EditModal";
-import EditModal from "@/components/ui/EditModal";
+import PageHeader from "@/shared/ui/PageHeader";
+import { Job, JobModal } from "@/features/job";
+import { FieldConfig } from "@/shared/types/modal";
+import EditModal from "@/shared/ui/EditModal";
 import { useAppSelector } from "@/redux/hooks";
 import { env } from "@/config/env";
-import JobApplicationsCard from "@/components/JobApplicationsCard";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import FilterButtons from "@/components/ui/FilterButtons";
-import SearchBar from "@/components/ui/SearchBar";
+import { JobApplicationsCard } from "@/features/application";
+import { ProtectedRoute } from "@/features/auth";
+import FilterButtons from "@/shared/ui/FilterButtons";
+import SearchBar from "@/shared/ui/SearchBar";
 
 const exportCSV = (data: any[], filename: string) => {
   if (!data || data.length === 0) {

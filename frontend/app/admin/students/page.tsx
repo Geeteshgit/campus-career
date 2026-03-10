@@ -2,38 +2,20 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-
 import Navbar from "@/components/Navbar";
-import PageHeader from "@/components/PageHeader";
-import StudentCard from "@/components/AdminDashboardComponents/StudentCard";
-import PrimaryButton from "@/components/ui/PrimaryButton";
-import AddModal, { FieldConfig } from "@/components/ui/AddModal";
-import EditModal from "@/components/ui/EditModal";
-
+import PageHeader from "@/shared/ui/PageHeader";
+import { Student, StudentCard, ViewStudentModal } from "@/features/student";
+import PrimaryButton from "@/shared/ui/PrimaryButton";
+import AddModal from "@/shared/ui/AddModal";
+import EditModal from "@/shared/ui/EditModal";
+import { FieldConfig } from "@/shared/types/modal";
 import { env } from "@/config/env";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import { ProtectedRoute } from "@/features/auth";
 import { useAppSelector } from "@/redux/hooks";
-import SuccessButton from "@/components/ui/SuccessButton";
-import { useDebounce } from "@/hooks/useDebounce";
-import FilterButtons from "@/components/ui/FilterButtons";
-import SearchBar from "@/components/ui/SearchBar";
-import ViewStudentModal from "@/components/ui/ViewStudentModal";
-
-interface Student {
-  _id: string;
-  userId: {
-    _id: string;
-    name: string;
-    email: string;
-    phone: string;
-  };
-  enrollmentNumber: string;
-  program: string;
-  year: string;
-  batch: string;
-  specialization: string;
-  cgpa: number;
-}
+import SuccessButton from "@/shared/ui/SuccessButton";
+import { useDebounce } from "@/shared/hooks/useDebounce";
+import FilterButtons from "@/shared/ui/FilterButtons";
+import SearchBar from "@/shared/ui/SearchBar";
 
 const StudentManagement = (): React.JSX.Element => {
   const [students, setStudents] = useState<Student[]>([]);

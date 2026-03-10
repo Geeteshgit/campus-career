@@ -2,12 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
-import PageHeader from "@/components/PageHeader";
-import UsersAnalytics from "@/components/AnalyticsComponents/UserAnalytics";
-import JobsAnalytics from "@/components/AnalyticsComponents/JobAnalytics";
+import PageHeader from "@/shared/ui/PageHeader";
+import { UsersAnalytics, JobsAnalytics } from "@/features/analytics";
 import axios from "axios";
 import { env } from "@/config/env";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import { ProtectedRoute } from "@/features/auth";
 
 const Analytics = (): React.JSX.Element => {
   const [statsData, setStatsData] = useState<any>(null);
