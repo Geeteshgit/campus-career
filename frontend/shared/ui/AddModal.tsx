@@ -13,6 +13,7 @@ interface AddModalProps {
   fields: FieldConfig[];
   onClose: () => void;
   onSave: (data: any) => void;
+  isPending?: boolean;
 }
 
 const AddModal = ({
@@ -20,11 +21,12 @@ const AddModal = ({
   fields,
   onClose,
   onSave,
+  isPending = false,
 }: AddModalProps): React.JSX.Element => {
   const initialData: Record<string, any> = {};
   fields.forEach((f) => {
     if (f.type === "select" && f.options?.length) {
-      initialData[f.name] = f.options[0]; 
+      initialData[f.name] = f.options[0];
     } else {
       initialData[f.name] = "";
     }
@@ -84,7 +86,9 @@ const AddModal = ({
         </div>
 
         {/* SAVE BUTTON */}
-        <PrimaryButton onClick={handleSave}>Save</PrimaryButton>
+        <PrimaryButton onClick={handleSave} disabled={isPending}>
+          Save
+        </PrimaryButton>
       </div>
     </div>
   );

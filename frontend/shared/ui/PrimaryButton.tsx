@@ -13,15 +13,17 @@ const PrimaryButton = ({
   onClick,
   type = "button",
   className = "",
-  disabled=false,
+  disabled = false,
 }: PrimaryButtonProps): React.JSX.Element => {
   return (
     <button
       type={type}
       onClick={onClick}
-      className={`text-sm sm:text-base px-4 py-2 bg-blue-500 text-white font-semibold 
-                  rounded-lg hover:bg-blue-600 hover:scale-[1.01] duration-300 
-                  transition cursor-pointer ${className}`}
+      className={`text-sm sm:text-base bg-blue-500 px-4 py-2 font-semibold rounded-lg transition duration-300 ${
+        disabled
+          ? "cursor-not-allowed"
+          : "bg-blue-500 hover:bg-blue-600 hover:scale-[1.01] cursor-pointer"
+      } text-white ${className}`}
       disabled={disabled}
     >
       {children}

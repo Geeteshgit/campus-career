@@ -14,6 +14,7 @@ interface EditModalProps {
   initialValues: Record<string, any>;
   onClose: () => void;
   onSave: (updatedData: any) => void;
+  isPending?: boolean;
 }
 
 const EditModal = ({
@@ -22,8 +23,8 @@ const EditModal = ({
   initialValues,
   onClose,
   onSave,
+  isPending = false,
 }: EditModalProps): React.JSX.Element => {
-  
   const [formData, setFormData] = useState(initialValues);
 
   const handleChange = (e: any) => {
@@ -76,7 +77,9 @@ const EditModal = ({
             </div>
           ))}
         </div>
-        <PrimaryButton onClick={handleSave}>Save Changes</PrimaryButton>
+        <PrimaryButton onClick={handleSave} disabled={isPending}>
+          Save Changes
+        </PrimaryButton>
       </div>
     </div>
   );
