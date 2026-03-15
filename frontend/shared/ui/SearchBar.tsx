@@ -1,6 +1,6 @@
 import React from "react";
 
-interface SearchBarProps {
+type SearchBarProps = {
   value?: string;
   onChange?: (value: string) => void;
   placeholder?: string;

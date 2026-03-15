@@ -1,6 +1,6 @@
 import React from "react";
 
-interface PrimaryButtonProps {
+type PrimaryButtonProps = {
   children: React.ReactNode;
   onClick?: () => void;
   type?: "button" | "submit" | "reset";

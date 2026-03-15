@@ -8,7 +8,7 @@ import PrimaryButton from "./PrimaryButton";
 import CloseButton from "./CloseButton";
 import { FieldConfig } from "../types/modal";
 
-interface AddModalProps {
+type AddModalProps = {
   title: string;
   fields: FieldConfig[];
   onClose: () => void;

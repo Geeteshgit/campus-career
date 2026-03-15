@@ -1,6 +1,6 @@
 import React from "react";
 
-interface DangerButtonProps {
+type DangerButtonProps = {
   children: React.ReactNode;
   onClick?: () => void;
   type?: "button" | "submit" | "reset";

@@ -1,6 +1,6 @@
 import React from "react";
 
-interface SelectFieldProps {
+type SelectFieldProps = {
   name: string;
   value?: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;

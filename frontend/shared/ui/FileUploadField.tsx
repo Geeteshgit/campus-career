@@ -1,6 +1,6 @@
 import React from "react";
 
-interface FileUploadFieldProps {
+type FileUploadFieldProps = {
   label?: string;
   file: File | null;
   onChange: (file: File | null) => void;

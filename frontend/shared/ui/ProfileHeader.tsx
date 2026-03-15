@@ -1,6 +1,6 @@
 import React from "react";
 
-interface ProfileHeaderProps {
+type ProfileHeaderProps = {
   name: string;
 }
 

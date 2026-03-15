@@ -1,6 +1,6 @@
 import React from "react";
 
-interface FilterButtonsProps {
+type FilterButtonsProps = {
   filters: string[];
   activeFilter?: string;
   onFilterChange?: (filter: string) => void;

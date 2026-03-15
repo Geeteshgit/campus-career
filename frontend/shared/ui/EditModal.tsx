@@ -8,7 +8,7 @@ import PrimaryButton from "./PrimaryButton";
 import CloseButton from "./CloseButton";
 import { FieldConfig } from "../types/modal";
 
-interface EditModalProps {
+type EditModalProps = {
   title: string;
   fields: FieldConfig[];
   initialValues: Record<string, any>;

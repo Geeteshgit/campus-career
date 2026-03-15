@@ -1,6 +1,6 @@
 import React from "react";
 
-interface TextAreaFieldProps {
+type TextAreaFieldProps = {
   name: string;
   placeholder?: string;
   value?: string;

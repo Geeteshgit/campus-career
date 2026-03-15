@@ -1,6 +1,6 @@
 import React from "react";
 
-interface ReadOnlyFieldProps {
+type ReadOnlyFieldProps = {
   value: string;
   placeholder?: string;
 }

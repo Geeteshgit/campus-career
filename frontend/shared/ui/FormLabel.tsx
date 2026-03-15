@@ -1,6 +1,6 @@
 import React from "react";
 
-interface FormLabelProps {
+type FormLabelProps = {
   htmlFor?: string;
   children: React.ReactNode;
 }

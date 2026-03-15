@@ -1,6 +1,6 @@
 import React from "react";
 
-interface PageHeaderProps {
+type PageHeaderProps = {
   title: string;
   subtitle?: string;
 }

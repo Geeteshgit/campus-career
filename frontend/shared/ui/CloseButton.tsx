@@ -1,7 +1,7 @@
 import React from "react";
 import { FaTimes } from "react-icons/fa";
 
-interface CloseButtonProps {
+type CloseButtonProps = {
   onClick: () => void;
   className?: string;
 }

@@ -1,6 +1,6 @@
 import React from "react";
 
-interface AsyncStateProps {
+type AsyncStateProps = {
   isLoading: boolean;
   isError: boolean;
   error?: unknown;
