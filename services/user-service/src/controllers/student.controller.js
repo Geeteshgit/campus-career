@@ -6,14 +6,14 @@ import { hashPassword } from "../utils/password.js";
 
 export const getMyStudentProfile = async (req, res) => {
   try {
-    const profile = await Student.findOne({ userId: req.user.id });
+    const student = await Student.findOne({ userId: req.user.id });
 
-    if (!profile)
+    if (!student)
       return res.status(404).json({ message: "Student profile not found" });
 
     return res
       .status(200)
-      .json({ message: "Fetched student profile", profile });
+      .json({ message: "Fetched student profile", student });
   } catch (err) {
     console.error("Error Fetching Student Profile: ", err);
     return res.status(500).json({ message: "Failed to fetch student profile" });
