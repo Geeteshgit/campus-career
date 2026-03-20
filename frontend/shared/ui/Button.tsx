@@ -4,12 +4,13 @@ import React, { ButtonHTMLAttributes } from "react";
 // External Libraries
 import clsx from "clsx";
 
-type Variant = "primary" | "danger" | "success";
+type Variant = "primary" | "danger" | "success" | "link";
 
 const variantStyles: Record<Variant, { base: string; hover: string }> = {
   primary: { base: "bg-blue-500", hover: "hover:bg-blue-600" },
   danger: { base: "bg-red-500", hover: "hover:bg-red-600" },
   success: { base: "bg-green-500", hover: "hover:bg-green-600" },
+  link: { base: "bg-transparent text-blue-500", hover: "hover:underline" },
 };
 
 type ButtonProps = {
