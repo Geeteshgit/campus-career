@@ -29,7 +29,9 @@ const Button = ({
       type={type}
       disabled={disabled}
       className={clsx(
-        "text-sm sm:text-base px-4 py-2 font-semibold rounded-lg transition duration-300 text-white",
+        "text-sm sm:text-base px-4 py-2 font-semibold rounded-lg transition duration-300",
+        variant !== "link" && "px-4 py-2 text-white",
+        variant === "link" && "p-0",
         variantStyles[variant].base,
         !disabled && variantStyles[variant].hover,
         disabled
