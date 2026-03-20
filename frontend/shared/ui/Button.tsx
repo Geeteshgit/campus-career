@@ -18,7 +18,7 @@ type ButtonProps = {
 
 const Button = ({
   variant = "primary",
-  className = "",
+  className,
   disabled = false,
   type = "button",
   ...props
