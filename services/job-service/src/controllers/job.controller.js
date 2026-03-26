@@ -66,12 +66,13 @@ export const getInactiveJobs = async (req, res) => {
 
 export const getRecommendedJobs = async (req, res) => {
   try {
-    const { student } = req.body;
+    const student = req.body?.student ?? req.body;
 
     if (!student) {
       return res.status(400).json({
         message: "Student data missing",
         recommendations: [],
+        jobs: [],
       });
     }
 
@@ -81,6 +82,7 @@ export const getRecommendedJobs = async (req, res) => {
       return res.status(200).json({
         message: "No jobs available",
         recommendations: [],
+        jobs: [],
       });
     }
 
@@ -104,6 +106,7 @@ export const getRecommendedJobs = async (req, res) => {
     return res.status(200).json({
       message: "Job recommendations generated",
       recommendations,
+      jobs: recommendations,
     });
   } catch (err) {
     console.error("Unexpected recommendation error:", err);
@@ -111,6 +114,7 @@ export const getRecommendedJobs = async (req, res) => {
     return res.status(200).json({
       message: "Recommendations temporarily unavailable",
       recommendations: [],
+      jobs: [],
     });
   }
 };
