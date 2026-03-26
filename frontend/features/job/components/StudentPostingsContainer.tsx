@@ -1,10 +1,15 @@
 "use client";
 
-import StudentJobCard from "./StudentJobCard";
-import { Job } from "@/features/job";
+// React
 import React from "react";
 
-interface StudentPostingsContainerProps {
+// Features
+import { Job } from "@/features/job";
+
+// Local Imports
+import StudentJobCard from "./StudentJobCard";
+
+type StudentPostingsContainerProps = {
   title: string;
   jobs: Job[];
   onJobClick: (job: Job) => void;

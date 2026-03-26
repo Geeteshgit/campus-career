@@ -1,11 +1,16 @@
 "use client";
-import React, { useState } from "react";
-import InputField from "@/shared/ui/InputField";
-import PrimaryButton from "@/shared/ui/PrimaryButton";
-import axios from "axios";
-import { env } from "@/config/env";
 
-interface ResetPasswordStepProps {
+// React
+import React from "react";
+
+// Shared UI Components
+import Button from "@/shared/ui/Button";
+import Input from "@/shared/ui/Input";
+
+// Features
+import { usePasswordReset } from "@/features/auth";
+
+type ResetPasswordStepProps = {
   email: string;
   newPassword: string;
   confirmNewPassword: string;
@@ -24,36 +29,29 @@ const ResetPasswordStep: React.FC<ResetPasswordStepProps> = ({
   onSuccess,
   onError,
 }) => {
-  const [loading, setLoading] = useState(false);
+  const { handleResetPassword, resetPasswordPending } = usePasswordReset();
 
   const resetPassword = async () => {
     try {
-      setLoading(true);
-      await axios.post(`${env.USER_SERVICE}/api/auth/reset-password`, {
-        email,
-        newPassword,
-        confirmNewPassword,
-      });
+      await handleResetPassword(email, newPassword, confirmNewPassword);
       onSuccess();
     } catch (err: any) {
       console.error("Password reset failed:", err);
       onError("Failed to reset password");
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
     <>
       <div className="flex flex-col gap-2">
-        <InputField
+        <Input
           name="newPassword"
           type="password"
           placeholder="New password"
           value={newPassword}
           onChange={(e) => onPasswordChange(e.target.value)}
         />
-        <InputField
+        <Input
           name="confirmNewPassword"
           type="password"
           placeholder="Confirm new password"
@@ -61,13 +59,14 @@ const ResetPasswordStep: React.FC<ResetPasswordStepProps> = ({
           onChange={(e) => onConfirmPasswordChange(e.target.value)}
         />
       </div>
-      <PrimaryButton
+      <Button
+        variant="primary"
         className="w-full mt-3"
         onClick={resetPassword}
-        disabled={loading}
+        disabled={resetPasswordPending}
       >
-        {loading ? "Resetting..." : "Reset Password"}
-      </PrimaryButton>
+        {resetPasswordPending ? "Resetting..." : "Reset Password"}
+      </Button>
     </>
   );
 };

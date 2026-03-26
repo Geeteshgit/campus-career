@@ -1,57 +1,51 @@
 "use client";
 
+// React
 import React, { useState } from "react";
+
+// Shared UI Components
+import Button from "@/shared/ui/Button";
 import FormLabel from "@/shared/ui/FormLabel";
-import InputField from "@/shared/ui/InputField";
-import PrimaryButton from "@/shared/ui/PrimaryButton";
-import axios from "axios";
-import { env } from "@/config/env";
-import { disconnectSocket } from "@/lib/socket";
-import { logout } from "@/redux/features/user/userSlice";
-import { useDispatch } from "react-redux";
-import { useRouter } from "next/navigation";
+import Input from "@/shared/ui/Input";
+
+// Features
+import { useChangePasswordMutation, useLogout } from "@/features/auth";
+
+type ChangePasswordData = {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+};
 
 const ProfileChangePassword = (): React.JSX.Element => {
-  const [oldPassword, setOldPassword] = useState<string>("");
-  const [newPassword, setNewPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [passwordFormData, setPasswordFormData] = useState<ChangePasswordData>({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
 
-  const dispatch = useDispatch();
-  const router = useRouter();
+  const { handleLogout, logoutPending } = useLogout();
+  const { changePassword, isPending: updatePending } = useChangePasswordMutation();
 
-  const handlePasswordChange = async (data: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setPasswordFormData({ ...passwordFormData, [name]: value });
+  };
+
+  const handlePasswordChange = async (data: ChangePasswordData) => {
     if (data.newPassword !== data.confirmPassword)
       return alert("Passwords do not match!");
 
     try {
-      await axios.put(
-        `${env.USER_SERVICE}/api/auth/change-password`,
-        {
-          oldPassword: data.oldPassword,
-          newPassword: data.newPassword,
-        },
-        { withCredentials: true },
-      );
-
-      handleLogout();
+      await changePassword({
+        oldPassword: data.oldPassword,
+        newPassword: data.newPassword,
+      });
+      await handleLogout();
       alert("Password updated successfully!");
     } catch (err) {
       console.error(err);
       alert("Failed to update password");
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await axios.post(`${env.USER_SERVICE}/api/auth/logout`, {}, {
-        withCredentials: true,
-      });
-      
-      dispatch(logout());
-      disconnectSocket();
-      router.push("/login");
-    } catch (err) {
-      console.error("Logout failed", err);
     }
   };
 
@@ -64,12 +58,12 @@ const ProfileChangePassword = (): React.JSX.Element => {
       {/* Current Password */}
       <div>
         <FormLabel>Current Password</FormLabel>
-        <InputField
-          name="currentPassword"
+        <Input
+          name="oldPassword"
           type="password"
           placeholder="Enter current password"
-          value={oldPassword}
-          onChange={(e) => setOldPassword(e.target.value)}
+          value={passwordFormData.oldPassword}
+          onChange={handleChange}
           required={true}
         />
       </div>
@@ -77,12 +71,12 @@ const ProfileChangePassword = (): React.JSX.Element => {
       {/* New Password */}
       <div>
         <FormLabel>New Password</FormLabel>
-        <InputField
+        <Input
           name="newPassword"
           type="password"
           placeholder="Enter new password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
+          value={passwordFormData.newPassword}
+          onChange={handleChange}
           required={true}
         />
       </div>
@@ -90,24 +84,24 @@ const ProfileChangePassword = (): React.JSX.Element => {
       {/* Confirm Password */}
       <div>
         <FormLabel>Confirm New Password</FormLabel>
-        <InputField
+        <Input
           name="confirmPassword"
           type="password"
           placeholder="Re-enter new password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
+          value={passwordFormData.confirmPassword}
+          onChange={handleChange}
           required={true}
         />
       </div>
 
       {/* Save Button */}
-      <PrimaryButton
-        onClick={() =>
-          handlePasswordChange({ oldPassword, newPassword, confirmPassword })
-        }
+      <Button
+        variant="primary"
+        onClick={() => handlePasswordChange(passwordFormData)}
+        disabled={updatePending || logoutPending}
       >
         Change Password
-      </PrimaryButton>
+      </Button>
     </div>
   );
 };

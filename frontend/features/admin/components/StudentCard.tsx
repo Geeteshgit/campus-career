@@ -1,4 +1,9 @@
+"use client";
+
+// React
 import React from "react";
+
+// External Libraries
 import { FiEdit2 } from "react-icons/fi";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -17,7 +22,7 @@ type Student = {
   cgpa: number;
 };
 
-interface StudentCardProps {
+type StudentCardProps = {
   student: Student;
   onView: (student: Student) => void;
   onEdit: (student: Student) => void;

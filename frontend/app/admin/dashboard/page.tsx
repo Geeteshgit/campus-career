@@ -1,13 +1,22 @@
-import { AdminDashboardCard } from "@/features/admin";
-import Navbar from "@/components/Navbar";
-import PageHeader from "@/shared/ui/PageHeader";
-import { ProtectedRoute } from "@/features/auth";
+// React
 import React from "react";
+
+// External Libraries
 import { BiBarChartAlt2 } from "react-icons/bi";
 import { FiBriefcase, FiSettings, FiUsers } from "react-icons/fi";
 import { GiNotebook } from "react-icons/gi";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { TbChecklist } from "react-icons/tb";
+
+// Layout Components
+import Navbar from "@/components/Navbar";
+
+// Shared UI Components
+import PageHeader from "@/shared/ui/PageHeader";
+
+// Features
+import { ProtectedRoute } from "@/features/auth";
+import { AdminDashboardCard } from "@/features/admin";
 
 const AdminDashboard = (): React.JSX.Element => {
   type AdminDashboardCard = {

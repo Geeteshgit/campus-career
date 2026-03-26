@@ -1,9 +1,18 @@
-import React from "react";
-import { Job } from "@/features/job";
-import { FiDownload } from "react-icons/fi";
-import PrimaryButton from "@/shared/ui/PrimaryButton";
+"use client";
 
-interface JobApplicationsCardProps {
+// React
+import React from "react";
+
+// External Libraries
+import { FiDownload } from "react-icons/fi";
+
+// Shared UI Components
+import Button from "@/shared/ui/Button";
+
+// Features
+import { Job } from "@/features/job";
+
+type JobApplicationsCardProps = {
   job: Job;
   isAdmin: boolean;
   onDownload?: (job: Job) => void;
@@ -54,13 +63,14 @@ const JobApplicationsCard = ({
 
       <div className="flex sm:justify-end" onClick={(e) => e.stopPropagation()}>
         {isAdmin && onDownload && (
-          <PrimaryButton
+          <Button
+            variant="primary"
             onClick={() => onDownload(job)}
             className="flex items-center gap-2"
           >
             <FiDownload className="w-4 h-4" />
             Download CSV
-          </PrimaryButton>
+          </Button>
         )}
 
         {!isAdmin && (

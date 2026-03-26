@@ -1,4 +1,5 @@
 import { usersApi } from "@/lib/axios";
+import { CreateStudentPayload, UpdateStudentPayload } from "../types/student.types";
 
 export interface PaginationParams {
   page?: number;
@@ -12,7 +13,7 @@ export const getMyStudentProfile = async () => {
   return data;
 };
 
-export const updateMyStudentProfile = async (payload: any) => {
+export const updateMyStudentProfile = async (payload: UpdateStudentPayload) => {
   const { data } = await usersApi.put("/students/me", payload);
   return data;
 };
@@ -24,11 +25,6 @@ export const uploadStudentResume = async (file: File) => {
   const { data } = await usersApi.post(
     "/students/me/resume",
     formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }
   );
 
   return data;
@@ -39,17 +35,12 @@ export const getAllStudents = async (params: PaginationParams = {}) => {
   return data;
 };
 
-export const getStudentStats = async () => {
-  const { data } = await usersApi.get("/students/stats");
-  return data;
-};
-
 export const getStudentByUserId = async (userId: string) => {
   const { data } = await usersApi.get(`/students/${userId}`);
   return data;
 };
 
-export const createStudent = async (payload: Record<string, any>) => {
+export const createStudent = async (payload: CreateStudentPayload) => {
   const { data } = await usersApi.post("/students", payload);
   return data;
 };
@@ -58,16 +49,11 @@ export const bulkCreateStudents = async (file: File) => {
   const formData = new FormData();
   formData.append("file", file);
 
-  const { data } = await usersApi.post("/students/bulk-upload", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data"
-    }
-  });
-
+  const { data } = await usersApi.post("/students/bulk-upload", formData);
   return data;
 };
 
-export const updateStudent = async (id: string, payload: Record<string, any>) => {
+export const updateStudent = async (id: string, payload: UpdateStudentPayload) => {
   const { data } = await usersApi.put(`/students/${id}`, payload);
   return data;
 };

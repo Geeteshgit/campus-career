@@ -1,7 +1,12 @@
-import React from "react";
-import { Message } from "../types/message";
+"use client";
 
-interface MessageBubbleProps {
+// React
+import React from "react";
+
+// Local Imports
+import { Message } from "../types/message.types";
+
+type MessageBubbleProps = {
   msg: Message;
   userId: string;
 }
@@ -10,7 +15,7 @@ const MessageBubble = ({
   msg,
   userId,
 }: MessageBubbleProps): React.JSX.Element => {
-  const isUser = msg.userId === userId;
+  const isUser: boolean = msg.userId === userId;
 
   return (
     <div className={`flex flex-col ${isUser ? "items-end" : "items-start"}`}>

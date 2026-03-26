@@ -1,14 +1,19 @@
 "use client";
 
+// React
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
-import { IoBookOutline, IoClose, IoMenuOutline } from "react-icons/io5";
 import { usePathname } from "next/navigation";
-import { FiBriefcase, FiUser } from "react-icons/fi";
+
+// External Libraries
 import { BiComment } from "react-icons/bi";
-import { useAppSelector } from "@/redux/hooks";
+import { FiBriefcase, FiUser } from "react-icons/fi";
+import { IoBookOutline, IoClose, IoMenuOutline } from "react-icons/io5";
 import { RxDashboard } from "react-icons/rx";
+
+// Features
+import { useAuthStore } from "@/features/auth/auth.store";
 
 type NavLink = {
   link: string;
@@ -20,7 +25,7 @@ const Navbar = (): React.JSX.Element => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const pathname = usePathname();
 
-  const user = useAppSelector((state) => state.user.user);
+  const user = useAuthStore((state) => state.user);
   const role = user?.role;
 
   const studentLinks: NavLink[] = [
@@ -52,10 +57,10 @@ const Navbar = (): React.JSX.Element => {
       href: "/admin/dashboard",
       icon: <RxDashboard className="w-4 h-4" />,
     },
-    { 
-      link: "Chat", 
-      href: "/chat", 
-      icon: <BiComment className="w-4 h-4" /> 
+    {
+      link: "Chat",
+      href: "/chat",
+      icon: <BiComment className="w-4 h-4" />,
     },
     {
       link: "Profile",

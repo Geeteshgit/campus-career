@@ -1,102 +1,41 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  loginUser,
-  logoutUser,
-  forgotPassword,
-  verifyResetOtp,
-  resetPassword,
-  changePassword,
-  getMe,
-} from "../api/auth.api";
+import { useEffect } from "react";
+import { useMeQuery } from "../api/auth.queries";
+import { useAuthStore } from "../auth.store";
 
-const STALE_TIME = 1000 * 60 * 1; // 1 minute
+export const useAuthInit = () => {
+  const login = useAuthStore((state) => state.login);
+  const logout = useAuthStore((state) => state.logout);
+  const currentUser = useAuthStore((state) => state.user);
 
-export const useMe = () => {
-  return useQuery({
-    queryKey: ["auth", "me"],
-    queryFn: getMe,
-    retry: false,
-    staleTime: STALE_TIME, 
-  });
-};
+  const {
+    data: userData,
+    isPending: userDataLoading,
+    isError: userDataError,
+    error: userDataErrorObj,
+  } = useMeQuery();
 
-export const useLogin = () => {
-  const queryClient = useQueryClient();
+  const user = userData?.user;
 
-  const mutation = useMutation({
-    mutationFn: loginUser,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
-    },
-  });
+  useEffect(() => {
+    if (user && user._id !== currentUser?.id) {
+      login({
+        id: user._id,
+        name: user.name,
+        role: user.role,
+      });
+    }
+  }, [user, currentUser, login]);
 
-  return {
-    login: mutation.mutateAsync,
-    ...mutation,
-  };
-};
-
-export const useLogout = () => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: logoutUser,
-    onSuccess: () => {
-      queryClient.clear();
-    },
-  });
+  useEffect(() => {
+    if (userDataError) {
+      logout();
+    }
+  }, [userDataError, logout]);
 
   return {
-    logout: mutation.mutateAsync,
-    ...mutation,
-  };
-};
-
-export const useForgotPassword = () => {
-  const mutation = useMutation({
-    mutationFn: forgotPassword,
-  });
-
-  return {
-    forgotPassword: mutation.mutateAsync,
-    ...mutation,
-  };
-};
-
-export const useVerifyResetOtp = () => {
-  const mutation = useMutation({
-    mutationFn: verifyResetOtp,
-  });
-
-  return {
-    verifyOtp: mutation.mutateAsync,
-    ...mutation,
-  };
-};
-
-export const useResetPassword = () => {
-  const mutation = useMutation({
-    mutationFn: resetPassword,
-  });
-
-  return {
-    resetPassword: mutation.mutateAsync,
-    ...mutation,
-  };
-};
-
-export const useChangePassword = () => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: changePassword,
-    onSuccess: () => {
-      queryClient.clear();
-    },
-  });
-
-  return {
-    changePassword: mutation.mutateAsync,
-    ...mutation,
+    user,
+    userLoading: userDataLoading,
+    userError: userDataError,
+    userErrorObj: userDataErrorObj,
   };
 };

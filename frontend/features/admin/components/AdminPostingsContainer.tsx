@@ -1,10 +1,15 @@
 "use client";
 
+// React
 import React from "react";
+
+// Features
 import { Job } from "@/features/job";
+
+// Local Imports
 import AdminJobCard from "./AdminJobCard";
 
-interface AdminPostingsContainerProps {
+type AdminPostingsContainerProps = {
   title: string;
   jobs: Job[];
   onJobClick: (job: Job) => void;

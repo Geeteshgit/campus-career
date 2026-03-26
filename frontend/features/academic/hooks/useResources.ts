@@ -1,72 +1,33 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+"use client";
+
 import {
-  getResources,
-  getStudentResources,
-  createResource,
-  updateResource,
-  deleteResource,
-} from "../api/resources.api";
+  useResourcesQuery,
+  useStudentResourcesQuery,
+} from "../api/resources.queries";
+import { Resource } from "../types/resource.types";
 
 export const useResources = () => {
-  return useQuery({
-    queryKey: ["resources", "admin"],
-    queryFn: getResources,
-  });
+  const {
+    data: resourcesData,
+    isPending: resourcesLoading,
+    isError: resourcesError,
+    error: resourcesErrorObj,
+  } = useResourcesQuery();
+
+  const resources: Resource[] = resourcesData?.resources ?? [];
+
+  return { resources, resourcesLoading, resourcesError, resourcesErrorObj };
 };
 
 export const useStudentResources = (program: string) => {
-  return useQuery({
-    queryKey: ["resources", "student", program],
-    queryFn: () => getStudentResources(program),
-    enabled: !!program
-  });
-};
+  const {
+    data: resourcesData,
+    isPending: resourcesLoading,
+    isError: resourcesError,
+    error: resourcesErrorObj,
+  } = useStudentResourcesQuery(program);
 
-export const useCreateResource = () => {
-  const queryClient = useQueryClient();
+  const resources: Resource[] = resourcesData?.resources ?? [];
 
-  const mutation = useMutation({
-    mutationFn: createResource,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["resources"] });
-    },
-  });
-
-  return {
-    createResource: mutation.mutateAsync,
-    ...mutation,
-  };
-};
-
-export const useUpdateResource = () => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: ({ id, payload }: { id: string; payload: any }) =>
-      updateResource(id, payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["resources"] });
-    }
-  });
-
-  return {
-    updateResource: mutation.mutateAsync,
-    ...mutation,
-  };
-};
-
-export const useDeleteResource = () => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: deleteResource,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["resources"] });
-    }
-  });
-
-  return {
-    deleteResource: mutation.mutateAsync,
-    ...mutation,
-  };
+  return { resources, resourcesLoading, resourcesError, resourcesErrorObj };
 };

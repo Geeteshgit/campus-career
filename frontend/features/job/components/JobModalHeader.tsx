@@ -1,8 +1,15 @@
-import { Job } from "@/features/job";
+"use client";
+
+// React
 import React from "react";
+
+// Shared UI Components
 import CloseButton from "@/shared/ui/CloseButton";
 
-interface JobModalHeaderProps {
+// Features
+import { Job } from "@/features/job";
+
+type JobModalHeaderProps = {
   job: Job;
   isActive: boolean;
   onClose: () => void;

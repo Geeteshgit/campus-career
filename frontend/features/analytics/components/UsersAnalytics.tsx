@@ -1,8 +1,15 @@
+"use client";
+
+// React
 import React from "react";
-import "@/lib/chart";
+
+// External Libraries
 import { Bar, Doughnut } from "react-chartjs-2";
 
-interface UserAnalyticsProps {
+// Lib
+import "@/lib/chart";
+
+type UserAnalyticsProps = {
   totalUsers: number;
   totalStudents: number;
   totalAdmins: number;

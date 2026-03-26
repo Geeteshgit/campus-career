@@ -1,8 +1,15 @@
-import { FaBuilding, FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
-import { Job } from "@/features/job";
+"use client";
+
+// React
 import React from "react";
 
-interface StudentJobCardProps {
+// External Libraries
+import { FaBuilding, FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
+
+// Features
+import { Job } from "@/features/job";
+
+type StudentJobCardProps = {
   job: Job & { matchScore?: number };
   onClick: () => void;
 }

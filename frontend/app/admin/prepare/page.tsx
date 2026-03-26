@@ -1,41 +1,61 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import Navbar from "@/components/Navbar";
-import PageHeader from "@/shared/ui/PageHeader";
-import PrimaryButton from "@/shared/ui/PrimaryButton";
-import DangerButton from "@/shared/ui/DangerButton";
-import AddModal from "@/shared/ui/AddModal";
-import EditModal from "@/shared/ui/EditModal";
-import { FieldConfig } from "@/shared/types/modal";
-import { env } from "@/config/env";
-import { useAppSelector } from "@/redux/hooks";
-import { ProtectedRoute } from "@/features/auth";
-import FilterButtons from "@/shared/ui/FilterButtons";
-import SearchBar from "@/shared/ui/SearchBar";
+// React
+import React, { useState } from "react";
 
-type ResourceLink = {
-  _id: string;
-  title: string;
-  url: string;
-  program: string;
-};
+// Layout Components
+import Navbar from "@/components/Navbar";
+
+// Shared UI Components
+import AsyncState from "@/shared/ui/AsyncState";
+import FilterButtons from "@/shared/ui/FilterButtons";
+import FormModal from "@/shared/ui/FormModal";
+import PageHeader from "@/shared/ui/PageHeader";
+import SearchBar from "@/shared/ui/SearchBar";
+import Button from "@/shared/ui/Button";
+
+// Shared Types
+import { FieldConfig } from "@/shared/types/modal.types";
+
+// Features
+import { ProtectedRoute, useAuthStore } from "@/features/auth";
+import {
+  Resource,
+  usePrograms,
+  useResourceManagement,
+  useResources,
+} from "@/features/academic";
 
 const PrepareAdminPage = (): React.JSX.Element => {
-  const user = useAppSelector((state) => state.user.user);
-  const programs = useAppSelector((state) => state.academic.programs);
-  const programNames = programs.map((program) => program.name);
+  const user = useAuthStore((state) => state.user);
   const isAdmin = user?.role !== "student";
 
-  const [resources, setResources] = useState<ResourceLink[]>([]);
-  const [activeProgram, setActiveProgram] = useState(programNames[0]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [activeProgram, setActiveProgram] = useState<string>();
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
-  const [addModalOpen, setAddModalOpen] = useState(false);
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [editResource, setEditResource] = useState<ResourceLink | null>(null);
+  const { programs, programsLoading, programsError, programsErrorObj } =
+    usePrograms();
+
+  const { resources, resourcesLoading, resourcesError, resourcesErrorObj } =
+    useResources();
+
+  const {
+    handleCreateResource,
+    handleUpdateResource,
+    handleDeleteResource,
+    handleEditResource,
+    createPending,
+    updatePending,
+    deletePending,
+    addResourceModalOpen,
+    editResourceModalOpen,
+    setAddResourceModalOpen,
+    setEditResourceModalOpen,
+    selectedResource,
+  } = useResourceManagement();
+
+  const programNames: string[] = programs.map((program) => program.name);
+  const defaultProgram: string = activeProgram ?? programNames[0];
 
   const resourceFields: FieldConfig[] = [
     { name: "title", placeholder: "Resource Title", type: "text" },
@@ -48,82 +68,12 @@ const PrepareAdminPage = (): React.JSX.Element => {
     },
   ];
 
-  const fetchResources = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(
-        `${env.ACADEMIC_CONFIG_SERVICE}/api/resources/admin`,
-        {
-          withCredentials: true,
-        },
-      );
-      setResources(response.data.resources);
-    } catch (err) {
-      console.error("Error fetching resources:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchResources();
-  }, []);
-
-  const handleAddResource = async (data: any) => {
-    try {
-      const response = await axios.post(
-        `${env.ACADEMIC_CONFIG_SERVICE}/api/resources`,
-        data,
-        { withCredentials: true },
-      );
-
-      setResources((prev) => [...prev, response.data.resource]);
-      setAddModalOpen(false);
-    } catch (err) {
-      console.error("Create resource error:", err);
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this resource?")) return;
-
-    try {
-      await axios.delete(`${env.ACADEMIC_CONFIG_SERVICE}/api/resources/${id}`, {
-        withCredentials: true,
-      });
-
-      setResources((prev) => prev.filter((r) => r._id !== id));
-    } catch (err) {
-      console.error("Delete resource error:", err);
-    }
-  };
-
-  const handleEditSave = async (data: any) => {
-    if (!editResource) return;
-
-    try {
-      const response = await axios.put(
-        `${env.ACADEMIC_CONFIG_SERVICE}/api/resources/${editResource._id}`,
-        data,
-        { withCredentials: true },
-      );
-
-      setResources((prev) =>
-        prev.map((r) =>
-          r._id === editResource._id ? response.data.updatedResource : r,
-        ),
-      );
-
-      setEditModalOpen(false);
-      setEditResource(null);
-    } catch (err) {
-      console.error("Update resource error:", err);
-    }
-  };
-
-  const filteredResources = resources
-    .filter((r) => r.program === activeProgram)
-    .filter((r) => r.title.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filteredResources: Resource[] = resources.filter((resource) => {
+    return (
+      resource.program === defaultProgram &&
+      resource.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
 
   return (
     <ProtectedRoute allowedRoles={["admin", "super_admin"]}>
@@ -137,28 +87,51 @@ const PrepareAdminPage = (): React.JSX.Element => {
             />
 
             {isAdmin && (
-              <PrimaryButton onClick={() => setAddModalOpen(true)}>
+              <Button
+                variant="primary"
+                onClick={() => true}
+                disabled={createPending}
+              >
                 Add Resource
-              </PrimaryButton>
+              </Button>
             )}
           </div>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-            <FilterButtons
-              filters ={programNames}
-              activeFilter={activeProgram}
-              onFilterChange={(f) => setActiveProgram(f as any)}
-            />
-            <SearchBar
-              value={searchTerm}
-              onChange={setSearchTerm}
-              placeholder="Search resources..."
-            />
-          </div>
-          <div className="flex flex-col gap-4">
-            {loading ? (
-              <p className="text-center py-10 text-neutral-500">Loading...</p>
-            ) : filteredResources.length > 0 ? (
-              filteredResources.map((item) => (
+
+          <AsyncState
+            isLoading={programsLoading}
+            isError={programsError}
+            error={programsErrorObj}
+            isEmpty={programs.length === 0}
+            loadingText="Loading programs..."
+            errorText="Failed to load programs"
+            emptyText="No programs found"
+          >
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+              <FilterButtons
+                filters={programNames}
+                activeFilter={defaultProgram}
+                onFilterChange={(f) => setActiveProgram(f as string)}
+              />
+
+              <SearchBar
+                value={searchTerm}
+                onChange={setSearchTerm}
+                placeholder="Search resources..."
+              />
+            </div>
+          </AsyncState>
+
+          <AsyncState
+            isLoading={resourcesLoading}
+            isError={resourcesError}
+            error={resourcesErrorObj}
+            isEmpty={resources.length === 0}
+            loadingText="Loading resources..."
+            errorText="Failed to load resources"
+            emptyText="No resources found"
+          >
+            <div className="flex flex-col gap-4">
+              {filteredResources.map((item) => (
                 <div
                   key={item._id}
                   className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 border border-neutral-200 rounded-lg hover:bg-blue-50 transition"
@@ -167,6 +140,7 @@ const PrepareAdminPage = (): React.JSX.Element => {
                     <p className="font-semibold text-neutral-900">
                       {item.title}
                     </p>
+
                     <a
                       href={item.url}
                       target="_blank"
@@ -175,47 +149,52 @@ const PrepareAdminPage = (): React.JSX.Element => {
                       {item.url}
                     </a>
                   </div>
+
                   {isAdmin && (
                     <div className="flex gap-2 justify-end">
-                      <PrimaryButton
+                      <Button
+                        variant="primary"
                         onClick={() => {
-                          setEditResource(item);
-                          setEditModalOpen(true);
+                          handleEditResource(item);
+                          setEditResourceModalOpen(true);
                         }}
                       >
                         Edit
-                      </PrimaryButton>
-                      <DangerButton onClick={() => handleDelete(item._id)}>
+                      </Button>
+
+                      <Button
+                        variant="danger"
+                        onClick={() => handleDeleteResource(item._id)}
+                        disabled={deletePending}
+                      >
                         Delete
-                      </DangerButton>
+                      </Button>
                     </div>
                   )}
                 </div>
-              ))
-            ) : (
-              <p className="text-neutral-500 text-center py-8">
-                No resources found.
-              </p>
-            )}
-          </div>
+              ))}
+            </div>
+          </AsyncState>
         </main>
 
-        {addModalOpen && (
-          <AddModal
+        {addResourceModalOpen && (
+          <FormModal
             title="Add New Preparation Resource"
             fields={resourceFields}
-            onClose={() => setAddModalOpen(false)}
-            onSave={handleAddResource}
+            onClose={() => setAddResourceModalOpen(false)}
+            onSave={handleCreateResource}
+            isPending={createPending}
           />
         )}
 
-        {editModalOpen && editResource && (
-          <EditModal
+        {editResourceModalOpen && selectedResource && (
+          <FormModal
             title="Edit Preparation Resource"
             fields={resourceFields}
-            initialValues={editResource}
-            onClose={() => setEditModalOpen(false)}
-            onSave={handleEditSave}
+            initialValues={selectedResource}
+            onClose={() => setEditResourceModalOpen(false)}
+            onSave={handleUpdateResource}
+            isPending={updatePending}
           />
         )}
       </>

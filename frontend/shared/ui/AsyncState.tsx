@@ -1,3 +1,4 @@
+// React
 import React from "react";
 
 type AsyncStateProps = {
@@ -9,7 +10,7 @@ type AsyncStateProps = {
   errorText?: string;
   emptyText?: string;
   children: React.ReactNode;
-}
+};
 
 const AsyncState = ({
   isLoading,
@@ -21,26 +22,23 @@ const AsyncState = ({
   emptyText = "No data found",
   children,
 }: AsyncStateProps): React.JSX.Element => {
-
-  if(isError) {
+  if (isError && error) {
     console.error(error);
   }
 
-  return isLoading ? (
-    <p className="text-center py-10 text-neutral-500">
-      {loadingText}
-    </p>
-  ) : isError ? (
-    <p className="text-center py-10 text-red-500">
-      {errorText}
-    </p>
-  ) : isEmpty ? (
-    <p className="text-center py-10 text-neutral-500">
-      {emptyText}
-    </p>
-  ) : (
-    <>{children}</>
-  );
+  if (isLoading) {
+    return <p className="text-center py-10 text-neutral-500">{loadingText}</p>;
+  }
+
+  if (isError) {
+    return <p className="text-center py-10 text-red-500">{errorText}</p>;
+  }
+
+  if (isEmpty) {
+    return <p className="text-center py-10 text-neutral-500">{emptyText}</p>;
+  }
+
+  return <>{children}</>;
 };
 
 export default AsyncState;

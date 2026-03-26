@@ -1,7 +1,10 @@
 "use client";
 
+// React
 import React, { useState } from "react";
-import PrimaryButton from "@/shared/ui/PrimaryButton";
+
+// Shared UI Components
+import Button from "@/shared/ui/Button";
 
 const ChatInput = ({
   onSend,
@@ -26,7 +29,9 @@ const ChatInput = ({
         placeholder="Type a message..."
         className="flex-1 px-4 py-2 border border-neutral-300 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
-      <PrimaryButton onClick={handleSend} className="px-6">Send</PrimaryButton>
+      <Button variant="primary" onClick={handleSend} className="px-6">
+        Send
+      </Button>
     </div>
   );
 };

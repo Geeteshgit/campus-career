@@ -1,13 +1,7 @@
 import { usersApi } from "@/lib/axios";
+import { UpdateUserPayload } from "../types/user.types";
 
-export const updateMyAccount = async (payload: {
-  phone: string;
-}) => {
+export const updateMyAccount = async (payload: UpdateUserPayload) => {
   const { data } = await usersApi.put("/users", payload);
-  return data;
-};
-
-export const getUserStats = async () => {
-  const { data } = await usersApi.get("/users/stats");
   return data;
 };

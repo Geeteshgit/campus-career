@@ -1,8 +1,15 @@
-import { ChatContainer } from "@/features/message";
-import Navbar from "@/components/Navbar";
-import PageHeader from "@/shared/ui/PageHeader";
-import { ProtectedRoute } from "@/features/auth";
+// React
 import React from "react";
+
+// Layout Components
+import Navbar from "@/components/Navbar";
+
+// Shared UI Components
+import PageHeader from "@/shared/ui/PageHeader";
+
+// Features
+import { ProtectedRoute } from "@/features/auth";
+import { ChatContainer } from "@/features/message";
 
 const Chat = (): React.JSX.Element => {
   return (

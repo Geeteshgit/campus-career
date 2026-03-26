@@ -1,3 +1,4 @@
+// React
 import React from "react";
 
 const Loading = (): React.JSX.Element => {

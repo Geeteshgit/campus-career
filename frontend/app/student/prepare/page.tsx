@@ -1,50 +1,25 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import Navbar from "@/components/Navbar";
-import PageHeader from "@/shared/ui/PageHeader";
-import { useAppSelector } from "@/redux/hooks";
-import { env } from "@/config/env";
-import { ProtectedRoute } from "@/features/auth";
+// React
+import React from "react";
 
-interface Resource {
-  _id: string;
-  title: string;
-  url: string;
-  program: string;
-}
+// Layout Components
+import Navbar from "@/components/Navbar";
+
+// Shared UI Components
+import PageHeader from "@/shared/ui/PageHeader";
+import AsyncState from "@/shared/ui/AsyncState";
+
+// Features
+import { ProtectedRoute } from "@/features/auth";
+import { useStudentResources } from "@/features/academic";
 
 const Prepare = (): React.JSX.Element => {
-  const student = useAppSelector((state) => state.user.studentProfile);
-  const studentProgram = student?.program;
 
-  const [materials, setMaterials] = useState<Resource[]>([]);
-  const [loading, setLoading] = useState(false);
+  const studentProgram = "B.Tech CSE"
 
-  useEffect(() => {
-    const fetchResources = async () => {
-      if (!studentProgram) return;
-
-      try {
-        setLoading(true);
-        const response = await axios.get(
-          `${env.ACADEMIC_CONFIG_SERVICE}/api/resources/student?program=${studentProgram}`,
-          {
-            withCredentials: true,
-          },
-        );
-
-        setMaterials(response.data.resources);
-      } catch (err) {
-        console.error("Failed to fetch resources:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchResources();
-  }, [studentProgram]);
+  const { resources, resourcesLoading, resourcesError, resourcesErrorObj } =
+    useStudentResources(studentProgram);
 
   return (
     <ProtectedRoute allowedRoles={["student"]}>
@@ -58,30 +33,29 @@ const Prepare = (): React.JSX.Element => {
               studentProgram || ""
             } students prepare for placements and interviews`}
           />
-
-          {loading ? (
-            <p className="text-neutral-600 text-center py-8">
-              Loading resources...
-            </p>
-          ) : materials.length === 0 ? (
-            <p className="text-neutral-600 text-center py-8">
-              No resources found for {studentProgram}.
-            </p>
-          ) : (
+          <AsyncState
+            isLoading={resourcesLoading}
+            isError={resourcesError}
+            error={resourcesErrorObj}
+            isEmpty={resources.length === 0}
+            loadingText="Loading resources..."
+            errorText="Failed to load resources"
+            emptyText={`No resources found for ${studentProgram}.`}
+          >
             <ul className="list-disc list-inside space-y-2 text-blue-500">
-              {materials.map((item) => (
-                <li key={item._id}>
+              {resources.map((resource) => (
+                <li key={resource._id}>
                   <a
-                    href={item.url}
+                    href={resource.url}
                     target="_blank"
                     className="hover:underline"
                   >
-                    {item.title}
+                    {resource.title}
                   </a>
                 </li>
               ))}
             </ul>
-          )}
+          </AsyncState>
         </main>
       </>
     </ProtectedRoute>

@@ -1,12 +1,8 @@
 import { jobsApi } from "@/lib/axios";
+import { CreateApplicationPayload } from "../types/application.types";
 
 export const getMyApplications = async () => {
   const { data } = await jobsApi.get("/applications");
-  return data;
-};
-
-export const getApplicationStats = async () => {
-  const { data } = await jobsApi.get("/applications/stats");
   return data;
 };
 
@@ -15,7 +11,7 @@ export const getApplicantsForJob = async (jobId: string) => {
   return data;
 };
 
-export const applyToJob = async (jobId: string) => {
-  const { data } = await jobsApi.post(`/applications/${jobId}`);
+export const applyToJob = async (jobId: string, payload: CreateApplicationPayload) => {
+  const { data } = await jobsApi.post(`/applications/${jobId}`, payload);
   return data;
 };

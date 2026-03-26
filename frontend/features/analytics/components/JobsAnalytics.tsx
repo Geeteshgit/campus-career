@@ -1,8 +1,15 @@
+"use client";
+
+// React
 import React from "react";
-import "@/lib/chart";
+
+// External Libraries
 import { Doughnut } from "react-chartjs-2";
 
-interface JobAnalyticsProps {
+// Lib
+import "@/lib/chart";
+
+type JobAnalyticsProps = {
   totalJobs: number;
   activeJobs: number;
   inactiveJobs: number;

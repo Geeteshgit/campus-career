@@ -1,89 +1,40 @@
 "use client";
+
+// React
 import React, { useState } from "react";
 import Image from "next/image";
-import InputField from "@/shared/ui/InputField";
+
+// Shared UI Components
 import FormLabel from "@/shared/ui/FormLabel";
-import PrimaryButton from "@/shared/ui/PrimaryButton";
-import axios from "axios";
-import { env } from "@/config/env";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { login } from "@/redux/features/user/userSlice";
-import { connectSocket, initSocket } from "@/lib/socket";
-import { setPrograms } from "@/redux/features/academic/academicSlice";
-import { useRouter } from "next/navigation";
+import Input from "@/shared/ui/Input";
+import Button from "@/shared/ui/Button";
 
-interface LoginFormProps {
+// Local Imports
+import { useLogin } from "../hooks/useLogin";
+import { LoginPayload } from "../types/auth.types";
+
+type LoginFormProps = {
   onForgotPasswordClick: () => void;
-}
+};
 
-const LoginForm: React.FC<LoginFormProps> = ({ onForgotPasswordClick }) => {
-  const router = useRouter();
-  const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.user.user);
+const LoginForm = ({
+  onForgotPasswordClick,
+}: LoginFormProps): React.JSX.Element => {
+  const { handleLogin, loginPending } = useLogin();
 
-  const [formData, setFormData] = useState({
+  const [loginData, setloginData] = useState<LoginPayload>({
     email: "",
     password: "",
   });
-  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setloginData({ ...loginData, [name]: value });
   };
 
-  const loginHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("USER SERVICE:", env.USER_SERVICE);
-
-    try {
-      setLoading(true);
-      const loginResponse = await axios.post(
-        `${env.USER_SERVICE}/api/auth/login`,
-        {
-          email: formData.email,
-          password: formData.password,
-        },
-        {
-          withCredentials: true,
-        },
-      );
-
-      const user = loginResponse.data.user;
-
-      const [studentResponse, academicResponse] = await Promise.all([
-        user.role === "student"
-          ? axios.get(`${env.USER_SERVICE}/api/student/me`, {
-              withCredentials: true,
-            })
-          : Promise.resolve(null),
-        axios.get(`${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs`, {
-          withCredentials: true,
-        }),
-      ]);
-
-      const studentProfile = studentResponse
-        ? studentResponse.data.profile
-        : null;
-
-      dispatch(setPrograms(academicResponse.data.programs));
-      dispatch(login({ user, studentProfile }));
-
-      initSocket();
-      connectSocket();
-
-      if (user.role === "student") {
-        router.push("/student/home");
-      } else if (user.role === "admin" || user.role === "super_admin") {
-        router.push("/admin/dashboard");
-      } else {
-        router.push("/login");
-      }
-    } catch (err: any) {
-      console.error("Login Error:", err);
-      alert(err.response?.data?.message || "Invalid credentials");
-    } finally {
-      setLoading(false);
-    }
+    await handleLogin(loginData);
   };
 
   return (
@@ -109,41 +60,45 @@ const LoginForm: React.FC<LoginFormProps> = ({ onForgotPasswordClick }) => {
           </p>
         </div>
 
-        <form onSubmit={loginHandler} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
             <FormLabel>Email</FormLabel>
-            <InputField
+            <Input
               name="email"
               type="email"
               placeholder="Enter your email"
-              value={formData.email}
+              value={loginData.email}
               onChange={handleChange}
             />
           </div>
 
           <div>
             <FormLabel>Password</FormLabel>
-            <InputField
+            <Input
               name="password"
               type="password"
               placeholder="Enter your password"
-              value={formData.password}
+              value={loginData.password}
               onChange={handleChange}
             />
           </div>
 
-          <PrimaryButton type="submit" className="w-full" disabled={loading}>
-            {loading ? "Logging in..." : "Login"}
-          </PrimaryButton>
+          <Button
+            variant="primary"
+            type="submit"
+            className="w-full"
+            disabled={loginPending}
+          >
+            Login
+          </Button>
 
           <div className="text-center">
-            <button
-              type="button"
+            <Button
+              variant="link"
               onClick={onForgotPasswordClick}
-              className="text-blue-500 font-medium cursor-pointer hover:underline"
             >
               Forgot password?
-            </button>
+            </Button>
           </div>
         </form>
       </div>

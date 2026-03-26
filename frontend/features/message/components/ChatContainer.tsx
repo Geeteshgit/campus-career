@@ -1,23 +1,34 @@
 "use client";
 
-import MessageList from "./MessageList";
-import ChatInput from "./ChatInput";
+// React
 import React, { useEffect, useRef } from "react";
-import { useAppSelector } from "@/redux/hooks";
-import { connectSocket, getSocket, initSocket } from "@/lib/socket";
-import { Message } from "../types/message";
+
+// External Libraries
 import { useQueryClient } from "@tanstack/react-query";
+
+// Lib
+import { connectSocket, getSocket, initSocket } from "@/lib/socket";
+
+// Local Imports
 import { useMessages } from "../hooks/useMessages";
-import Loader from "@/shared/ui/Loader";
+import { Message } from "../types/message.types";
+import ChatInput from "./ChatInput";
+import MessageList from "./MessageList";
+import { useAuthStore } from "@/features/auth";
 
 const ChatContainer = (): React.JSX.Element => {
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const queryClient = useQueryClient();
-  const { data, isPending, isError, error } = useMessages();
-  const messages: Message[] = data?.messages ?? [];
+  const {
+    data: messagesData,
+    isPending: messagesLoading,
+    isError: messagesError,
+    error: messagesErrorObj,
+  } = useMessages();
+  const messages: Message[] = messagesData?.messages;
 
-  const user = useAppSelector((state) => state.user.user);
-  const userId = user?._id;
+  const user = useAuthStore((state) => state.user);
+  const userId = user?.id;
   const username = user?.name;
 
   useEffect(() => {
@@ -28,7 +39,7 @@ const ChatContainer = (): React.JSX.Element => {
     if (!socket) return;
 
     socket.on("receiveMessage", (msg: Message) => {
-      queryClient.setQueryData(["messages"], (old: any) => {
+      queryClient.setQueryData<{ messages: Message[] }>(["messages"], (old) => {
         if (!old) return old;
 
         return {
@@ -61,22 +72,15 @@ const ChatContainer = (): React.JSX.Element => {
     });
   };
 
-  if (isPending) return <Loader />;
-
-  if (isError) {
-  return (
-    <div className="text-red-500 text-center p-4">
-      {(error as any)?.response?.data?.message || "Failed to load messages"}
-    </div>
-  );
-}
-
   return (
     <div className="flex flex-col border border-neutral-300 rounded-lg overflow-hidden shadow-sm h-[70vh] bg-neutral-50/50">
       <MessageList
-        messages={messages}
+        messages={messages ?? []}
         chatEndRef={chatEndRef}
         userId={userId || ""}
+        messagesLoading={messagesLoading}
+        messagesError={messagesError}
+        messagesErrorObj={messagesErrorObj}
       />
       <ChatInput onSend={handleSend} />
     </div>

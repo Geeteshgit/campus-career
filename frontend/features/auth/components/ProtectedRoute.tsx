@@ -1,18 +1,24 @@
 "use client";
 
+// React
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAppSelector } from "@/redux/hooks";
+
+// Shared UI Components
 import Loader from "@/shared/ui/Loader";
 
-interface ProtectedRouteProps {
+// Local Imports
+import { useAuthStore } from "../auth.store";
+
+type ProtectedRouteProps = {
   allowedRoles: string[];
   children: React.ReactNode;
 }
 
 const ProtectedRoute = ({ allowedRoles, children }: ProtectedRouteProps) => {
   const router = useRouter();
-  const { user, authLoading } = useAppSelector((state) => state.user);
+  const user = useAuthStore((state) => state.user);
+  const authLoading = useAuthStore((state) => state.authLoading);
 
   useEffect(() => {
     if (authLoading) return;

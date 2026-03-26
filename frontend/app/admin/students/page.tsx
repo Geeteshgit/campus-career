@@ -1,44 +1,77 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
+// React
+import React, { useRef, useState } from "react";
+
+// Layout Components
 import Navbar from "@/components/Navbar";
-import PageHeader from "@/shared/ui/PageHeader";
-import { Student, StudentCard, ViewStudentModal } from "@/features/student";
-import PrimaryButton from "@/shared/ui/PrimaryButton";
-import AddModal from "@/shared/ui/AddModal";
-import EditModal from "@/shared/ui/EditModal";
-import { FieldConfig } from "@/shared/types/modal";
-import { env } from "@/config/env";
-import { ProtectedRoute } from "@/features/auth";
-import { useAppSelector } from "@/redux/hooks";
-import SuccessButton from "@/shared/ui/SuccessButton";
-import { useDebounce } from "@/shared/hooks/useDebounce";
+
+// Shared UI Components
 import FilterButtons from "@/shared/ui/FilterButtons";
+import FormModal from "@/shared/ui/FormModal";
+import PageHeader from "@/shared/ui/PageHeader";
 import SearchBar from "@/shared/ui/SearchBar";
+import Button from "@/shared/ui/Button";
+import AsyncState from "@/shared/ui/AsyncState";
+
+// Shared Hooks
+import { useDebounce } from "@/shared/hooks/useDebounce";
+
+// Shared Types
+import { FieldConfig } from "@/shared/types/modal.types";
+
+// Features
+import { ProtectedRoute } from "@/features/auth";
+import {
+  CreateStudentPayload,
+  StudentCard,
+  useStudents,
+  useStudentManagement,
+  ViewStudentModal,
+} from "@/features/student";
+import { usePrograms, years } from "@/features/academic";
 
 const StudentManagement = (): React.JSX.Element => {
-  const [students, setStudents] = useState<Student[]>([]);
-  const [page, setPage] = useState<number>(1);
-  const [hasMore, setHasMore] = useState<boolean>(true);
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const years = ["1st Year", "2nd Year", "3rd Year", "4th Year", "5th Year"];
-
   const [selectedProgram, setSelectedProgram] = useState<string>("All");
   const [selectedYear, setSelectedYear] = useState<string>("All");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   const debouncedSearch = useDebounce(searchTerm, 300);
 
-  const [addModalOpen, setAddModalOpen] = useState<boolean>(false);
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
-  const [viewStudentModalOpen, setViewStudentModalOpen] =
-    useState<boolean>(false);
-
-  const programs = useAppSelector((state) => state.academic.programs);
+  const { programs, programsLoading, programsError, programsErrorObj } =
+    usePrograms();
   const programNames = programs.map((program) => program.name);
+
+  const {
+    students,
+    studentsLoading,
+    studentsFetching,
+    studentsError,
+    studentsErrorObj,
+    hasMore,
+    handleShowMore,
+
+  } = useStudents({
+    selectedProgram,
+    selectedYear,
+    search: debouncedSearch,
+  });
+
+  const {
+    addStudentModalOpen,
+    editModalOpen,
+    viewStudentModalOpen,
+    selectedStudent,
+    setAddStudentModalOpen,
+    setEditModalOpen,
+    setViewStudentModalOpen,
+    handleCreateStudent,
+    handleUpdateStudent,
+    handleDeleteStudent,
+    handleCreateBulkStudents,
+    openViewStudentModal,
+    openEditStudentModal,
+  } = useStudentManagement();
 
   const studentFields: FieldConfig[] = [
     { name: "name", placeholder: "Student Name", type: "text" },
@@ -74,137 +107,15 @@ const StudentManagement = (): React.JSX.Element => {
     { name: "cgpa", placeholder: "CGPA", type: "number" },
   ];
 
-  const fetchStudents = async ({
-    reset = false,
-    pageNumber = 1,
-  }: {
-    reset?: boolean;
-    pageNumber?: number;
-  }) => {
-    try {
-      const response = await axios.get(`${env.USER_SERVICE}/api/student`, {
-        params: {
-          page: pageNumber,
-          program: selectedProgram,
-          year: selectedYear,
-          search: debouncedSearch,
-        },
-        withCredentials: true,
-      });
-      setStudents((prev) =>
-        reset ? response.data.students : [...prev, ...response.data.students],
-      );
-      setHasMore(response.data.hasMore);
-    } catch (err) {
-      console.error("Error fetching students:", err);
-    }
-  };
-
-  const handleStudentAdded = async (data: Record<string, any>) => {
-    try {
-      const response = await axios.post(
-        `${env.USER_SERVICE}/api/student`,
-        data,
-        { withCredentials: true },
-      );
-
-      setStudents((prev) => [...prev, response.data.student]);
-      setAddModalOpen(false);
-    } catch (err) {
-      console.error("Failed to add student", err);
-      alert("Failed to add student");
-    }
-  };
-
-  const handleStudentUpdated = async (updatedValues: Record<string, any>) => {
-    if (!selectedStudent) return;
-
-    try {
-      const res = await axios.put(
-        `${env.USER_SERVICE}/api/student/${selectedStudent._id}`,
-        updatedValues,
-        { withCredentials: true },
-      );
-
-      setStudents((prev) =>
-        prev.map((s) => (s._id === selectedStudent._id ? res.data.student : s)),
-      );
-
-      setEditModalOpen(false);
-    } catch (err) {
-      console.error("Failed to update student", err);
-      alert("Failed to update student");
-    }
-  };
-
-  const handleDelete = async (student: Student) => {
-    try {
-      await axios.delete(`${env.USER_SERVICE}/api/student/${student._id}`, {
-        withCredentials: true,
-      });
-
-      setStudents((prev) => prev.filter((s) => s._id !== student._id));
-    } catch (err) {
-      console.error("Failed to delete student", err);
-      alert("Failed to delete student");
-    }
-  };
-
-  useEffect(() => {
-    setPage(1);
-    setHasMore(true);
-    fetchStudents({ reset: true, pageNumber: 1 });
-  }, [selectedProgram, selectedYear, debouncedSearch]);
-
-  const openViewModal = (student: Student) => {
-    const flatStudent = {
-      ...student,
-      name: student.userId.name,
-      email: student.userId.email,
-      phone: student.userId.phone,
-    };
-    setSelectedStudent({ ...student, ...flatStudent });
-    setViewStudentModalOpen(true);
-  };
-
-  const openEditModal = (student: Student) => {
-    const flatStudent = {
-      ...student,
-      name: student.userId.name,
-      email: student.userId.email,
-      phone: student.userId.phone,
-    };
-
-    setSelectedStudent({ ...student, ...flatStudent });
-    setEditModalOpen(true);
-  };
-
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleExcelUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleExcelUploadChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      await axios.post(
-        `${env.USER_SERVICE}/api/student/bulk-upload`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true,
-        },
-      );
-
-      alert("Students uploaded successfully");
-      fetchStudents({ reset: true, pageNumber: 1 });
-    } catch (err) {
-      alert("Upload failed");
-    }
+    await handleCreateBulkStudents(file);
   };
 
   return (
@@ -222,37 +133,53 @@ const StudentManagement = (): React.JSX.Element => {
                 ref={fileInputRef}
                 type="file"
                 accept=".xlsx,.xls"
-                onChange={handleExcelUpload}
+                onChange={handleExcelUploadChange}
                 className="hidden"
               />
-              <SuccessButton onClick={() => fileInputRef.current?.click()}>
+              <Button
+                variant="success"
+                onClick={() => fileInputRef.current?.click()}
+              >
                 Upload Excel
-              </SuccessButton>
+              </Button>
 
-              <PrimaryButton onClick={() => setAddModalOpen(true)}>
+              <Button
+                variant="primary"
+                onClick={() => setAddStudentModalOpen(true)}
+              >
                 Add Student
-              </PrimaryButton>
+              </Button>
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-            <div className="flex flex-col gap-2">
-              <FilterButtons
-                filters={["All", ...programNames]}
-                activeFilter={selectedProgram}
-                onFilterChange={setSelectedProgram}
-              />
-              <FilterButtons
-                filters={["All", ...years]}
-                activeFilter={selectedYear}
-                onFilterChange={setSelectedYear}
+          <AsyncState
+            isLoading={programsLoading}
+            isError={programsError}
+            error={programsErrorObj}
+            isEmpty={programs.length === 0}
+            loadingText="Loading programs..."
+            errorText="Failed to load programs"
+            emptyText="No programs found"
+          >
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+              <div className="flex flex-col gap-2">
+                <FilterButtons
+                  filters={["All", ...programNames]}
+                  activeFilter={selectedProgram}
+                  onFilterChange={setSelectedProgram}
+                />
+                <FilterButtons
+                  filters={["All", ...years]}
+                  activeFilter={selectedYear}
+                  onFilterChange={setSelectedYear}
+                />
+              </div>
+              <SearchBar
+                value={searchTerm}
+                onChange={setSearchTerm}
+                placeholder="Search by name or enrollment number"
               />
             </div>
-            <SearchBar
-              value={searchTerm}
-              onChange={setSearchTerm}
-              placeholder="Search by name or enrollment number"
-            />
-          </div>
+          </AsyncState>
           <div className="flex flex-col gap-2">
             <div className="grid grid-cols-6 gap-3 rounded-xl bg-blue-50 p-4">
               <p className="text-sm font-semibold text-neutral-600">
@@ -270,51 +197,53 @@ const StudentManagement = (): React.JSX.Element => {
                 Actions
               </p>
             </div>
-            {loading ? (
-              <p className="text-center py-10 text-neutral-500">Loading...</p>
-            ) : students.length > 0 ? (
+            <AsyncState
+              isLoading={studentsLoading}
+              isError={studentsError}
+              error={studentsErrorObj}
+              isEmpty={students.length === 0}
+              loadingText="Loading students..."
+              errorText="Failed to load students"
+              emptyText="No students found"
+            >
               <div className="flex flex-col gap-1">
                 {students.map((student) => (
                   <StudentCard
                     key={student._id}
                     student={student}
-                    onView={() => openViewModal(student)}
-                    onEdit={() => openEditModal(student)}
-                    onDelete={() => handleDelete(student)}
+                    onView={() => openViewStudentModal(student)}
+                    onEdit={() => openEditStudentModal(student)}
+                    onDelete={() => handleDeleteStudent(student)}
                   />
                 ))}
                 {hasMore && (
                   <div className="flex justify-center py-6">
-                    <PrimaryButton
-                      disabled={loading}
-                      onClick={() => {
-                        const nextPage = page + 1;
-                        setPage(nextPage);
-                        fetchStudents({ pageNumber: nextPage });
-                      }}
+                    <Button
+                      variant="primary"
+                      disabled={studentsFetching}
+                      onClick={handleShowMore}
                     >
-                      {loading ? "Loading..." : "Show More"}
-                    </PrimaryButton>
+                      {studentsFetching ? "Loading..." : "Show More"}
+                    </Button>
                   </div>
                 )}
               </div>
-            ) : (
-              <p className="text-neutral-500 text-center py-10">
-                No students found
-              </p>
-            )}
+            </AsyncState>
           </div>
         </main>
-        {addModalOpen && (
-          <AddModal
+
+        {addStudentModalOpen && (
+          <FormModal
             title="Add New Student"
             fields={studentFields}
-            onClose={() => setAddModalOpen(false)}
-            onSave={handleStudentAdded}
+            onClose={() => setAddStudentModalOpen(false)}
+            onSave={(values) =>
+              handleCreateStudent(values as CreateStudentPayload)
+            }
           />
         )}
         {editModalOpen && selectedStudent && (
-          <EditModal
+          <FormModal
             title="Edit Student"
             fields={studentFields}
             initialValues={{
@@ -329,7 +258,7 @@ const StudentManagement = (): React.JSX.Element => {
               cgpa: selectedStudent.cgpa,
             }}
             onClose={() => setEditModalOpen(false)}
-            onSave={handleStudentUpdated}
+            onSave={handleUpdateStudent}
           />
         )}
         {viewStudentModalOpen && selectedStudent && (

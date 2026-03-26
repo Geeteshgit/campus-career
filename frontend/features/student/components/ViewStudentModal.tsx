@@ -1,9 +1,12 @@
 "use client";
 
+// React
 import React from "react";
+
+// Shared UI Components
 import CloseButton from "@/shared/ui/CloseButton";
 
-interface ViewStudentModalProps {
+type ViewStudentModalProps = {
   title: string;
   student: {
     name: string;

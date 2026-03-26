@@ -1,38 +1,31 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+// React
+import React from "react";
+
+// Layout Components
 import Navbar from "@/components/Navbar";
+
+// Shared UI Components
 import PageHeader from "@/shared/ui/PageHeader";
-import { UsersAnalytics, JobsAnalytics } from "@/features/analytics";
-import axios from "axios";
-import { env } from "@/config/env";
+import AsyncState from "@/shared/ui/AsyncState";
+
+// Features
 import { ProtectedRoute } from "@/features/auth";
+import {
+  UsersAnalytics,
+  JobsAnalytics,
+  useAnalytics,
+} from "@/features/analytics";
 
 const Analytics = (): React.JSX.Element => {
-  const [statsData, setStatsData] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const { analytics, analyticsLoading, analyticsError, analyticsErrorObj } =
+    useAnalytics();
 
-  const fetchAllData = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(
-        `${env.ANALYTICS_SERVICE}/api/analytics`,
-        {
-          withCredentials: true,
-        },
-      );
-      setStatsData(response.data.analytics);
-    } catch (err) {
-      console.error("Analytics fetch failed:", err);
-      setStatsData(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchAllData();
-  }, []);
+  const userStats = analytics?.users?.stats;
+  const studentStats = analytics?.students?.stats;
+  const jobStats = analytics?.jobs?.stats;
+  const applicationStats = analytics?.applications?.stats;
 
   return (
     <ProtectedRoute allowedRoles={["admin", "super_admin"]}>
@@ -43,35 +36,34 @@ const Analytics = (): React.JSX.Element => {
             title="Platform Analytics"
             subtitle="Track platform-wide metrics"
           />
-
-          {loading ? (
-            <p className="text-center text-neutral-600 py-10">
-              Loading analytics...
-            </p>
-          ) : !statsData ? (
-            <p className="text-center text-neutral-600 py-10">
-              Analytics data is currently unavailable.
-            </p>
-          ) : (
+          <AsyncState
+            isLoading={analyticsLoading}
+            isError={analyticsError}
+            error={analyticsErrorObj}
+            isEmpty={false}
+            loadingText="Loading analytics"
+            errorText="Failed to load analytics"
+            emptyText="No analytics found"
+          >
             <>
               <UsersAnalytics
-                totalUsers={statsData.users.stats.totalUsers}
-                totalStudents={statsData.users.stats.students}
-                totalAdmins={statsData.users.stats.admins}
-                studentsPerProgram={statsData.students.stats.studentsPerProgram}
-                studentsPerYear={statsData.students.stats.studentsPerYear}
+                totalUsers={userStats?.totalUsers ?? 0}
+                totalStudents={userStats?.students ?? 0}
+                totalAdmins={userStats?.admins ?? 0}
+                studentsPerProgram={studentStats?.studentsPerProgram ?? {}}
+                studentsPerYear={studentStats?.studentsPerYear ?? {}}
               />
 
               <JobsAnalytics
-                totalJobs={statsData.jobs.stats.totalJobs}
-                activeJobs={statsData.jobs.stats.activeJobs}
-                inactiveJobs={statsData.jobs.stats.inactiveJobs}
-                fulltime={statsData.jobs.stats.fullTime}
-                internship={statsData.jobs.stats.internship}
-                application={statsData.applications.stats.totalApplications}
+                totalJobs={jobStats?.totalJobs ?? 0}
+                activeJobs={jobStats?.activeJobs ?? 0}
+                inactiveJobs={jobStats?.inactiveJobs ?? 0}
+                fulltime={jobStats?.fullTime ?? 0}
+                internship={jobStats?.internship ?? 0}
+                application={applicationStats?.totalApplications ?? 0}
               />
             </>
-          )}
+          </AsyncState>
         </main>
       </>
     </ProtectedRoute>

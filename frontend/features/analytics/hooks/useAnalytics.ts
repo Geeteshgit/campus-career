@@ -1,12 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
-import { getPlatformAnalytics } from "../api/analytics.api";
+"use client";
 
-const STALE_TIME = 1000 * 60 * 10; // 10 minutes
+import { usePlatformAnalyticsQuery } from "../api/analytics.queries";
 
-export const usePlatformAnalytics = () => {
-  return useQuery({
-    queryKey: ["analytics", "platform"],
-    queryFn: getPlatformAnalytics,
-    staleTime: STALE_TIME,
-  });
+export const useAnalytics = () => {
+  const {
+    data: analyticsData,
+    isPending: analyticsLoading,
+    isError: analyticsError,
+    error: analyticsErrorObj,
+  } = usePlatformAnalyticsQuery();
+
+  const analytics = analyticsData?.analytics;
+
+  return { analytics, analyticsLoading, analyticsError, analyticsErrorObj };
 };

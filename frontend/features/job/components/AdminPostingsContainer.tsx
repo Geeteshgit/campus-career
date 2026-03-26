@@ -1,14 +1,19 @@
 "use client";
 
+// React
 import React from "react";
+
+// Features
 import { Job } from "@/features/job";
+
+// Local Imports
 import AdminJobCard from "./AdminJobCard";
 
-interface AdminPostingsContainerProps {
+type AdminPostingsContainerProps = {
   title: string;
   jobs: Job[];
   onJobClick: (job: Job) => void;
-}
+};
 
 const AdminPostingsContainer = ({
   title,
@@ -20,19 +25,18 @@ const AdminPostingsContainer = ({
       <h2 className="text-xl font-semibold text-neutral-800">{title}</h2>
       <div className="flex flex-col gap-2">
         <div className="grid grid-cols-5 gap-3 rounded-xl bg-blue-50 p-4">
-        <p className="text-sm font-semibold text-neutral-600">Company</p>
-        <p className="text-sm font-semibold text-neutral-600">Role</p>
-        <p className="text-sm font-semibold text-neutral-600 text-center">
-          Type
-        </p>
-        <p className="text-sm font-semibold text-neutral-600 text-center">
-          Package
-        </p>
-        <p className="text-sm font-semibold text-neutral-600 text-center">
-          Deadline
-        </p>
-      </div>
-      {jobs.length > 0 ? (
+          <p className="text-sm font-semibold text-neutral-600">Company</p>
+          <p className="text-sm font-semibold text-neutral-600">Role</p>
+          <p className="text-sm font-semibold text-neutral-600 text-center">
+            Type
+          </p>
+          <p className="text-sm font-semibold text-neutral-600 text-center">
+            Package
+          </p>
+          <p className="text-sm font-semibold text-neutral-600 text-center">
+            Deadline
+          </p>
+        </div>
         <div className="flex flex-col gap-1">
           {jobs.map((job) => (
             <AdminJobCard
@@ -42,11 +46,6 @@ const AdminPostingsContainer = ({
             />
           ))}
         </div>
-      ) : (
-        <p className="text-neutral-500 text-center py-10">
-          No {title.toLowerCase()} found
-        </p>
-      )}
       </div>
     </section>
   );

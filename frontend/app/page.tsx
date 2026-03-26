@@ -1,25 +1,29 @@
 "use client";
 
+// React
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAppSelector } from "@/redux/hooks";
+
+// Features
+import { useAuthStore } from "@/features/auth";
 
 const Homepage = () => {
-  const user = useAppSelector((state) => state.user.user);
   const router = useRouter();
+  const user = useAuthStore((state) => state.user);
+  const role = user?.role;
 
   useEffect(() => {
     if (!user) {
       router.replace("/login");
     }
 
-    if(user?.role === "student") {
+    if(role === "student") {
       router.replace("/student/postings");
     }
-    else if(user?.role === "admin" || user?.role === "super_admin") {
+    else if(role === "admin" || role === "super_admin") {
       router.replace("/admin/dashboard");
     }
-  }, [user]);
+  }, [user, role, router]);
 
   return null; 
 };

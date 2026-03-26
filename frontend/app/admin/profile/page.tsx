@@ -1,65 +1,21 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import axios from "axios";
+// React
+import React from "react";
+
+// Layout Components
 import Navbar from "@/components/Navbar";
+
+// Shared UI Components
+import Button from "@/shared/ui/Button";
 import PageHeader from "@/shared/ui/PageHeader";
-import FormLabel from "@/shared/ui/FormLabel";
-import ReadOnlyField from "@/shared/ui/ReadonlyField";
-import InputField from "@/shared/ui/InputField";
-import PrimaryButton from "@/shared/ui/PrimaryButton";
-import DangerButton from "@/shared/ui/DangerButton";
-import { ProfileChangePassword } from "@/features/user";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import {
-  login,
-  logout,
-  updateUserField,
-} from "@/redux/features/user/userSlice";
-import { env } from "@/config/env";
-import { disconnectSocket } from "@/lib/socket";
-import { ProtectedRoute } from "@/features/auth";
+
+// Features
+import { ProtectedRoute, useLogout } from "@/features/auth";
+import { ProfileChangePassword, UserDetails } from "@/features/user";
 
 const AdminProfile = (): React.JSX.Element => {
-  const dispatch = useAppDispatch();
-  const router = useRouter();
-  const user = useAppSelector((state) => state.user.user);
-
-  const handleSave = async () => {
-    try {
-      const response = await axios.put(
-        `${env.USER_SERVICE}/api/user`,
-        { phone: user?.phone },
-        { withCredentials: true },
-      );
-
-      dispatch(
-        login({
-          user: response.data.updatedUser,
-          studentProfile: null,
-        }),
-      );
-
-      alert("Profile updated successfully!");
-    } catch (err: any) {
-      console.error("Failed to update profile", err);
-      alert(err.response?.data?.message || "Failed to update profile");
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await axios.post(`${env.USER_SERVICE}/api/auth/logout`, {}, {
-        withCredentials: true,
-      });
-      
-      dispatch(logout());
-      disconnectSocket();
-      router.push("/login");
-    } catch (err) {
-      console.error("Logout failed", err);
-    }
-  };
+  const { handleLogout, logoutPending } = useLogout();
 
   return (
     <ProtectedRoute allowedRoles={["admin", "super_admin"]}>
@@ -71,47 +27,19 @@ const AdminProfile = (): React.JSX.Element => {
               title="Admin Profile"
               subtitle="Manage your admin account details"
             />
-            <DangerButton onClick={handleLogout}>Logout</DangerButton>
+            <Button
+              variant="danger"
+              onClick={handleLogout}
+              disabled={logoutPending}
+            >
+              Logout
+            </Button>
           </div>
 
-          {!user ? (
-            <div className="p-6">Loading...</div>
-          ) : (
-            <div className="bg-neutral-50 border border-neutral-300 rounded-xl p-6 flex flex-col gap-6">
-              <div className="flex flex-col md:flex-row gap-6">
-                <div className="w-full">
-                  <FormLabel>Name</FormLabel>
-                  <ReadOnlyField value={user.name} />
-                </div>
-
-                <div className="w-full">
-                  <FormLabel>Email</FormLabel>
-                  <ReadOnlyField value={user.email} />
-                </div>
-              </div>
-
-              <div>
-                <FormLabel>Phone Number</FormLabel>
-                <InputField
-                  name="phone"
-                  placeholder="Phone Number"
-                  value={user.phone}
-                  onChange={(e) =>
-                    dispatch(
-                      updateUserField({
-                        field: "phone",
-                        value: e.target.value,
-                      }),
-                    )
-                  }
-                />
-              </div>
-
-              <PrimaryButton onClick={handleSave}>Save</PrimaryButton>
-
-              <ProfileChangePassword />
-            </div>
-          )}
+          <div className="bg-neutral-50 border border-neutral-300 rounded-xl p-6 flex flex-col gap-6">
+            <UserDetails />
+            <ProfileChangePassword />
+          </div>
         </main>
       </>
     </ProtectedRoute>

@@ -1,16 +1,12 @@
 import { jobsApi } from "@/lib/axios";
+import { CreateJobPayload, RecommendedJobsStudentPayload, UpdateJobPayload } from "../types/job.types";
 
 export const getAllJobs = async () => {
   const { data } = await jobsApi.get("/jobs");
   return data;
 };
 
-export const getJobStats = async () => {
-  const { data } = await jobsApi.get("/jobs/stats");
-  return data;
-};
-
-export const createJob = async (payload: any) => {
+export const createJob = async (payload: CreateJobPayload) => {
   const { data } = await jobsApi.post("/jobs", payload);
   return data;
 };
@@ -20,12 +16,12 @@ export const getInactiveJobs = async () => {
   return data;
 };
 
-export const getRecommendedJobs = async (payload: any) => {
-  const { data } = await jobsApi.post("/jobs/recommendations", payload);
+export const getRecommendedJobs = async (payload: RecommendedJobsStudentPayload) => {
+  const { data } = await jobsApi.post("/jobs/recommendations", { student: payload });
   return data;
 };
 
-export const updateJob = async (id: string, payload: any) => {
+export const updateJob = async (id: string, payload: UpdateJobPayload) => {
   const { data } = await jobsApi.put(`/jobs/${id}`, payload);
   return data;
 };

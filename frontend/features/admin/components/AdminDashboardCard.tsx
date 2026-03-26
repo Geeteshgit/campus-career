@@ -1,7 +1,10 @@
-import Link from "next/link";
-import React from "react";
+"use client";
 
-interface AdminDashboardCardProps {
+// React
+import React from "react";
+import Link from "next/link";
+
+type AdminDashboardCardProps = {
   title: string;
   subtitle: string;
   href: string;

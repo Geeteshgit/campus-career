@@ -1,13 +1,22 @@
+"use client";
+
+// React
 import React from "react";
+
+// External Libraries
 import { FiEdit2 } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { Admin } from '@/features/admin';
 
-interface AdminCardProps {
+// Features
+import { Role } from "@/features/auth";
+import { Admin } from "@/features/admin";
+
+type AdminCardProps = {
   admin: Admin;
-  role: string;
+  role: Role;
   onEdit: (admin: Admin) => void;
   onDelete: (admin: Admin) => void;
+  deletePending?: boolean;
 }
 
 const AdminCard = ({
@@ -15,6 +24,7 @@ const AdminCard = ({
   role,
   onEdit,
   onDelete,
+  deletePending = false,
 }: AdminCardProps): React.JSX.Element => {
   const isSuperAdmin = role === "super_admin";
 
@@ -38,8 +48,12 @@ const AdminCard = ({
               <FiEdit2 />
             </span>
             <span
-              className="text-xl cursor-pointer text-red-500 hover:scale-105 transition duration-300"
-              onClick={() => onDelete(admin)}
+              className={`text-xl text-red-500 transition duration-300 ${
+                deletePending
+                  ? "cursor-not-allowed"
+                  : "cursor-pointer hover:scale-105"
+              }`}
+              onClick={() => !deletePending && onDelete(admin)}
             >
               <RiDeleteBin6Line />
             </span>

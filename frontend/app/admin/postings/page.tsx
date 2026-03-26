@@ -1,185 +1,67 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+// React
+import React from "react";
+
+// Layout Components
 import Navbar from "@/components/Navbar";
-import { Job, JobModal, AdminPostingsContainer } from "@/features/job";
-import PageHeader from "@/shared/ui/PageHeader";
-import PrimaryButton from "@/shared/ui/PrimaryButton";
-import AddModal from "@/shared/ui/AddModal";
-import EditModal from "@/shared/ui/EditModal";
-import { FieldConfig } from "@/shared/types/modal";
-import { useAppSelector } from "@/redux/hooks";
-import { env } from "@/config/env";
-import { ProtectedRoute } from "@/features/auth";
+
+// Shared UI Components
+import AsyncState from "@/shared/ui/AsyncState";
 import FilterButtons from "@/shared/ui/FilterButtons";
+import FormModal from "@/shared/ui/FormModal";
+import PageHeader from "@/shared/ui/PageHeader";
 import SearchBar from "@/shared/ui/SearchBar";
+import Button from "@/shared/ui/Button";
+
+// Features
+import { ProtectedRoute, useAuthStore } from "@/features/auth";
+import {
+  Job,
+  JobModal,
+  AdminPostingsContainer,
+  useAllJobs,
+  useJobManagement,
+  useJobFilters,
+  createJobFieldsConfig,
+  editJobFieldsConfig,
+} from "@/features/job";
 
 const Postings = (): React.JSX.Element => {
-  const [jobs, setJobs] = useState<Job[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-  const [jobModalOpen, setJobModalOpen] = useState(false);
-  const [addJobModalOpen, setAddJobModalOpen] = useState(false);
-
-  const [editModalOpen, setEditModalOpen] = useState(false);
-
-  const [filter, setFilter] = useState<"All" | "Full-Time" | "Internship">(
-    "All",
-  );
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const user = useAppSelector((state) => state.user.user);
+  const user = useAuthStore((state) => state.user);
   const isAdmin = user?.role !== "student";
 
-  const jobFields: FieldConfig[] = [
-    { name: "company", placeholder: "Company" },
-    { name: "role", placeholder: "Job Role" },
-    { name: "location", placeholder: "Location" },
-    { name: "package", placeholder: "Package / Salary" },
-    { name: "deadline", placeholder: "Deadline", type: "date" },
-    { name: "positions", placeholder: "Positions", type: "number" },
-    {
-      name: "type",
-      placeholder: "Select Type",
-      type: "select",
-      options: ["Full-Time", "Internship"],
-    },
-    { name: "description", placeholder: "Job Description", type: "textarea" },
-    {
-      name: "requirements",
-      placeholder: "Requirements (one per line)",
-      type: "textarea",
-    },
-    { name: "eligibility", placeholder: "Eligibility", type: "textarea" },
-  ];
+  const { jobs, jobsLoading, jobsError, jobsErrorObject } = useAllJobs();
 
-  const editFields: FieldConfig[] = [
-    ...jobFields,
-    {
-      name: "status",
-      placeholder: "Select Status",
-      type: "select",
-      options: ["Active", "Inactive"],
-    },
-  ];
+  const {
+    handleCreateJob,
+    handleUpdateJob,
+    handleDeleteJob,
+    handleEditJob,
+    handleJobClick,
+    createPending,
+    updatePending,
+    deletePending,
+    jobModalOpen,
+    addJobModalOpen,
+    editJobModalOpen,
+    setJobModalOpen,
+    setAddJobModalOpen,
+    setEditJobModalOpen,
+    selectedJob,
+  } = useJobManagement();
 
-  const fetchJobs = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(`${env.JOB_SERVICE}/api/jobs`, {
-        withCredentials: true,
-      });
-      setJobs(response.data.jobs);
-    } catch (err) {
-      console.error("Failed to fetch jobs:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { applyFilters, filter, setFilter, searchTerm, setSearchTerm } =
+    useJobFilters();
 
-  useEffect(() => {
-    fetchJobs();
-  }, []);
+  const filteredJobs = applyFilters(jobs);
 
-  const handleJobSave = async (formData: any) => {
-    try {
-      const jobData = {
-        ...formData,
-        requirements: formData.requirements
-          ? formData.requirements.split("\n")
-          : [],
-      };
-
-      const response = await axios.post(
-        `${env.JOB_SERVICE}/api/jobs`,
-        jobData,
-        {
-          withCredentials: true,
-        },
-      );
-
-      setJobs((prev) => [...prev, response.data.job]);
-      setAddJobModalOpen(false);
-    } catch (err) {
-      console.error("Job create error:", err);
-    }
-  };
-
-  const handleEditButton = (job: Job) => {
-    setSelectedJob(job);
-    setEditModalOpen(true);
-  };
-
-  const handleSaveEdit = async (updatedData: any) => {
-    if (!selectedJob) return;
-
-    try {
-      const finalData = {
-        ...updatedData,
-        requirements: updatedData.requirements?.split("\n") || [],
-      };
-
-      const response = await axios.put(
-        `${env.JOB_SERVICE}/api/jobs/${selectedJob._id}`,
-        finalData,
-        { withCredentials: true },
-      );
-
-      setJobs((prev) =>
-        prev.map((job) =>
-          job._id === selectedJob._id ? response.data.updatedJob : job,
-        ),
-      );
-
-      setEditModalOpen(false);
-      setJobModalOpen(false);
-      setSelectedJob(null);
-    } catch (err) {
-      console.error("Job update error:", err);
-    }
-  };
-
-  const handleDelete = async (job: Job) => {
-    try {
-      await axios.delete(`${env.JOB_SERVICE}/api/jobs/${job._id}`, {
-        withCredentials: true,
-      });
-
-      setJobs((prev) => prev.filter((j) => j._id !== job._id));
-      setJobModalOpen(false);
-      setSelectedJob(null);
-    } catch (err) {
-      console.error("Job delete error:", err);
-    }
-  };
-
-  const handleJobClick = (job: Job) => {
-    setSelectedJob(job);
-    setJobModalOpen(true);
-  };
-
-  const filteredByType =
-    filter === "All" ? jobs : jobs.filter((job) => job.type === filter);
-
-  const filteredJobs = filteredByType.filter((job) => {
-    const term = searchTerm.toLowerCase();
-    const company = job.company?.toLowerCase() ?? "";
-    const role = job.role?.toLowerCase() ?? "";
-    const location = job.location?.toLowerCase() ?? "";
-    const pkg = job.package?.toLowerCase() ?? "";
-
-    return (
-      company.includes(term) ||
-      role.includes(term) ||
-      location.includes(term) ||
-      pkg.includes(term)
-    );
-  });
-
-  const activeJobs = filteredJobs.filter((job) => job.status === "Active");
-  const inactiveJobs = filteredJobs.filter((job) => job.status === "Inactive");
+  const activeJobs: Job[] = filteredJobs.filter(
+    (job) => job.status === "Active",
+  );
+  const inactiveJobs: Job[] = filteredJobs.filter(
+    (job) => job.status === "Inactive",
+  );
 
   return (
     <ProtectedRoute allowedRoles={["admin", "super_admin"]}>
@@ -192,15 +74,17 @@ const Postings = (): React.JSX.Element => {
               title="Job Postings"
               subtitle="Manage and view job opportunities"
             />
-            <PrimaryButton onClick={() => setAddJobModalOpen(true)}>
+            <Button variant="primary" onClick={() => setAddJobModalOpen(true)}>
               Create Posting
-            </PrimaryButton>
+            </Button>
           </div>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
             <FilterButtons
               filters={["All", "Full-Time", "Internship"]}
               activeFilter={filter}
-              onFilterChange={(f) => setFilter(f as any)}
+              onFilterChange={(f) =>
+                setFilter(f as "All" | "Full-Time" | "Internship")
+              }
             />
             <SearchBar
               value={searchTerm}
@@ -209,11 +93,15 @@ const Postings = (): React.JSX.Element => {
             />
           </div>
 
-          {loading ? (
-            <p className="text-center text-neutral-600 py-10">
-              Loading jobs...
-            </p>
-          ) : (
+          <AsyncState
+            isLoading={jobsLoading}
+            isError={jobsError}
+            error={jobsErrorObject}
+            isEmpty={jobs.length === 0}
+            loadingText="Loading job postings"
+            errorText="Failed to load job postings"
+            emptyText="No job postings found"
+          >
             <>
               <AdminPostingsContainer
                 title="Active Postings"
@@ -227,7 +115,7 @@ const Postings = (): React.JSX.Element => {
                 onJobClick={handleJobClick}
               />
             </>
-          )}
+          </AsyncState>
         </main>
 
         {jobModalOpen && selectedJob && (
@@ -235,31 +123,34 @@ const Postings = (): React.JSX.Element => {
             job={selectedJob}
             isAdmin={isAdmin}
             onOpenChange={setJobModalOpen}
-            onEdit={handleEditButton}
-            onDelete={handleDelete}
+            onEdit={handleEditJob}
+            onDelete={handleDeleteJob}
+            isPending={deletePending}
           />
         )}
 
         {addJobModalOpen && (
-          <AddModal
+          <FormModal
             title="Create Job Posting"
-            fields={jobFields}
+            fields={createJobFieldsConfig}
             onClose={() => setAddJobModalOpen(false)}
-            onSave={handleJobSave}
+            onSave={handleCreateJob}
+            isPending={createPending}
           />
         )}
 
-        {editModalOpen && selectedJob && (
-          <EditModal
+        {editJobModalOpen && selectedJob && (
+          <FormModal
             title="Edit Job Posting"
-            fields={editFields}
+            fields={editJobFieldsConfig}
             initialValues={{
               ...selectedJob,
               deadline: selectedJob.deadline?.split("T")[0],
               requirements: selectedJob.requirements.join("\n"),
             }}
-            onClose={() => setEditModalOpen(false)}
-            onSave={handleSaveEdit}
+            onClose={() => setEditJobModalOpen(false)}
+            onSave={handleUpdateJob}
+            isPending={updatePending}
           />
         )}
       </>

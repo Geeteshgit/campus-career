@@ -1,91 +1,68 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+"use client";
+
 import {
-  getAllJobs,
-  getJobStats,
-  createJob,
-  getInactiveJobs,
-  getRecommendedJobs,
-  updateJob,
-  deleteJob
-} from "../api/jobs.api";
+  useAllJobsQuery,
+  useInactiveJobsQuery,
+  useRecommendedJobsQuery,
+} from "../api/jobs.queries";
+import { Job, RecommendedJobsStudentPayload } from "../types/job.types";
 
 export const useAllJobs = () => {
-  return useQuery({
-    queryKey: ["jobs"],
-    queryFn: getAllJobs,
-  });
-};
+  const {
+    data: jobsData,
+    isPending: jobsLoading,
+    isError: jobsError,
+    error: jobsErrorObject,
+  } = useAllJobsQuery();
 
-export const useJobStats = () => {
-  return useQuery({
-    queryKey: ["jobs", "stats"],
-    queryFn: getJobStats,
-  });
+  const jobs: Job[] = jobsData?.jobs ?? [];
+  const activeJobs = jobs.filter((job) => job.status === "Active");
+  const inactiveJobs = jobs.filter((job) => job.status === "Inactive");
+
+  return {
+    jobs,
+    activeJobs,
+    inactiveJobs,
+    jobsLoading,
+    jobsError,
+    jobsErrorObject,
+  };
 };
 
 export const useInactiveJobs = () => {
-  return useQuery({
-    queryKey: ["jobs", "inactive"],
-    queryFn: getInactiveJobs,
-  });
-};
+  const {
+    data: inactiveJJobsData,
+    isPending: inactiveJobsLoading,
+    isError: inactiveJobsError,
+    error: inactiveJobsErrorObj,
+  } = useInactiveJobsQuery();
 
-export const useRecommendedJobs = () => {
-  const mutation = useMutation({
-    mutationFn: getRecommendedJobs,
-  });
+  const inactiveJobs: Job[] = inactiveJJobsData?.jobs ?? [];
 
   return {
-    getRecommendedJobs: mutation.mutateAsync,
-    ...mutation,
+    inactiveJobs,
+    inactiveJobsLoading,
+    inactiveJobsError,
+    inactiveJobsErrorObj,
   };
 };
 
-export const useCreateJob = () => {
-  const queryClient = useQueryClient();
+export const useRecommendedJobs = (
+  payload: RecommendedJobsStudentPayload,
+) => {
+  const {
+    data: recommendedJobsData,
+    isPending: recommendedJobsLoading,
+    isError: recommendedJobsError,
+    error: recommendedJobsErrorObj,
+  } = useRecommendedJobsQuery(payload);
 
-  const mutation = useMutation({
-    mutationFn: createJob,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["jobs"] });
-    },
-  });
-
-  return {
-    createJob: mutation.mutateAsync,
-    ...mutation,
-  };
-};
-
-export const useUpdateJob = () => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: ({ id, payload }: { id: string; payload: any }) =>
-      updateJob(id, payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["jobs"] });
-    },
-  });
+  const recommendedJobs: Job[] = recommendedJobsData?.jobs ?? [];
 
   return {
-    updateJob: mutation.mutateAsync,
-    ...mutation,
-  };
-};
-
-export const useDeleteJob = () => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: deleteJob,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["jobs"] });
-    },
-  });
-
-  return {
-    deleteJob: mutation.mutateAsync,
-    ...mutation,
+    recommendedJobs,
+    recommendedJobsLoading,
+    recommendedJobsError,
+    recommendedJobsErrorObj,
   };
 };

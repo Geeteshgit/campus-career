@@ -1,14 +1,21 @@
+"use client";
+
+// React
 import React from "react";
+
+// External Libraries
 import { FiEdit2 } from "react-icons/fi";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { Student } from "@/features/student";
 
-interface StudentCardProps {
-  student: Student;
-  onView: (student: Student) => void;
-  onEdit: (student: Student) => void;
-  onDelete: (student: Student) => void;
+// Features
+import { PopulatedStudent } from "@/features/student";
+
+type StudentCardProps = {
+  student: PopulatedStudent;
+  onView: (student: PopulatedStudent) => void;
+  onEdit: (student: PopulatedStudent) => void;
+  onDelete: (student: PopulatedStudent) => void;
 }
 
 const StudentCard = ({

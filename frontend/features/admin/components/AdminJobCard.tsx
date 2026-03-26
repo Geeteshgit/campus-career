@@ -1,9 +1,12 @@
 "use client";
 
+// React
 import React from "react";
+
+// Features
 import { Job } from "@/features/job";
 
-interface AdminJobCardProps {
+type AdminJobCardProps = {
   job: Job;
   onClick: () => void;
 }

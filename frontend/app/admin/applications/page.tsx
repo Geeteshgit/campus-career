@@ -1,56 +1,52 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+// React
+import React, { useState } from "react";
+
+// Layout Components
 import Navbar from "@/components/Navbar";
-import PageHeader from "@/shared/ui/PageHeader";
-import { Job, JobModal } from "@/features/job";
-import { FieldConfig } from "@/shared/types/modal";
-import EditModal from "@/shared/ui/EditModal";
-import { useAppSelector } from "@/redux/hooks";
-import { env } from "@/config/env";
-import { JobApplicationsCard } from "@/features/application";
-import { ProtectedRoute } from "@/features/auth";
+
+// Shared UI Components
+import AsyncState from "@/shared/ui/AsyncState";
 import FilterButtons from "@/shared/ui/FilterButtons";
+import FormModal from "@/shared/ui/FormModal";
+import PageHeader from "@/shared/ui/PageHeader";
 import SearchBar from "@/shared/ui/SearchBar";
 
-const exportCSV = (data: any[], filename: string) => {
-  if (!data || data.length === 0) {
-    alert("No data to export");
-    return;
-  }
-
-  const headers = Object.keys(data[0]).join(",");
-  const rows = data
-    .map((row) =>
-      Object.values(row)
-        .map((v) => `"${v}"`)
-        .join(","),
-    )
-    .join("\n");
-
-  const csv = `${headers}\n${rows}`;
-
-  const blob = new Blob([csv], { type: "text/csv" });
-  const url = window.URL.createObjectURL(blob);
-  const link = document.createElement("a");
-
-  link.href = url;
-  link.download = filename;
-  link.click();
-
-  window.URL.revokeObjectURL(url);
-};
+// Features
+import { ProtectedRoute, useAuthStore } from "@/features/auth";
+import { JobApplicationsCard } from "@/features/application";
+import { downloadApplicantsCSV } from "@/features/application/utils/downloadApplicantsCSV";
+import {
+  editJobFieldsConfig,
+  Job,
+  JobFormData,
+  JobModal,
+  UpdateJobPayload,
+  useAllJobsQuery,
+  useDeleteJobMutation,
+  useUpdateJobMutation,
+} from "@/features/job";
 
 const ApplicationsAdminPage = (): React.JSX.Element => {
-  const user = useAppSelector((state) => state.user.user);
+  const user = useAuthStore((state) => state.user);
   const isAdmin = user?.role !== "student";
 
-  const [jobs, setJobs] = useState<Job[]>([]);
+  const {
+    data: jobsData,
+    isPending: jobsLoading,
+    isError: jobsError,
+    error: jobsErrorObj,
+  } = useAllJobsQuery();
+  const { updateJob, isPending: updatePending } = useUpdateJobMutation();
+  const { deleteJob, isPending: deletePending } = useDeleteJobMutation();
+
+  const jobs: Job[] = jobsData?.jobs ?? [];
+
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
-  const [jobModalOpen, setJobModalOpen] = useState(false);
-  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [jobModalOpen, setJobModalOpen] = useState<boolean>(false);
+  const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
 
   const [editingJob, setEditingJob] = useState<Job | null>(null);
 
@@ -58,82 +54,23 @@ const ApplicationsAdminPage = (): React.JSX.Element => {
     "All",
   );
 
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const jobFields: FieldConfig[] = [
-    { name: "company", placeholder: "Company" },
-    { name: "role", placeholder: "Job Role" },
-    { name: "location", placeholder: "Location" },
-    { name: "package", placeholder: "Package / Salary" },
-    { name: "deadline", placeholder: "Deadline", type: "date" },
-    { name: "positions", placeholder: "Positions", type: "number" },
-    {
-      name: "type",
-      placeholder: "Select Type",
-      type: "select",
-      options: ["Full-Time", "Internship"],
-    },
-    { name: "description", placeholder: "Job Description", type: "textarea" },
-    {
-      name: "requirements",
-      placeholder: "Requirements (one per line)",
-      type: "textarea",
-    },
-    { name: "eligibility", placeholder: "Eligibility", type: "textarea" },
-  ];
-
-  const editFields: FieldConfig[] = [
-    ...jobFields,
-    {
-      name: "status",
-      placeholder: "Select Status",
-      type: "select",
-      options: ["Active", "Inactive"],
-    },
-  ];
-
-  const fetchJobs = async () => {
-    try {
-      const response = await axios.get(`${env.JOB_SERVICE}/api/jobs`, {
-        withCredentials: true,
-      });
-      setJobs(response.data.jobs);
-    } catch (err) {
-      console.error("Failed to fetch jobs:", err);
-    }
-  };
-
-  useEffect(() => {
-    fetchJobs();
-  }, []);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const handleEditClick = (job: Job) => {
     setEditingJob(job);
     setEditModalOpen(true);
   };
 
-  const handleSaveEdit = async (updatedData: any) => {
+  const handleSaveEdit = async (updatedData: JobFormData) => {
     if (!editingJob) return;
 
     try {
-      const finalData = {
+      const finalData: UpdateJobPayload = {
         ...updatedData,
         requirements: updatedData.requirements?.split("\n") || [],
       };
 
-      const response = await axios.put(
-        `${env.JOB_SERVICE}/api/jobs/${editingJob._id}`,
-        finalData,
-        {
-          withCredentials: true,
-        }
-      );
-
-      setJobs((prev) =>
-        prev.map((j) =>
-          j._id === editingJob._id ? response.data.updatedJob : j,
-        ),
-      );
+      await updateJob({ id: editingJob._id, payload: finalData });
 
       setEditModalOpen(false);
       setJobModalOpen(false);
@@ -145,11 +82,7 @@ const ApplicationsAdminPage = (): React.JSX.Element => {
 
   const handleDelete = async (job: Job) => {
     try {
-      await axios.delete(`${env.JOB_SERVICE}/api/jobs/${job._id}`, {
-        withCredentials: true,
-      });
-
-      setJobs((prev) => prev.filter((j) => j._id !== job._id));
+      await deleteJob(job._id);
 
       setJobModalOpen(false);
       setSelectedJob(null);
@@ -163,44 +96,10 @@ const ApplicationsAdminPage = (): React.JSX.Element => {
     setJobModalOpen(true);
   };
 
-  const handleDownload = async (job: Job) => {
-    try {
-      const response = await axios.get(
-        `${env.JOB_SERVICE}/api/applications/${job._id}`,
-        { withCredentials: true },
-      );
-
-      const applicants = response.data.applicants;
-
-      if (!applicants || applicants.length === 0) {
-        alert("No applicants found for this job.");
-        return;
-      }
-
-      const formatted = applicants.map((a: any) => ({
-        enrollmentNumber: a.enrollmentNumber,
-        name: a.name,
-        email: a.email,
-        phone: a.phone,
-        program: a.program,
-        year: a.year,
-        batch: a.batch,
-        specialization: a.specialization,
-        cgpa: a.cgpa,
-        appliedOn: new Date(a.createdAt).toLocaleDateString("en-GB"),
-      }));
-
-      exportCSV(formatted, `${job.company}_${job.role}_Applicants.csv`);
-    } catch (err) {
-      console.error("Download CSV error:", err);
-      alert("Failed to download CSV");
-    }
-  };
-
-  const filteredByType =
+  const filteredByType: Job[] =
     filter === "All" ? jobs : jobs.filter((job) => job.type === filter);
 
-  const filteredJobs = filteredByType.filter((job) => {
+  const filteredJobs: Job[] = filteredByType.filter((job) => {
     const term = searchTerm.toLowerCase();
     return (
       job.company.toLowerCase().includes(term) ||
@@ -222,7 +121,9 @@ const ApplicationsAdminPage = (): React.JSX.Element => {
             <FilterButtons
               filters={["All", "Full-Time", "Internship"]}
               activeFilter={filter}
-              onFilterChange={(f) => setFilter(f as any)}
+              onFilterChange={(f) =>
+                setFilter(f as "All" | "Full-Time" | "Internship")
+              }
             />
             <SearchBar
               value={searchTerm}
@@ -231,23 +132,27 @@ const ApplicationsAdminPage = (): React.JSX.Element => {
             />
           </div>
 
-          <div className="flex flex-col bg-white border border-neutral-200 rounded-xl shadow-sm overflow-hidden">
-            {filteredJobs.map((job) => (
-              <JobApplicationsCard
-                key={job._id}
-                job={job}
-                isAdmin={isAdmin}
-                onDownload={handleDownload}
-                onOpenModal={openJobModal}
-              />
-            ))}
-
-            {filteredJobs.length === 0 && (
-              <p className="py-5 text-center text-neutral-600">
-                No job postings found.
-              </p>
-            )}
-          </div>
+          <AsyncState
+            isLoading={jobsLoading}
+            isError={jobsError}
+            error={jobsErrorObj}
+            isEmpty={jobs.length === 0}
+            loadingText="Loading job postings"
+            errorText="Failed to load job postings"
+            emptyText="No job postings found"
+          >
+            <div className="flex flex-col bg-white border border-neutral-200 rounded-xl shadow-sm overflow-hidden">
+              {filteredJobs.map((job) => (
+                <JobApplicationsCard
+                  key={job._id}
+                  job={job}
+                  isAdmin={isAdmin}
+                  onDownload={downloadApplicantsCSV}
+                  onOpenModal={openJobModal}
+                />
+              ))}
+            </div>
+          </AsyncState>
         </main>
 
         {jobModalOpen && selectedJob && (
@@ -257,13 +162,14 @@ const ApplicationsAdminPage = (): React.JSX.Element => {
             onOpenChange={setJobModalOpen}
             onEdit={handleEditClick}
             onDelete={handleDelete}
+            isPending={deletePending}
           />
         )}
 
         {editModalOpen && editingJob && (
-          <EditModal
+          <FormModal
             title="Edit Job Posting"
-            fields={editFields}
+            fields={editJobFieldsConfig}
             initialValues={{
               ...editingJob,
               deadline: editingJob.deadline?.split("T")[0],
@@ -271,6 +177,7 @@ const ApplicationsAdminPage = (): React.JSX.Element => {
             }}
             onClose={() => setEditModalOpen(false)}
             onSave={handleSaveEdit}
+            isPending={updatePending}
           />
         )}
       </>

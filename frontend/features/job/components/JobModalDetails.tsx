@@ -1,11 +1,18 @@
+"use client";
+
+// React
 import React from "react";
-import { Job } from "@/features/job";
+
+// External Libraries
 import {
   FaMapMarkerAlt,
   FaRupeeSign,
   FaCalendarAlt,
   FaUsers,
 } from "react-icons/fa";
+
+// Features
+import { Job } from "@/features/job";
 
 const JobModalDetails = ({ job }: { job: Job }): React.JSX.Element => {
   const formattedDeadline = job.deadline

@@ -1,141 +1,51 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+// React
+import React, { useState } from "react";
+
+// Layout Components
 import Navbar from "@/components/Navbar";
+
+// Shared UI Components
+import AsyncState from "@/shared/ui/AsyncState";
+import Button from "@/shared/ui/Button";
+import FormModal from "@/shared/ui/FormModal";
 import PageHeader from "@/shared/ui/PageHeader";
-import { AdminCard, Admin } from "@/features/admin";
-import { useAppSelector } from "@/redux/hooks";
-import AddModal from "@/shared/ui/AddModal";
-import EditModal from "@/shared/ui/EditModal";
-import { FieldConfig } from "@/shared/types/modal";
-import PrimaryButton from "@/shared/ui/PrimaryButton";
-import { env } from "@/config/env";
-import { ProtectedRoute } from "@/features/auth";
 import SearchBar from "@/shared/ui/SearchBar";
 
+// Features
+import { ProtectedRoute, useAuthStore } from "@/features/auth";
+import {
+  AdminCard,
+  adminFieldsConfig,
+  superAdminFieldsConfig,
+  useAdminManagement,
+  useAdmins,
+} from "@/features/admin";
+
 const AdminManagement = (): React.JSX.Element => {
-  const user = useAppSelector((state) => state.user.user);
+  const user = useAuthStore((state) => state.user);
   const role = user?.role ?? "admin";
 
-  const [admins, setAdmins] = useState<Admin[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
-  const [searchTerm, setSearchTerm] = useState("");
+  const { filteredAdmins, adminsLoading, adminsError, adminsErrorObj } =
+    useAdmins(searchTerm);
 
-  const [addAdminModalOpen, setAddAdminModalOpen] = useState(false);
-  const [editAdminModalOpen, setEditAdminModalOpen] = useState(false);
-  const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
-
-  const fetchAdmins = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(`${env.USER_SERVICE}/api/admin`, {
-        withCredentials: true,
-      });
-
-      setAdmins(response.data.admins);
-    } catch (err) {
-      console.error("Failed to fetch admins:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchAdmins();
-  }, []);
-
-  const handleAdminAdded = async (newAdminData: any) => {
-    try {
-      const payload =
-        role === "super_admin"
-          ? newAdminData
-          : { ...newAdminData, role: "admin" };
-
-      const response = await axios.post(
-        `${env.USER_SERVICE}/api/admin`,
-        payload,
-        {
-          withCredentials: true,
-        },
-      );
-
-      setAdmins((prev) => [...prev, response.data.admin]);
-      setAddAdminModalOpen(false);
-    } catch (err) {
-      console.error("Failed to add admin:", err);
-    }
-  };
-
-  const handleAdminUpdated = async (updatedValues: any) => {
-    if (!selectedAdmin) return;
-
-    try {
-      if (role !== "super_admin") {
-        delete updatedValues.role;
-      }
-
-      const response = await axios.put(
-        `${env.USER_SERVICE}/api/admin/${selectedAdmin._id}`,
-        updatedValues,
-        {
-          withCredentials: true,
-        },
-      );
-
-      setAdmins((prev) =>
-        prev.map((a) =>
-          a._id === selectedAdmin._id ? response.data.updatedUser : a,
-        ),
-      );
-
-      setEditAdminModalOpen(false);
-    } catch (err) {
-      console.error("Failed to update admin:", err);
-    }
-  };
-
-  const handleDelete = async (admin: Admin) => {
-    try {
-      await axios.delete(`${env.USER_SERVICE}/api/admin/${admin._id}`, {
-        withCredentials: true,
-      });
-
-      setAdmins((prev) => prev.filter((a) => a._id !== admin._id));
-    } catch (err) {
-      console.error("Failed to delete admin:", err);
-    }
-  };
-
-  const handleEdit = (admin: Admin) => {
-    setSelectedAdmin(admin);
-    setEditAdminModalOpen(true);
-  };
-
-  const adminFields: FieldConfig[] = [
-    { name: "name", placeholder: "Admin Name", type: "text" },
-    { name: "email", placeholder: "Email", type: "email" },
-    { name: "phone", placeholder: "Phone Number", type: "text" },
-  ];
-
-  const superAdminFields: FieldConfig[] = [
-    ...adminFields,
-    {
-      name: "role",
-      placeholder: "Select Role",
-      type: "select",
-      options: ["admin", "super_admin"],
-    },
-  ];
-
-  // 🔍 SEARCH FILTER
-  const filteredAdmins = admins.filter((admin) =>
-    [admin.name, admin.email, admin.phone]
-      .join(" ")
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase()),
-  );
+  const {
+    handleCreateAdmin,
+    handleUpdateAdmin,
+    handleDeleteAdmin,
+    handleEditAdmin,
+    createPending,
+    updatePending,
+    deletePending,
+    addAdminModalOpen,
+    editAdminModalOpen,
+    setAddAdminModalOpen,
+    setEditAdminModalOpen,
+    selectedAdmin,
+  } = useAdminManagement(role);
 
   return (
     <ProtectedRoute allowedRoles={["admin", "super_admin"]}>
@@ -147,9 +57,12 @@ const AdminManagement = (): React.JSX.Element => {
               title="Admin Users"
               subtitle="View and manage all the admin accounts"
             />
-            <PrimaryButton onClick={() => setAddAdminModalOpen(true)}>
+            <Button
+              variant="primary"
+              onClick={() => setAddAdminModalOpen(true)}
+            >
               Add Admin
-            </PrimaryButton>
+            </Button>
           </div>
 
           <div className="flex justify-end">
@@ -174,45 +87,57 @@ const AdminManagement = (): React.JSX.Element => {
                 Actions
               </p>
             </div>
-
-            {loading ? (
-              <p className="text-center py-10 text-neutral-500">Loading...</p>
-            ) : filteredAdmins.length > 0 ? (
+            <AsyncState
+              isLoading={adminsLoading}
+              isError={adminsError}
+              error={adminsErrorObj}
+              isEmpty={filteredAdmins.length === 0}
+              loadingText="Loading admins"
+              errorText="Failed to load admins"
+              emptyText="No admins found"
+            >
               <div className="flex flex-col gap-1">
                 {filteredAdmins.map((admin) => (
                   <AdminCard
                     key={admin._id}
                     admin={admin}
                     role={role}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
+                    onEdit={handleEditAdmin}
+                    onDelete={handleDeleteAdmin}
+                    deletePending={deletePending}
                   />
                 ))}
               </div>
-            ) : (
-              <p className="text-neutral-500 text-center py-10">
-                No admins found
-              </p>
-            )}
+            </AsyncState>
           </div>
         </main>
 
         {addAdminModalOpen && (
-          <AddModal
+          <FormModal
             title="Add New Admin"
-            fields={role === "super_admin" ? superAdminFields : adminFields}
+            fields={
+              role === "super_admin"
+                ? superAdminFieldsConfig
+                : adminFieldsConfig
+            }
             onClose={() => setAddAdminModalOpen(false)}
-            onSave={handleAdminAdded}
+            onSave={handleCreateAdmin}
+            isPending={createPending}
           />
         )}
 
         {editAdminModalOpen && selectedAdmin && (
-          <EditModal
+          <FormModal
             title="Edit Admin"
-            fields={role === "super_admin" ? superAdminFields : adminFields}
+            fields={
+              role === "super_admin"
+                ? superAdminFieldsConfig
+                : adminFieldsConfig
+            }
             initialValues={selectedAdmin}
             onClose={() => setEditAdminModalOpen(false)}
-            onSave={handleAdminUpdated}
+            onSave={handleUpdateAdmin}
+            isPending={updatePending}
           />
         )}
       </>

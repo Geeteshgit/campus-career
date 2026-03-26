@@ -1,85 +1,33 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+// React
+import React from "react";
+
+// Layout Components
 import Navbar from "@/components/Navbar";
+
+// Shared UI Components
+import AsyncState from "@/shared/ui/AsyncState";
+import Button from "@/shared/ui/Button";
+import Input from "@/shared/ui/Input";
 import PageHeader from "@/shared/ui/PageHeader";
-import PrimaryButton from "@/shared/ui/PrimaryButton";
-import DangerButton from "@/shared/ui/DangerButton";
-import InputField from "@/shared/ui/InputField";
-import axios from "axios";
-import { env } from "@/config/env";
+
+// Features
 import { ProtectedRoute } from "@/features/auth";
-import { useAppSelector } from "@/redux/hooks";
-import { useDispatch } from "react-redux";
-import { setPrograms } from "@/redux/features/academic/academicSlice";
+import { useProgramManagement, usePrograms } from "@/features/academic";
 
 const ConfigurationsPage = (): React.JSX.Element => {
-  const [newProgram, setNewProgram] = useState("");
-  const dispatch = useDispatch();
-  const programs = useAppSelector((state) => state.academic.programs);
+  const { programs, programsLoading, programsError, programsErrorObj } =
+    usePrograms();
 
-  const fetchPrograms = async () => {
-    try {
-      const response = await axios.get(
-        `${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs`,
-        {
-          withCredentials: true,
-        },
-      );
-
-      dispatch(setPrograms(response.data.programs));
-    } catch (err) {
-      console.error("Failed to fetch programs:", err);
-    }
-  };
-
-  useEffect(() => {
-    fetchPrograms();
-  }, []);
-
-  const addProgram = async () => {
-    if (!newProgram.trim()) return;
-
-    try {
-      const response = await axios.post(
-        `${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs`,
-        { name: newProgram.trim() },
-        {
-          withCredentials: true,
-        },
-      );
-
-      const fetchPrograms = await axios.get(
-        `${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs`,
-        { withCredentials: true },
-      );
-      dispatch(setPrograms(fetchPrograms.data.programs));
-      setNewProgram("");
-    } catch (err) {
-      console.error("Failed to add program:", err);
-      alert("Could not add program");
-    }
-  };
-
-  const deleteProgram = async (programId: string) => {
-    try {
-      await axios.delete(
-        `${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs/${programId}`,
-        {
-          withCredentials: true,
-        },
-      );
-
-      const fetchPrograms = await axios.get(
-        `${env.ACADEMIC_CONFIG_SERVICE}/api/academics/programs`,
-        { withCredentials: true },
-      );
-      dispatch(setPrograms(fetchPrograms.data.programs));
-    } catch (err) {
-      console.error("Failed to delete program:", err);
-      alert("Could not delete program");
-    }
-  };
+  const {
+    handleCreateProgram,
+    handleDeleteProgram,
+    createPending,
+    deletePending,
+    newProgram,
+    setNewProgram,
+  } = useProgramManagement();
 
   return (
     <ProtectedRoute allowedRoles={["admin", "super_admin"]}>
@@ -96,22 +44,32 @@ const ConfigurationsPage = (): React.JSX.Element => {
             <h2 className="text-lg font-semibold text-neutral-800">Programs</h2>
 
             <div className="flex gap-2">
-              <InputField
+              <Input
                 name="program"
                 value={newProgram}
                 onChange={(e) => setNewProgram(e.target.value)}
                 placeholder="Add Program"
               />
-              <PrimaryButton onClick={addProgram}>Add</PrimaryButton>
+              <Button
+                variant="primary"
+                onClick={() => handleCreateProgram({ name: newProgram })}
+                disabled={!newProgram.trim() || createPending}
+              >
+                Add
+              </Button>
             </div>
 
-            <div className="flex flex-col gap-2">
-              {programs.length === 0 ? (
-                <p className="text-neutral-600 text-center py-4">
-                  No programs available.
-                </p>
-              ) : (
-                programs.map((program) => (
+            <AsyncState
+              isLoading={programsLoading}
+              isError={programsError}
+              error={programsErrorObj}
+              isEmpty={programs.length === 0}
+              loadingText="Loading programs..."
+              errorText="Failed to load programs"
+              emptyText="No programs found"
+            >
+              <div className="flex flex-col gap-2">
+                {programs.map((program) => (
                   <div
                     key={program._id}
                     className="flex items-center justify-between bg-white border border-neutral-200 rounded-lg px-4 py-2"
@@ -120,13 +78,17 @@ const ConfigurationsPage = (): React.JSX.Element => {
                       {program.name}
                     </p>
 
-                    <DangerButton onClick={() => deleteProgram(program._id)}>
+                    <Button
+                      variant="danger"
+                      onClick={() => handleDeleteProgram(program._id)}
+                      disabled={deletePending}
+                    >
                       Delete
-                    </DangerButton>
+                    </Button>
                   </div>
-                ))
-              )}
-            </div>
+                ))}
+              </div>
+            </AsyncState>
           </div>
         </main>
       </>

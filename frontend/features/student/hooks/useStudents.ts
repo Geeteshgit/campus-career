@@ -1,141 +1,83 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+"use client";
+
 import {
-  getMyStudentProfile,
-  updateMyStudentProfile,
-  uploadStudentResume,
-  getAllStudents,
-  getStudentStats,
-  getStudentByUserId,
-  createStudent,
-  bulkCreateStudents,
-  updateStudent,
-  deleteStudent,
-  PaginationParams,
-} from "../api/students.api";
+	useAllStudentsQuery,
+	useInfiniteStudentsQuery,
+	useMyStudentProfileQuery,
+	useStudentByUserIdQuery,
+	useUpdateMyStudentProfileMutation,
+	useUploadStudentResumeMutation,
+} from "../api/students.queries";
+import { useMemo } from "react";
+import { PaginationParams } from "../api/students.api";
+import { PopulatedStudent } from "../types/student.types";
 
 export const useMyStudentProfile = () => {
-  return useQuery({
-    queryKey: ["students", "my"],
-    queryFn: getMyStudentProfile,
-  });
-};
-
-export const useStudentStats = () => {
-  return useQuery({
-    queryKey: ["students", "stats"],
-    queryFn: getStudentStats,
-  });
+	return useMyStudentProfileQuery();
 };
 
 export const useAllStudents = (params?: PaginationParams) => {
-  return useQuery({
-    queryKey: ["students", params],
-    queryFn: () => getAllStudents(params),
-  });
+	return useAllStudentsQuery(params);
 };
 
 export const useStudentByUserId = (userId: string) => {
-  return useQuery({
-    queryKey: ["students", userId],
-    queryFn: () => getStudentByUserId(userId),
-    enabled: !!userId,
-  });
+	return useStudentByUserIdQuery(userId);
+};
+
+type StudentsListParams = {
+	selectedProgram: string;
+	selectedYear: string;
+	search: string;
+};
+
+export const useStudents = ({
+	selectedProgram,
+	selectedYear,
+	search,
+}: StudentsListParams) => {
+	const {
+		data: studentsData,
+		isPending: studentsLoading,
+		isFetching: studentsFetching,
+		isError: studentsError,
+		error: studentsErrorObj,
+		hasNextPage,
+		fetchNextPage,
+	} = useInfiniteStudentsQuery({
+		program: selectedProgram,
+		year: selectedYear,
+		search,
+	});
+
+	const students = useMemo(() => {
+		return (
+			studentsData?.pages.flatMap(
+				(pageData) => (pageData?.students as PopulatedStudent[]) ?? [],
+			) ?? []
+		);
+	}, [studentsData]);
+
+	const handleShowMore = () => {
+		if (!hasNextPage || studentsFetching) return;
+		void fetchNextPage();
+	};
+
+	return {
+		students,
+		hasMore: Boolean(hasNextPage),
+		handleShowMore,
+		studentsLoading,
+		studentsFetching,
+		studentsError,
+		studentsErrorObj,
+	};
 };
 
 export const useUpdateMyStudentProfile = () => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: updateMyStudentProfile,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["students", "my"] });
-    },
-  });
-
-  return {
-    updateMyStudentProfile: mutation.mutateAsync,
-    ...mutation,
-  };
+	return useUpdateMyStudentProfileMutation();
 };
 
 export const useUploadStudentResume = () => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: uploadStudentResume,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["students", "my"] });
-    },
-  });
-
-  return {
-    uploadStudentResume: mutation.mutateAsync,
-    ...mutation,
-  };
+	return useUploadStudentResumeMutation();
 };
 
-export const useCreateStudent = () => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: createStudent,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["students"] });
-    },
-  });
-
-  return {
-    createStudent: mutation.mutateAsync,
-    ...mutation,
-  };
-};
-
-export const useBulkCreateStudents = () => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: bulkCreateStudents,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["students"] });
-    },
-  });
-
-  return {
-    bulkCreateStudents: mutation.mutateAsync,
-    ...mutation,
-  };
-};
-
-export const useUpdateStudent = () => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: ({ id, payload }: { id: string; payload: Record<string, any> }) =>
-      updateStudent(id, payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["students"] });
-    },
-  });
-
-  return {
-    updateStudent: mutation.mutateAsync,
-    ...mutation,
-  };
-};
-
-export const useDeleteStudent = () => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: deleteStudent,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["students"] });
-    },
-    retry: 1,
-  });
-
-  return {
-    deleteStudent: mutation.mutateAsync,
-    ...mutation,
-  };
-};

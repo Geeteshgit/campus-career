@@ -1,11 +1,16 @@
 "use client";
-import React, { useState } from "react";
-import InputField from "@/shared/ui/InputField";
-import PrimaryButton from "@/shared/ui/PrimaryButton";
-import axios from "axios";
-import { env } from "@/config/env";
 
-interface SendOtpStepProps {
+// React
+import React from "react";
+
+// Shared UI Components
+import Button from "@/shared/ui/Button";
+import Input from "@/shared/ui/Input";
+
+// Features
+import { usePasswordReset } from "@/features/auth";
+
+type SendOtpStepProps = {
   email: string;
   onEmailChange: (email: string) => void;
   onSuccess: () => void;
@@ -18,40 +23,33 @@ const SendOtpStep: React.FC<SendOtpStepProps> = ({
   onSuccess,
   message,
 }) => {
-  const [loading, setLoading] = useState(false);
+  const { handleSendOtp, sendOtpPending } = usePasswordReset();
 
   const sendOtp = async () => {
     try {
-      setLoading(true);
-      const response = await axios.post(
-        `${env.USER_SERVICE}/api/auth/forgot-password`,
-        {
-          email,
-        },
-      );
+      await handleSendOtp(email);
       onSuccess();
     } catch (err: any) {
       console.error("Failed to send OTP:", err);
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
     <>
-      <InputField
+      <Input
         name="email"
         placeholder="Enter your email"
         value={email}
         onChange={(e) => onEmailChange(e.target.value)}
       />
-      <PrimaryButton
+      <Button
+        variant="primary"
         className="w-full mt-3"
         onClick={sendOtp}
-        disabled={loading}
+        disabled={sendOtpPending}
       >
-        {loading ? "Sending..." : "Send OTP"}
-      </PrimaryButton>
+        {sendOtpPending ? "Sending..." : "Send OTP"}
+      </Button>
     </>
   );
 };

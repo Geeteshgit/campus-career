@@ -1,21 +1,24 @@
 "use client";
+
+// React
 import React, { useState } from "react";
+
+// Shared UI Components
 import CloseButton from "@/shared/ui/CloseButton";
+
+// Local Imports
+import ResetPasswordStep from "./ResetPasswordStep";
 import SendOtpStep from "./SendOtpStep";
 import VerifyOtpStep from "./VerifyOtpStep";
-import ResetPasswordStep from "./ResetPasswordStep";
 
-interface ForgotPasswordModalProps {
+type ForgotPasswordModalProps = {
   isOpen: boolean;
   onClose: () => void;
-}
+};
 
 type PasswordResetStep = 1 | 2 | 3;
 
-const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
-  isOpen,
-  onClose,
-}) => {
+const ForgotPasswordModal = ({ isOpen, onClose }: ForgotPasswordModalProps) => {
   const [step, setStep] = useState<PasswordResetStep>(1);
   const [fpEmail, setFpEmail] = useState<string>("");
   const [otp, setOtp] = useState<string>("");
@@ -63,9 +66,7 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
         </h2>
 
         {message && (
-          <p className="text-center text-neutral-600 text-sm mb-3">
-            {message}
-          </p>
+          <p className="text-center text-neutral-600 text-sm mb-3">{message}</p>
         )}
 
         {step === 1 && (

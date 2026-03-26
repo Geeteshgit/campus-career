@@ -1,72 +1,24 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  getAllAdmins,
-  getAdminById,
-  createAdmin,
-  updateAdminById,
-  deleteAdminById
-} from "../api/admins.api";
+"use client";
 
-export const useAdmins = () => {
-  return useQuery({
-    queryKey: ["admins"],
-    queryFn: getAllAdmins,
-  });
-};
+import { useAdminsQuery } from "../api/admins.queries";
+import { Admin } from "../types/admin.types";
 
-export const useAdmin = (id: string) => {
-  return useQuery({
-    queryKey: ["admins", id],
-    queryFn: () => getAdminById(id),
-    enabled: !!id
-  });
-};
+export const useAdmins = (searchTerm: string) => {
+  const {
+    data: adminsData,
+    isPending: adminsLoading,
+    isError: adminsError,
+    error: adminsErrorObj,
+  } = useAdminsQuery();
 
-export const useCreateAdmin = () => {
-  const queryClient = useQueryClient();
+  const admins: Admin[] = adminsData?.admins ?? [];
 
-  const mutation = useMutation({
-    mutationFn: createAdmin,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admins"] });
-    },
-  });
+  const filteredAdmins = admins.filter((admin) =>
+    [admin.name, admin.email, admin.phone]
+      .join(" ")
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase()),
+  );
 
-  return {
-    createAdmin: mutation.mutateAsync,
-    ...mutation,
-  };
-};
-
-export const useUpdateAdmin = () => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: ({ id, payload }: { id: string; payload: any }) =>
-      updateAdminById(id, payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admins"] });
-    },
-  });
-
-  return {
-    updateAdmin: mutation.mutateAsync,
-    ...mutation,
-  };
-};
-
-export const useDeleteAdmin = () => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: deleteAdminById,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admins"] });
-    },
-  });
-
-  return {
-    deleteAdmin: mutation.mutateAsync,
-    ...mutation,
-  };
+  return { admins, filteredAdmins, adminsLoading, adminsError, adminsErrorObj };
 };

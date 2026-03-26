@@ -1,51 +1,50 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+// React
+import React, { useState } from "react";
+
+// Layout Components
 import Navbar from "@/components/Navbar";
-import PageHeader from "@/shared/ui/PageHeader";
-import { Job, JobModal } from "@/features/job";
-import { JobApplicationsCard } from "@/features/application";
-import { env } from "@/config/env";
-import { ProtectedRoute } from "@/features/auth";
+
+// Shared UI Components
 import FilterButtons from "@/shared/ui/FilterButtons";
+import PageHeader from "@/shared/ui/PageHeader";
 import SearchBar from "@/shared/ui/SearchBar";
+import AsyncState from "@/shared/ui/AsyncState";
+
+// Features
+import { ProtectedRoute } from "@/features/auth";
+import {
+  JobApplicationsCard,
+  PopulatedApplication,
+  useMyApplications,
+} from "@/features/application";
+import { Job, JobModal } from "@/features/job";
 
 const ApplicationsPage = (): React.JSX.Element => {
-  const [jobs, setJobs] = useState<Job[]>([]);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-  const [jobModalOpen, setJobModalOpen] = useState(false);
+  const [jobModalOpen, setJobModalOpen] = useState<boolean>(false);
 
   const [filter, setFilter] = useState<"All" | "Full-Time" | "Internship">(
     "All",
   );
   const [searchTerm, setSearchTerm] = useState("");
 
-  const fetchAppliedJobs = async () => {
-    try {
-      const response = await axios.get(
-        `${env.JOB_SERVICE}/api/applications/my`,
-        {
-          withCredentials: true,
-        },
-      );
+  type AppliedJob = Job & { appliedAt: string };
 
-      const applications = response.data.applications;
+  const {
+    data: applicationsData,
+    isPending: applicationsLoading,
+    isError: applicationsError,
+    error: applicationsErrorObj,
+  } = useMyApplications();
 
-      const formattedJobs = applications.map((application: any) => ({
-        ...application.jobId,
-        createdAt: application.createdAt,
-      }));
-
-      setJobs(formattedJobs);
-    } catch (err) {
-      console.error("Failed to fetch applied jobs:", err);
-    }
-  };
-
-  useEffect(() => {
-    fetchAppliedJobs();
-  }, []);
+  const applications: PopulatedApplication[] =
+    applicationsData?.applications ?? [];
+  const jobs: AppliedJob[] = applications.map((application) => ({
+    ...application.jobId,
+    appliedAt: application.createdAt,
+  }));
 
   const openJobModal = (job: Job) => {
     setSelectedJob(job);
@@ -77,7 +76,9 @@ const ApplicationsPage = (): React.JSX.Element => {
             <FilterButtons
               filters={["All", "Full-Time", "Internship"]}
               activeFilter={filter}
-              onFilterChange={(f) => setFilter(f as any)}
+              onFilterChange={(f) =>
+                setFilter(f as "All" | "Full-Time" | "Internship")
+              }
             />
             <SearchBar
               value={searchTerm}
@@ -85,23 +86,26 @@ const ApplicationsPage = (): React.JSX.Element => {
               placeholder="Search by company or role..."
             />
           </div>
-
-          <div className="flex flex-col bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden">
-            {filteredJobs.map((job) => (
-              <JobApplicationsCard
-                key={job._id}
-                job={job}
-                isAdmin={false}
-                onOpenModal={openJobModal}
-              />
-            ))}
-
-            {filteredJobs.length === 0 && (
-              <p className="py-5 text-center text-neutral-600">
-                No applications found.
-              </p>
-            )}
-          </div>
+          <AsyncState
+            isLoading={applicationsLoading}
+            isError={applicationsError}
+            error={applicationsErrorObj}
+            isEmpty={applications.length === 0}
+            loadingText="Loading job postings"
+            errorText="Failed to load job postings"
+            emptyText="No job postings found"
+          >
+            <div className="flex flex-col bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden">
+              {filteredJobs.map((job) => (
+                <JobApplicationsCard
+                  key={job._id}
+                  job={job}
+                  isAdmin={false}
+                  onOpenModal={openJobModal}
+                />
+              ))}
+            </div>
+          </AsyncState>
         </main>
 
         {jobModalOpen && selectedJob && (

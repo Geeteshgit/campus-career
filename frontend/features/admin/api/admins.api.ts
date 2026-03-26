@@ -1,4 +1,5 @@
 import { usersApi } from "@/lib/axios";
+import { CreateAdminPayload, UpdateAdminPayload } from "../types/admin.types";
 
 export const getAllAdmins = async () => {
   const { data } = await usersApi.get("/admins");
@@ -10,16 +11,12 @@ export const getAdminById = async (id: string) => {
   return data;
 };
 
-export const createAdmin = async (payload: {
-  name: string;
-  email: string;
-  phone: string;
-}) => {
+export const createAdmin = async (payload: CreateAdminPayload) => {
   const { data } = await usersApi.post("/admins", payload);
   return data;
 };
 
-export const updateAdminById = async (id: string, payload: any) => {
+export const updateAdminById = async (id: string, payload: UpdateAdminPayload) => {
   const { data } = await usersApi.put(`/admins/${id}`, payload);
   return data;
 };

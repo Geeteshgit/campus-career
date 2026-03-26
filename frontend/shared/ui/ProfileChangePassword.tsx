@@ -1,25 +1,41 @@
 "use client";
 
+// React
 import React, { useState } from "react";
-import FormLabel from "./FormLabel";
-import InputField from "./InputField";
-import PrimaryButton from "./PrimaryButton";
-import axios from "axios";
-import { env } from "@/config/env";
-import { disconnectSocket } from "@/lib/socket";
-import { logout } from "@/redux/features/user/userSlice";
-import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
+
+// External Libraries
+import axios from "axios";
+
+// Config
+import { env } from "@/config/env";
+
+// Lib
+import { disconnectSocket } from "@/lib/socket";
+
+// Local Imports
+import Button from "./Button";
+import FormLabel from "./FormLabel";
+import Input from "./Input";
+
+// Features
+import { useAuthStore } from "@/features/auth";
+
+interface PasswordChangeData {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
 
 const ProfileChangePassword = (): React.JSX.Element => {
   const [oldPassword, setOldPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
 
-  const dispatch = useDispatch();
   const router = useRouter();
+  const logoutStore = useAuthStore((state) => state.logout);
 
-  const handlePasswordChange = async (data: any) => {
+  const handlePasswordChange = async (data: PasswordChangeData) => {
     if (data.newPassword !== data.confirmPassword)
       return alert("Passwords do not match!");
 
@@ -47,7 +63,7 @@ const ProfileChangePassword = (): React.JSX.Element => {
         withCredentials: true,
       });
       
-      dispatch(logout());
+      logoutStore();
       disconnectSocket();
       router.push("/login");
     } catch (err) {
@@ -64,12 +80,12 @@ const ProfileChangePassword = (): React.JSX.Element => {
       {/* Current Password */}
       <div>
         <FormLabel>Current Password</FormLabel>
-        <InputField
+        <Input
           name="currentPassword"
           type="password"
           placeholder="Enter current password"
           value={oldPassword}
-          onChange={(e) => setOldPassword(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOldPassword(e.target.value)}
           required={true}
         />
       </div>
@@ -77,12 +93,12 @@ const ProfileChangePassword = (): React.JSX.Element => {
       {/* New Password */}
       <div>
         <FormLabel>New Password</FormLabel>
-        <InputField
+        <Input
           name="newPassword"
           type="password"
           placeholder="Enter new password"
           value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewPassword(e.target.value)}
           required={true}
         />
       </div>
@@ -90,24 +106,25 @@ const ProfileChangePassword = (): React.JSX.Element => {
       {/* Confirm Password */}
       <div>
         <FormLabel>Confirm New Password</FormLabel>
-        <InputField
+        <Input
           name="confirmPassword"
           type="password"
           placeholder="Re-enter new password"
           value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)}
           required={true}
         />
       </div>
 
       {/* Save Button */}
-      <PrimaryButton
+      <Button
+        variant="primary"
         onClick={() =>
           handlePasswordChange({ oldPassword, newPassword, confirmPassword })
         }
       >
         Change Password
-      </PrimaryButton>
+      </Button>
     </div>
   );
 };

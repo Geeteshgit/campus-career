@@ -1,45 +1,34 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+"use client";
+
 import {
-  getMyApplications,
-  getApplicationStats,
-  getApplicantsForJob,
-  applyToJob
-} from "../api/applications.api";
+  useApplyToJobMutation,
+  useApplicantsForJobQuery,
+  useMyApplicationsQuery,
+} from "../api/applications.queries";
+import { CreateApplicationPayload } from "../types/application.types";
 
 export const useMyApplications = () => {
-  return useQuery({
-    queryKey: ["applications", "my"],
-    queryFn: getMyApplications,
-  });
-};
-
-export const useApplicationStats = () => {
-  return useQuery({
-    queryKey: ["applications", "stats"],
-    queryFn: getApplicationStats,
-  });
+  return useMyApplicationsQuery();
 };
 
 export const useApplicantsForJob = (jobId: string) => {
-  return useQuery({
-    queryKey: ["applications", "job", jobId],
-    queryFn: () => getApplicantsForJob(jobId),
-    enabled: !!jobId,
-  });
+  return useApplicantsForJobQuery(jobId);
 };
 
 export const useApplyToJob = () => {
-  const queryClient = useQueryClient();
+  const { applyToJob, isPending: applyPending, ...rest } =
+    useApplyToJobMutation();
 
-  const mutation = useMutation({
-    mutationFn: applyToJob,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["applications"] });
-    },
-  });
+  const handleApplyToJob = async (
+    jobId: string,
+    payload: CreateApplicationPayload,
+  ) => {
+    return applyToJob({ jobId, payload });
+  };
 
   return {
-    applyToJob: mutation.mutateAsync,
-    ...mutation,
+    handleApplyToJob,
+    applyPending,
+    ...rest,
   };
 };

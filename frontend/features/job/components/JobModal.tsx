@@ -1,15 +1,21 @@
-import JobModalHeader from "./JobModalHeader";
-import JobModalDetails from "./JobModalDetails";
-import JobModalFooter from "./JobModalFooter";
+"use client";
+
+// Features
 import { Job } from "@/features/job";
 
-interface JobModalProps {
+// Local Imports
+import JobModalDetails from "./JobModalDetails";
+import JobModalFooter from "./JobModalFooter";
+import JobModalHeader from "./JobModalHeader";
+
+type JobModalProps = {
   job: Job | null;
   isAdmin?: boolean;
   onOpenChange: (open: boolean) => void;
   onDelete?: (job: Job) => void;
   onEdit?: (job: Job) => void;
   onApply?: (job: Job) => void;
+  isPending?: boolean;
 }
 
 const JobModal = ({
@@ -18,7 +24,8 @@ const JobModal = ({
   onOpenChange,
   onDelete,
   onEdit,
-  onApply
+  onApply,
+  isPending = false,
 }: JobModalProps) => {
 
   if (!job) return null;
@@ -52,6 +59,7 @@ const JobModal = ({
             onEdit={handleEditClick}
             onDelete={handleDeleteClick}
             onApply={onApply}
+            isPending={isPending}
           />
         </div>
       </div>

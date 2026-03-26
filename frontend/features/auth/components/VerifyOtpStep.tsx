@@ -1,11 +1,16 @@
 "use client";
-import React, { useState } from "react";
-import InputField from "@/shared/ui/InputField";
-import PrimaryButton from "@/shared/ui/PrimaryButton";
-import axios from "axios";
-import { env } from "@/config/env";
 
-interface VerifyOtpStepProps {
+// React
+import React from "react";
+
+// Shared UI Components
+import Button from "@/shared/ui/Button";
+import Input from "@/shared/ui/Input";
+
+// Features
+import { usePasswordReset } from "@/features/auth";
+
+type VerifyOtpStepProps = {
   email: string;
   otp: string;
   onOtpChange: (otp: string) => void;
@@ -20,39 +25,34 @@ const VerifyOtpStep: React.FC<VerifyOtpStepProps> = ({
   onSuccess,
   onError,
 }) => {
-  const [loading, setLoading] = useState(false);
+  const { handleVerifyOtp, verifyOtpPending } = usePasswordReset();
 
   const verifyOtp = async () => {
     try {
-      setLoading(true);
-      await axios.post(`${env.USER_SERVICE}/api/auth/verify-reset-otp`, {
-        email,
-        otp,
-      });
+      await handleVerifyOtp(email, otp);
       onSuccess();
     } catch (err: any) {
       console.error("OTP verification failed:", err);
       onError("Invalid or expired OTP");
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
     <>
-      <InputField
+      <Input
         name="otp"
         placeholder="Enter OTP"
         value={otp}
         onChange={(e) => onOtpChange(e.target.value)}
       />
-      <PrimaryButton
+      <Button
+        variant="primary"
         className="w-full mt-3"
         onClick={verifyOtp}
-        disabled={loading}
+        disabled={verifyOtpPending}
       >
-        {loading ? "Verifying..." : "Verify OTP"}
-      </PrimaryButton>
+        {verifyOtpPending ? "Verifying..." : "Verify OTP"}
+      </Button>
     </>
   );
 };

@@ -1,11 +1,22 @@
+"use client";
+
+// React
 import React from "react";
-import { Message } from "../types/message";
+
+// Shared UI Components
+import AsyncState from "@/shared/ui/AsyncState";
+
+// Local Imports
+import { Message } from "../types/message.types";
 import MessageBubble from "./MessageBubble";
 
-interface MessageListProps {
+type MessageListProps = {
   messages: Message[];
   userId: string;
   chatEndRef: React.RefObject<HTMLDivElement | null>;
+  messagesLoading: boolean;
+  messagesError: boolean;
+  messagesErrorObj: unknown;
 }
 
 const formatDateLabel = (dateStr: string): string => {
@@ -34,31 +45,44 @@ const MessageList = ({
   messages,
   userId,
   chatEndRef,
+  messagesLoading,
+  messagesError,
+  messagesErrorObj,
 }: MessageListProps): React.JSX.Element => {
-  let lastRenderedDate = "";
-
   return (
     <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-3">
-      {messages.map((msg) => {
-        const currentDate = formatDateLabel(msg.createdAt);
-        const showDateHeader = currentDate !== lastRenderedDate;
-        lastRenderedDate = currentDate;
+      <AsyncState
+        isLoading={messagesLoading}
+        isError={messagesError}
+        error={messagesErrorObj}
+        isEmpty={!messages?.length}
+        loadingText="Loading messages..."
+        errorText="Failed to load messages"
+        emptyText="No messages yet."
+      >
+        {messages.map((msg, index) => {
+          const currentDate = formatDateLabel(msg.createdAt);
+          const prevDate =
+            index > 0 ? formatDateLabel(messages[index - 1].createdAt) : null;
 
-        return (
-          <React.Fragment key={msg._id}>
-            {showDateHeader && (
-              <div className="flex justify-center my-2">
-                <span className="px-3 py-1 text-xs font-medium rounded-lg bg-neutral-200 text-neutral-700">
-                  {currentDate}
-                </span>
-              </div>
-            )}
+          const showDateHeader = currentDate !== prevDate;
 
-            <MessageBubble msg={msg} userId={userId} />
-          </React.Fragment>
-        );
-      })}
-      <div ref={chatEndRef} />
+          return (
+            <React.Fragment key={msg._id}>
+              {showDateHeader && (
+                <div className="flex justify-center my-2">
+                  <span className="px-3 py-1 text-xs font-medium rounded-lg bg-neutral-200 text-neutral-700">
+                    {currentDate}
+                  </span>
+                </div>
+              )}
+
+              <MessageBubble msg={msg} userId={userId} />
+            </React.Fragment>
+          );
+        })}
+        <div ref={chatEndRef} />
+      </AsyncState>
     </div>
   );
 };
