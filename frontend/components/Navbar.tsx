@@ -14,6 +14,7 @@ import { RxDashboard } from "react-icons/rx";
 
 // Features
 import { useAuthStore } from "@/features/auth/auth.store";
+import clsx from "clsx";
 
 type NavLink = {
   link: string;
@@ -98,11 +99,10 @@ const Navbar = (): React.JSX.Element => {
               <li key={link.link}>
                 <Link
                   href={link.href}
-                  className={`flex items-center gap-2 transition-colors ${
-                    isActive
-                      ? "text-blue-500 font-semibold"
-                      : "hover:text-blue-500"
-                  }`}
+                  className={clsx("flex items-center gap-2 transition-colors", {
+                    "text-blue-500 font-semibold": isActive,
+                    "hover:text-blue-500": !isActive
+                  })}
                 >
                   {link.icon}
                   {link.link}
@@ -133,11 +133,10 @@ const Navbar = (): React.JSX.Element => {
                   <Link
                     href={link.href}
                     onClick={() => setIsOpen(false)}
-                    className={`flex items-center gap-2 transition-colors ${
-                      isActive
-                        ? "text-blue-500 font-semibold"
-                        : "hover:text-blue-500"
-                    }`}
+                    className={clsx("flex items-center gap-2 transition-colors", {
+                      "text-blue-500 font-semibold": isActive,
+                      "hover:text-blue-500": !isActive
+                    })}
                   >
                     {link.icon}
                     {link.link}
