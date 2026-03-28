@@ -21,7 +21,6 @@ const SendOtpStep: React.FC<SendOtpStepProps> = ({
   email,
   onEmailChange,
   onSuccess,
-  message,
 }) => {
   const { handleSendOtp, sendOtpPending } = usePasswordReset();
 

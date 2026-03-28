@@ -31,7 +31,7 @@ const VerifyOtpStep: React.FC<VerifyOtpStepProps> = ({
     try {
       await handleVerifyOtp(email, otp);
       onSuccess();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("OTP verification failed:", err);
       onError("Invalid or expired OTP");
     }
