@@ -28,7 +28,7 @@ const SendOtpStep: React.FC<SendOtpStepProps> = ({
     try {
       await handleSendOtp(email);
       onSuccess();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Failed to send OTP:", err);
     }
   };
