@@ -7,6 +7,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 // External Libraries
+import clsx from "clsx";
 import { BiComment } from "react-icons/bi";
 import { FiBriefcase, FiUser } from "react-icons/fi";
 import { IoBookOutline, IoClose, IoMenuOutline } from "react-icons/io5";
@@ -14,7 +15,6 @@ import { RxDashboard } from "react-icons/rx";
 
 // Features
 import { useAuthStore } from "@/features/auth/auth.store";
-import clsx from "clsx";
 
 type NavLink = {
   link: string;
