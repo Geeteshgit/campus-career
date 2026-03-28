@@ -4,6 +4,7 @@
 import React from "react";
 
 // External Libraries
+import clsx from "clsx";
 import { FaBuilding, FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
 
 // Features
@@ -12,7 +13,7 @@ import { Job } from "@/features/job";
 type StudentJobCardProps = {
   job: Job & { matchScore?: number };
   onClick: () => void;
-}
+};
 
 const StudentJobCard = ({
   job,
@@ -21,7 +22,12 @@ const StudentJobCard = ({
   return (
     <div
       onClick={onClick}
-      className={`p-6 rounded-xl border border-neutral-200 cursor-pointer bg-white hover:shadow-lg hover:scale-[1.01] transition-all duration-300 hover:border-blue-500 ${job.status === "Inactive" ? "opacity-70" : ""}`}
+      className={clsx(
+        "p-6 rounded-xl border border-neutral-200 cursor-pointer bg-white hover:shadow-lg hover:scale-[1.01] transition-all duration-300 hover:border-blue-500",
+        {
+          "opacity-70": job.status === "Inactive",
+        },
+      )}
     >
       {/* Header Section */}
       <div className="flex items-start justify-between mb-4">

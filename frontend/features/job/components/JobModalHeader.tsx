@@ -3,6 +3,9 @@
 // React
 import React from "react";
 
+// External Libraries
+import clsx from "clsx";
+
 // Shared UI Components
 import CloseButton from "@/shared/ui/CloseButton";
 
@@ -42,11 +45,10 @@ const JobModalHeader = ({
           {job.type}
         </span>
         <span
-          className={`px-3 py-1 text-xs font-semibold rounded-full ${
-            isActive
-              ? "bg-green-100 text-green-700"
-              : "bg-neutral-200 text-neutral-600"
-          }`}
+          className={clsx("px-3 py-1 text-xs font-semibold rounded-full", {
+            "bg-green-100 text-green-700": isActive,
+            "bg-neutral-200 text-neutral-600": !isActive,
+          })}
         >
           {job.status}
         </span>
