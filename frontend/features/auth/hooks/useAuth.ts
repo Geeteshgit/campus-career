@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react";
 import { useMeQuery } from "../api/auth.queries";
 import { useAuthStore } from "../auth.store";
