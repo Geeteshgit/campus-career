@@ -1,7 +1,7 @@
 "use client";
 
 // React
-import React, { useState } from "react";
+import { useState } from "react";
 
 // Shared UI Components
 import Button from "@/shared/ui/Button";
@@ -10,7 +10,7 @@ const ChatInput = ({
   onSend,
 }: {
   onSend: (text: string) => void;
-}): React.JSX.Element => {
+}) => {
   const [input, setInput] = useState<string>("");
 
   const handleSend = () => {

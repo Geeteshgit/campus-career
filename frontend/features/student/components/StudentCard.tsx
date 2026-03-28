@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // External Libraries
 import { FiEdit2 } from "react-icons/fi";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
@@ -23,7 +20,7 @@ const StudentCard = ({
   onView,
   onEdit,
   onDelete,
-}: StudentCardProps): React.JSX.Element => {
+}: StudentCardProps) => {
   return (
     <div className="bg-white hover:bg-blue-50 border border-neutral-200 rounded-xl p-4 shadow-sm transition flex flex-col gap-4">
       <div className="grid grid-cols-6 items-center gap-3">

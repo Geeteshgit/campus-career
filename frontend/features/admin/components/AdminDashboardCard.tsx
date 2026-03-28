@@ -16,7 +16,7 @@ const AdminDashboardCard = ({
   subtitle,
   href,
   icon,
-}: AdminDashboardCardProps): React.JSX.Element => {
+}: AdminDashboardCardProps) => {
   return (
     <Link
       href={href}

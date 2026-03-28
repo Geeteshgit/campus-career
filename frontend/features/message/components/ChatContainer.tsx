@@ -1,7 +1,7 @@
 "use client";
 
 // React
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 // External Libraries
 import { useQueryClient } from "@tanstack/react-query";
@@ -16,7 +16,7 @@ import ChatInput from "./ChatInput";
 import MessageList from "./MessageList";
 import { useAuthStore } from "@/features/auth";
 
-const ChatContainer = (): React.JSX.Element => {
+const ChatContainer = () => {
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const queryClient = useQueryClient();
   const {

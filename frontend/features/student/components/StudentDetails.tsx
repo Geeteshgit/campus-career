@@ -1,7 +1,7 @@
 "use client";
 
 // React
-import React, { useState } from "react";
+import { useState } from "react";
 
 // Shared UI Components
 import AsyncState from "@/shared/ui/AsyncState";
@@ -15,7 +15,7 @@ import {
 import StudentDetailsView from "./StudentDetailsView";
 import StudentDetailsForm from "./StudentDetailsForm";
 
-const StudentDetails = (): React.JSX.Element => {
+const StudentDetails = () => {
   const {
     data: studentData,
     isPending: studentLoading,

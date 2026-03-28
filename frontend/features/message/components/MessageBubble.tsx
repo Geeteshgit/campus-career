@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // External Libraries
 import clsx from "clsx";
 
@@ -17,7 +14,7 @@ type MessageBubbleProps = {
 const MessageBubble = ({
   msg,
   userId,
-}: MessageBubbleProps): React.JSX.Element => {
+}: MessageBubbleProps) => {
   const isUser: boolean = msg.userId === userId;
 
   return (

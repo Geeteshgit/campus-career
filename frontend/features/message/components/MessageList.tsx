@@ -48,7 +48,7 @@ const MessageList = ({
   messagesLoading,
   messagesError,
   messagesErrorObj,
-}: MessageListProps): React.JSX.Element => {
+}: MessageListProps) => {
   return (
     <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-3">
       <AsyncState

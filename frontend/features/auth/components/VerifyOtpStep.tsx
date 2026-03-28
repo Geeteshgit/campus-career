@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // Shared UI Components
 import Button from "@/shared/ui/Button";
 import Input from "@/shared/ui/Input";
@@ -16,15 +13,15 @@ type VerifyOtpStepProps = {
   onOtpChange: (otp: string) => void;
   onSuccess: () => void;
   onError: (message: string) => void;
-}
+};
 
-const VerifyOtpStep: React.FC<VerifyOtpStepProps> = ({
+const VerifyOtpStep = ({
   email,
   otp,
   onOtpChange,
   onSuccess,
   onError,
-}) => {
+}: VerifyOtpStepProps) => {
   const { handleVerifyOtp, verifyOtpPending } = usePasswordReset();
 
   const verifyOtp = async () => {

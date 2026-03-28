@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // Shared UI Components
 import FormLabel from "@/shared/ui/FormLabel";
 import Input from "@/shared/ui/Input";
@@ -46,7 +43,7 @@ const StudentDetailsForm = ({
   onSave,
   onCancel,
   onUploadResume,
-}: StudentDetailsFormProps): React.JSX.Element => {
+}: StudentDetailsFormProps) => {
   return (
     <div className="flex flex-col gap-6">
       <h2 className="text-lg font-semibold text-neutral-800">

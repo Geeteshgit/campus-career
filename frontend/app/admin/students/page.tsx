@@ -31,7 +31,7 @@ import {
 } from "@/features/student";
 import { usePrograms, years } from "@/features/academic";
 
-const StudentManagement = (): React.JSX.Element => {
+const StudentManagement = () => {
   const [selectedProgram, setSelectedProgram] = useState<string>("All");
   const [selectedYear, setSelectedYear] = useState<string>("All");
   const [searchTerm, setSearchTerm] = useState<string>("");

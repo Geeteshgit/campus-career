@@ -1,6 +1,3 @@
-// React
-import React from "react";
-
 // External Libraries
 import { clsx } from "clsx";
 
@@ -16,7 +13,7 @@ const SearchBar = ({
   onChange,
   placeholder = "Search...",
   className
-}: SearchBarProps): React.JSX.Element => {
+}: SearchBarProps) => {
   return (
     <div className="w-full sm:w-64 md:w-80">
       <input

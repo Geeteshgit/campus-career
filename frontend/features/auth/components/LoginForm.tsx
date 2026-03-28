@@ -19,7 +19,7 @@ type LoginFormProps = {
 
 const LoginForm = ({
   onForgotPasswordClick,
-}: LoginFormProps): React.JSX.Element => {
+}: LoginFormProps) => {
   const { handleLogin, loginPending } = useLogin();
 
   const [loginData, setloginData] = useState<LoginPayload>({

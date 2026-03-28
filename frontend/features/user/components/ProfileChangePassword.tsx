@@ -17,7 +17,7 @@ type ChangePasswordData = {
   confirmPassword: string;
 };
 
-const ProfileChangePassword = (): React.JSX.Element => {
+const ProfileChangePassword = () => {
   const [passwordFormData, setPasswordFormData] = useState<ChangePasswordData>({
     oldPassword: "",
     newPassword: "",

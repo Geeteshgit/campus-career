@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // Layout Components
 import Navbar from "@/components/Navbar";
 
@@ -16,7 +13,7 @@ import PageHeader from "@/shared/ui/PageHeader";
 import { ProtectedRoute } from "@/features/auth";
 import { useProgramManagement, usePrograms } from "@/features/academic";
 
-const ConfigurationsPage = (): React.JSX.Element => {
+const ConfigurationsPage = () => {
   const { programs, programsLoading, programsError, programsErrorObj } =
     usePrograms();
 

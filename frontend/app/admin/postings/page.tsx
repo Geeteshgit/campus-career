@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // Layout Components
 import Navbar from "@/components/Navbar";
 
@@ -27,7 +24,7 @@ import {
   editJobFieldsConfig,
 } from "@/features/job";
 
-const Postings = (): React.JSX.Element => {
+const Postings = () => {
   const user = useAuthStore((state) => state.user);
   const isAdmin = user?.role !== "student";
 

@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // Shared UI Components
 import AsyncState from "@/shared/ui/AsyncState";
 
@@ -14,7 +11,7 @@ import { useUpdateMyAccount } from "../hooks/useUserManagement";
 import UserDetailsView from "./UserDetailsView";
 import UserDetailsForm from "./UserDetailsForm";
 
-const UserDetails = (): React.JSX.Element => {
+const UserDetails = () => {
   const {
     data: userData,
     isPending: userDataLoading,

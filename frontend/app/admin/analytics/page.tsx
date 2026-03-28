@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // Layout Components
 import Navbar from "@/components/Navbar";
 
@@ -18,7 +15,7 @@ import {
   useAnalytics,
 } from "@/features/analytics";
 
-const Analytics = (): React.JSX.Element => {
+const Analytics = () => {
   const { analytics, analyticsLoading, analyticsError, analyticsErrorObj } =
     useAnalytics();
 

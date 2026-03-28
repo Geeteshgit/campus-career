@@ -1,7 +1,7 @@
 "use client";
 
 // React
-import React, { useState } from "react";
+import { useState } from "react";
 
 // Shared UI Components
 import Button from "@/shared/ui/Button";
@@ -23,7 +23,7 @@ const UserDetailsForm = ({
   onSave,
   onCancel,
   isSaving,
-}: UserDetailsFormProps): React.JSX.Element => {
+}: UserDetailsFormProps) => {
   const [phone, setPhone] = useState(data?.phone ?? "");
 
   return (

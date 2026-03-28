@@ -1,6 +1,3 @@
-// React
-import React from "react";
-
 // External Libraries
 import clsx from "clsx";
 import { FaTimes } from "react-icons/fa";
@@ -13,7 +10,7 @@ type CloseButtonProps = {
 const CloseButton = ({
   onClick,
   className = "",
-}: CloseButtonProps): React.JSX.Element => {
+}: CloseButtonProps) => {
   return (
     <button
       onClick={onClick}

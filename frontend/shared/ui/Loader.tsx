@@ -1,7 +1,4 @@
-// React
-import React from "react";
-
-const Loader = (): React.JSX.Element => {
+const Loader = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-white">
       <div className="flex flex-col items-center gap-4">

@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-
+// Shared UI Components
 import Button from "@/shared/ui/Button";
 
 type StudentDetailsViewProps = {
@@ -24,7 +23,7 @@ const StudentDetailsView = ({
   cgpa,
   skills,
   onEdit,
-}: StudentDetailsViewProps): React.JSX.Element => {
+}: StudentDetailsViewProps) => {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">

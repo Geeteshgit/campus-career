@@ -26,7 +26,7 @@ const ViewStudentModal = ({
   title,
   student,
   onClose,
-}: ViewStudentModalProps): React.JSX.Element => {
+}: ViewStudentModalProps) => {
   const InfoRow = ({
     label,
     value,

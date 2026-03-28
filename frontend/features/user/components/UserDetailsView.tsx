@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // Shared UI Components
 import Button from "@/shared/ui/Button";
 
@@ -17,7 +14,7 @@ type UserDetailsViewProps = {
 const UserDetailsView = ({
   data,
   onEdit,
-}: UserDetailsViewProps): React.JSX.Element => {
+}: UserDetailsViewProps) => {
   return (
     <div className="flex flex-col gap-6 pb-6 border-b border-neutral-200">
       <div className="flex items-center justify-between">

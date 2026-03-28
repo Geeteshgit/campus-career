@@ -1,7 +1,7 @@
 "use client";
 
 // React
-import React, { useState } from "react";
+import { useState } from "react";
 
 // Layout Components
 import Navbar from "@/components/Navbar";
@@ -26,7 +26,7 @@ import {
   useResources,
 } from "@/features/academic";
 
-const PrepareAdminPage = (): React.JSX.Element => {
+const PrepareAdminPage = ()=> {
   const user = useAuthStore((state) => state.user);
   const isAdmin = user?.role !== "student";
 

@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // External Libraries
 import clsx from "clsx";
 import { FaBuilding, FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
@@ -18,7 +15,7 @@ type StudentJobCardProps = {
 const StudentJobCard = ({
   job,
   onClick,
-}: StudentJobCardProps): React.JSX.Element => {
+}: StudentJobCardProps) => {
   return (
     <div
       onClick={onClick}

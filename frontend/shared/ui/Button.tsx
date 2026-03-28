@@ -1,5 +1,5 @@
 // React
-import React, { ButtonHTMLAttributes } from "react";
+import { ButtonHTMLAttributes } from "react";
 
 // External Libraries
 import clsx from "clsx";
@@ -27,7 +27,7 @@ const Button = ({
   disabled = false,
   type = "button",
   ...props
-}: ButtonProps): React.JSX.Element => {
+}: ButtonProps) => {
   const isSolidVariant =
     variant === "primary" || variant === "danger" || variant === "success";
 

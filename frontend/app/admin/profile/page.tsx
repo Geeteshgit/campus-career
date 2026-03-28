@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // Layout Components
 import Navbar from "@/components/Navbar";
 
@@ -14,7 +11,7 @@ import PageHeader from "@/shared/ui/PageHeader";
 import { ProtectedRoute, useLogout } from "@/features/auth";
 import { ProfileChangePassword, UserDetails } from "@/features/user";
 
-const AdminProfile = (): React.JSX.Element => {
+const AdminProfile = () => {
   const { handleLogout, logoutPending } = useLogout();
 
   return (

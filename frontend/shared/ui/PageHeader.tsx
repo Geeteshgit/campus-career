@@ -1,12 +1,9 @@
-// React
-import React from "react";
-
 type PageHeaderProps = {
   title: string;
   subtitle?: string;
 }
 
-const PageHeader = ({ title, subtitle }: PageHeaderProps): React.JSX.Element => {
+const PageHeader = ({ title, subtitle }: PageHeaderProps) => {
   return (
     <div className="flex flex-col gap-2">
       <h1 className="text-2xl sm:text-3xl font-bold text-neutral-800">

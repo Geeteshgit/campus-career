@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // External Libraries
 import clsx from "clsx";
 import { FiDownload } from "react-icons/fi";
@@ -25,7 +22,7 @@ const JobApplicationsCard = ({
   isAdmin,
   onDownload,
   onOpenModal,
-}: JobApplicationsCardProps): React.JSX.Element => {
+}: JobApplicationsCardProps) => {
   const formattedDate = job.createdAt
     ? new Date(job.createdAt).toLocaleDateString("en-GB", {
         day: "2-digit",

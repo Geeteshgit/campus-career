@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // Shared UI Components
 import Button from "@/shared/ui/Button";
 import Input from "@/shared/ui/Input";
@@ -20,7 +17,7 @@ type ResetPasswordStepProps = {
   onError: (message: string) => void;
 }
 
-const ResetPasswordStep: React.FC<ResetPasswordStepProps> = ({
+const ResetPasswordStep = ({
   email,
   newPassword,
   confirmNewPassword,
@@ -28,7 +25,7 @@ const ResetPasswordStep: React.FC<ResetPasswordStepProps> = ({
   onConfirmPasswordChange,
   onSuccess,
   onError,
-}) => {
+}: ResetPasswordStepProps) => {
   const { handleResetPassword, resetPasswordPending } = usePasswordReset();
 
   const resetPassword = async () => {

@@ -18,7 +18,7 @@ import PageHeader from "@/shared/ui/PageHeader";
 import { ProtectedRoute } from "@/features/auth";
 import { AdminDashboardCard } from "@/features/admin";
 
-const AdminDashboard = (): React.JSX.Element => {
+const AdminDashboard = () => {
   type AdminDashboardCard = {
     title: string;
     subtitle: string;

@@ -1,7 +1,7 @@
 "use client";
 
 // React
-import React, { useState } from "react";
+import { useState } from "react";
 
 // Layout Components
 import Navbar from "@/components/Navbar";
@@ -28,7 +28,7 @@ import {
   useUpdateJobMutation,
 } from "@/features/job";
 
-const ApplicationsAdminPage = (): React.JSX.Element => {
+const ApplicationsAdminPage = () => {
   const user = useAuthStore((state) => state.user);
   const isAdmin = user?.role !== "student";
 

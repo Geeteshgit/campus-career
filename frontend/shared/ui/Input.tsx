@@ -1,5 +1,5 @@
 // React
-import React, { InputHTMLAttributes } from "react";
+import { InputHTMLAttributes } from "react";
 
 //External Libraries
 import clsx from "clsx";
@@ -12,7 +12,7 @@ const Input = ({
   readOnly = false,
   className,
   ...props
-}: InputProps): React.JSX.Element => {
+}: InputProps) => {
   return (
     <input
       readOnly={readOnly}

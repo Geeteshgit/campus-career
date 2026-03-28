@@ -1,6 +1,6 @@
 // React
 import clsx from "clsx";
-import React, { SelectHTMLAttributes } from "react";
+import { SelectHTMLAttributes } from "react";
 
 type SelectProps = {
   options: string[];
@@ -10,7 +10,7 @@ const Select = ({
   options,
   className,
   ...props
-}: SelectProps): React.JSX.Element => {
+}: SelectProps) => {
   return (
     <select
       className={clsx(

@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // External Libraries
 import clsx from "clsx";
 
@@ -22,7 +19,7 @@ const JobModalHeader = ({
   job,
   isActive,
   onClose,
-}: JobModalHeaderProps): React.JSX.Element => {
+}: JobModalHeaderProps) => {
   const formattedDate = job.createdAt
     ? new Date(job.createdAt).toLocaleDateString("en-GB", {
         day: "2-digit",

@@ -21,7 +21,7 @@ const AsyncState = ({
   errorText = "Failed to load data",
   emptyText = "No data found",
   children,
-}: AsyncStateProps): React.JSX.Element => {
+}: AsyncStateProps) => {
   if (isError && error) {
     console.error(error);
   }

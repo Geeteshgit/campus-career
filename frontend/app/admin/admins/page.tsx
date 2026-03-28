@@ -1,7 +1,7 @@
 "use client";
 
 // React
-import React, { useState } from "react";
+import { useState } from "react";
 
 // Layout Components
 import Navbar from "@/components/Navbar";
@@ -23,7 +23,7 @@ import {
   useAdmins,
 } from "@/features/admin";
 
-const AdminManagement = (): React.JSX.Element => {
+const AdminManagement = () => {
   const user = useAuthStore((state) => state.user);
   const role = user?.role ?? "admin";
 

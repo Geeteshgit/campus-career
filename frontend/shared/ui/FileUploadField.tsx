@@ -1,6 +1,3 @@
-// React
-import React from "react";
-
 type FileUploadFieldProps = {
   label?: string;
   file: File | null;
@@ -8,7 +5,7 @@ type FileUploadFieldProps = {
   required?: boolean;
 }
 
-const FileUploadField = ({ label, file, onChange, required }: FileUploadFieldProps): React.JSX.Element => {
+const FileUploadField = ({ label, file, onChange, required }: FileUploadFieldProps) => {
   return (
     <div className="flex flex-col w-full">
       {label && <p className="text-xs text-neutral-500 mb-1">{label}</p>}

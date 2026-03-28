@@ -22,7 +22,7 @@ type NavLink = {
   icon: React.ReactNode;
 };
 
-const Navbar = (): React.JSX.Element => {
+const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const pathname = usePathname();
 

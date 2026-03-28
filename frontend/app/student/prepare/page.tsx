@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // Layout Components
 import Navbar from "@/components/Navbar";
 
@@ -14,7 +11,7 @@ import AsyncState from "@/shared/ui/AsyncState";
 import { ProtectedRoute } from "@/features/auth";
 import { useStudentResources } from "@/features/academic";
 
-const Prepare = (): React.JSX.Element => {
+const Prepare = () => {
 
   const studentProgram = "B.Tech CSE"
 

@@ -1,13 +1,13 @@
 "use client";
 
 // React
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 // Features
 import { LoginForm, ForgotPasswordModal, useAuthStore } from "@/features/auth";
 
-const Login = (): React.JSX.Element => {
+const Login = () => {
   const [showForgotModal, setShowForgotModal] = useState<boolean>(false);
 
   const router = useRouter();

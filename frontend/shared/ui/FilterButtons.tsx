@@ -1,6 +1,3 @@
-// React
-import React from "react";
-
 // External Libraries
 import clsx from "clsx";
 
@@ -14,7 +11,7 @@ const FilterButtons = ({
   filters,
   activeFilter = "",
   onFilterChange = () => {},
-}: FilterButtonsProps): React.JSX.Element => {
+}: FilterButtonsProps) => {
   return (
     <div className="flex flex-wrap gap-2">
       {filters.map((filter) => (

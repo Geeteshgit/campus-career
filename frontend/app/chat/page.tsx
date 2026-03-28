@@ -1,6 +1,3 @@
-// React
-import React from "react";
-
 // Layout Components
 import Navbar from "@/components/Navbar";
 
@@ -11,7 +8,7 @@ import PageHeader from "@/shared/ui/PageHeader";
 import { ProtectedRoute } from "@/features/auth";
 import { ChatContainer } from "@/features/message";
 
-const Chat = (): React.JSX.Element => {
+const Chat = () => {
   return (
     <ProtectedRoute allowedRoles={["student", "admin", "super_admin"]}>
       <>

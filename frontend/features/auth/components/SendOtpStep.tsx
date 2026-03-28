@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // Shared UI Components
 import Button from "@/shared/ui/Button";
 import Input from "@/shared/ui/Input";
@@ -17,11 +14,11 @@ type SendOtpStepProps = {
   message: string;
 }
 
-const SendOtpStep: React.FC<SendOtpStepProps> = ({
+const SendOtpStep = ({
   email,
   onEmailChange,
   onSuccess,
-}) => {
+}: SendOtpStepProps) => {
   const { handleSendOtp, sendOtpPending } = usePasswordReset();
 
   const sendOtp = async () => {

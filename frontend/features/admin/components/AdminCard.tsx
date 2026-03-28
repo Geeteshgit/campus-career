@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // External Libraries
 import clsx from "clsx";
 import { FiEdit2 } from "react-icons/fi";
@@ -26,7 +23,7 @@ const AdminCard = ({
   onEdit,
   onDelete,
   deletePending = false,
-}: AdminCardProps): React.JSX.Element => {
+}: AdminCardProps) => {
   const isSuperAdmin = role === "super_admin";
 
   return (

@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // External Libraries
 import { Doughnut } from "react-chartjs-2";
 
@@ -25,7 +22,7 @@ const JobsAnalytics = ({
   fulltime,
   internship,
   application,
-}: JobAnalyticsProps): React.JSX.Element => {
+}: JobAnalyticsProps) => {
   const blueShades = ["#BFDBFE", "#93C5FD", "#60A5FA", "#3B82F6", "#2563EB"];
 
   return (

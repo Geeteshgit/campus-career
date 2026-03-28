@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // External Libraries
 import { Bar, Doughnut } from "react-chartjs-2";
 
@@ -23,7 +20,7 @@ const UsersAnalytics = ({
   totalAdmins,
   studentsPerProgram,
   studentsPerYear,
-}: UserAnalyticsProps): React.JSX.Element => {
+}: UserAnalyticsProps) => {
   const blueShades = ["#BFDBFE", "#93C5FD", "#60A5FA", "#3B82F6", "#2563EB"];
 
   const totalYears = Object.keys(studentsPerYear).length;

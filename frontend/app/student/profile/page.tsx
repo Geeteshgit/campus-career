@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // Layout Components
 import Navbar from "@/components/Navbar";
 
@@ -15,7 +12,7 @@ import { ProtectedRoute, useLogout } from "@/features/auth";
 import { ProfileChangePassword, UserDetails } from "@/features/user";
 import { StudentDetails } from "@/features/student";
 
-const StudentProfile = (): React.JSX.Element => {
+const StudentProfile = () => {
 
   const { handleLogout, logoutPending } = useLogout();
 

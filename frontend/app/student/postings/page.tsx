@@ -1,7 +1,7 @@
 "use client";
 
 // React
-import React, { useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 
 // Layout Components
@@ -27,7 +27,7 @@ import {
   useRecommendedJobs,
 } from "@/features/job";
 
-const Postings = (): React.JSX.Element => {
+const Postings = () => {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [jobModalOpen, setJobModalOpen] = useState<boolean>(false);
 

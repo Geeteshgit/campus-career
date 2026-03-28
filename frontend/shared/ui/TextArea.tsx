@@ -1,5 +1,5 @@
 // React
-import React, { TextareaHTMLAttributes } from "react";
+import { TextareaHTMLAttributes } from "react";
 
 // External Libraries
 import clsx from "clsx";
@@ -8,7 +8,7 @@ type TextAreaProps = {
   rows?: number;
 } & TextareaHTMLAttributes<HTMLTextAreaElement>;
 
-const TextArea = ({ rows = 4, className, ...props }: TextAreaProps): React.JSX.Element => {
+const TextArea = ({ rows = 4, className, ...props }: TextAreaProps) => {
   return (
     <textarea
       rows={rows}

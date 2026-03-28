@@ -1,13 +1,12 @@
 "use client";
 
 // React
-import React from "react";
 import { useRouter } from "next/navigation";
 
 // Shared UI Components
 import Button from "@/shared/ui/Button";
 
-const NotFound = (): React.JSX.Element => {
+const NotFound = () => {
   const router = useRouter();
 
   return (

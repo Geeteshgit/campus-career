@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // Features
 import { Job } from "@/features/job";
 
@@ -19,7 +16,7 @@ const StudentPostingsContainer = ({
   title,
   jobs,
   onJobClick,
-}: StudentPostingsContainerProps): React.JSX.Element => {
+}: StudentPostingsContainerProps) => {
   return (
     <section className="flex flex-col gap-5">
       <h2 className="text-xl font-semibold text-neutral-800">{title}</h2>

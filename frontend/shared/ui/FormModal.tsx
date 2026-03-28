@@ -27,7 +27,7 @@ const FormModal = ({
   onClose,
   onSave,
   isPending = false,
-}: FormModalProps): React.JSX.Element => {
+}: FormModalProps) => {
   const buildInitialState = () => {
     if (initialValues) return initialValues;
 

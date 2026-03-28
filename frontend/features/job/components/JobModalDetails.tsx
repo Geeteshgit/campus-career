@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // External Libraries
 import {
   FaMapMarkerAlt,
@@ -14,7 +11,7 @@ import {
 // Features
 import { Job } from "@/features/job";
 
-const JobModalDetails = ({ job }: { job: Job }): React.JSX.Element => {
+const JobModalDetails = ({ job }: { job: Job }) => {
   const formattedDeadline = job.deadline
     ? new Date(job.deadline).toLocaleDateString("en-GB", {
         day: "2-digit",

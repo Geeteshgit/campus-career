@@ -1,7 +1,7 @@
 "use client";
 
 // React
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 // Shared UI Components

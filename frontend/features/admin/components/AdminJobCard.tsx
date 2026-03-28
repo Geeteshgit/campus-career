@@ -1,8 +1,5 @@
 "use client";
 
-// React
-import React from "react";
-
 // External Libraries
 import clsx from "clsx";
 
@@ -17,7 +14,7 @@ type AdminJobCardProps = {
 const AdminJobCard = ({
   job,
   onClick,
-}: AdminJobCardProps): React.JSX.Element => {
+}: AdminJobCardProps) => {
   return (
     <div
       className={clsx(

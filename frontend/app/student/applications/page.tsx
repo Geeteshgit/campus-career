@@ -1,7 +1,7 @@
 "use client";
 
 // React
-import React, { useState } from "react";
+import { useState } from "react";
 
 // Layout Components
 import Navbar from "@/components/Navbar";
@@ -21,7 +21,7 @@ import {
 } from "@/features/application";
 import { Job, JobModal } from "@/features/job";
 
-const ApplicationsPage = (): React.JSX.Element => {
+const ApplicationsPage = () => {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [jobModalOpen, setJobModalOpen] = useState<boolean>(false);
 
