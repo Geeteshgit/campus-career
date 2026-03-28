@@ -4,6 +4,7 @@
 import React from "react";
 
 // External Libraries
+import clsx from "clsx";
 import { FiDownload } from "react-icons/fi";
 
 // Shared UI Components
@@ -46,12 +47,11 @@ const JobApplicationsCard = ({
 
       <div className="flex flex-wrap gap-2 sm:justify-center">
         <span
-          className={`px-2 py-1 text-xs font-semibold rounded-full 
-          ${
-            job.status === "Active"
-              ? "bg-green-100 text-green-700"
-              : "bg-neutral-200 text-neutral-600"
-          }`}
+          className={clsx("px-2 py-1 text-xs font-semibold rounded-full", 
+          {
+              "bg-green-100 text-green-700": job.status === "Active",
+              "bg-neutral-200 text-neutral-600": job.status === "Inactive",
+          })}
         >
           {job.status}
         </span>
