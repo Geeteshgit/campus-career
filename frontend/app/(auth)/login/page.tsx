@@ -15,10 +15,9 @@ const Login = () => {
   const role = user?.role;
 
   useEffect(() => {
-    if (user) {
-      if (role === "student") router.replace("/student/postings");
-      else router.replace("/admin/dashboard");
-    }
+    if (!role) return;
+    if (role === "student") router.replace("/student/postings");
+    else router.replace("/admin/dashboard");
   }, [user, role, router]);
 
   return (

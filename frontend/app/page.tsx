@@ -13,19 +13,16 @@ const Homepage = () => {
   const role = user?.role;
 
   useEffect(() => {
-    if (!user) {
+    if (!role) {
       router.replace("/login");
+      return;
     }
 
-    if(role === "student") {
-      router.replace("/student/postings");
-    }
-    else if(role === "admin" || role === "super_admin") {
-      router.replace("/admin/dashboard");
-    }
+    if (role === "student") router.replace("/student/postings");
+    else router.replace("/admin/dashboard");
   }, [user, role, router]);
 
-  return null; 
+  return null;
 };
 
 export default Homepage;
