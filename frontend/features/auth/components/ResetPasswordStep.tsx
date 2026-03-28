@@ -35,7 +35,7 @@ const ResetPasswordStep: React.FC<ResetPasswordStepProps> = ({
     try {
       await handleResetPassword(email, newPassword, confirmNewPassword);
       onSuccess();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Password reset failed:", err);
       onError("Failed to reset password");
     }
