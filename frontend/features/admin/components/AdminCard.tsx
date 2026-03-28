@@ -4,6 +4,7 @@
 import React from "react";
 
 // External Libraries
+import clsx from "clsx";
 import { FiEdit2 } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
@@ -48,11 +49,10 @@ const AdminCard = ({
               <FiEdit2 />
             </span>
             <span
-              className={`text-xl text-red-500 transition duration-300 ${
-                deletePending
-                  ? "cursor-not-allowed"
-                  : "cursor-pointer hover:scale-105"
-              }`}
+              className={clsx("text-xl text-red-500 transition duration-300", {
+                "cursor-not-allowed": deletePending,
+                "cursor-pointer hover:scale-105": !deletePending
+              })}
               onClick={() => !deletePending && onDelete(admin)}
             >
               <RiDeleteBin6Line />

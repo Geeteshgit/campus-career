@@ -3,13 +3,16 @@
 // React
 import React from "react";
 
+// External Libraries
+import clsx from "clsx";
+
 // Features
 import { Job } from "@/features/job";
 
 type AdminJobCardProps = {
   job: Job;
   onClick: () => void;
-}
+};
 
 const AdminJobCard = ({
   job,
@@ -17,14 +20,23 @@ const AdminJobCard = ({
 }: AdminJobCardProps): React.JSX.Element => {
   return (
     <div
-      className={`bg-white hover:bg-blue-50 border border-neutral-200 rounded-xl p-4 shadow-sm transition cursor-pointer ${job.status === "Inactive" ? "opacity-70" : ""}`}
+      className={clsx(
+        "bg-white hover:bg-blue-50 border border-neutral-200 rounded-xl p-4 shadow-sm transition cursor-pointer",
+        {
+          "opacity-70": job.status === "Inactive",
+        },
+      )}
       onClick={onClick}
     >
       <div className="grid grid-cols-5 items-center gap-3">
         <p className="font-semibold text-neutral-900 truncate">{job.company}</p>
         <p className="font-semibold text-neutral-900 truncate">{job.role}</p>
-        <p className="font-semibold text-neutral-900 truncate text-center">{job.type}</p>
-        <p className="font-semibold text-neutral-900 truncate text-center">{job.package}</p>
+        <p className="font-semibold text-neutral-900 truncate text-center">
+          {job.type}
+        </p>
+        <p className="font-semibold text-neutral-900 truncate text-center">
+          {job.package}
+        </p>
         <p className="font-semibold text-neutral-900 truncate text-center">
           {new Date(job.deadline).toLocaleDateString("en-GB", {
             day: "2-digit",
