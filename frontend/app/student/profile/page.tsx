@@ -11,9 +11,20 @@ import PageHeader from "@/shared/ui/PageHeader";
 import { ChangePassword, ProtectedRoute, useLogout } from "@/features/auth";
 import { UserDetails } from "@/features/user";
 import { StudentDetails } from "@/features/student";
+import { useRouter } from "next/navigation";
 
 const StudentProfile = () => {
+  const router = useRouter();
   const { handleLogout, logoutPending } = useLogout();
+
+  const onLogout = async () => {
+    try {
+      await handleLogout();
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+  };
 
   return (
     <ProtectedRoute allowedRoles={["student"]}>
@@ -27,7 +38,7 @@ const StudentProfile = () => {
             />
             <Button
               variant="danger"
-              onClick={handleLogout}
+              onClick={onLogout}
               disabled={logoutPending}
             >
               Logout

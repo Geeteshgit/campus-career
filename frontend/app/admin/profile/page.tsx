@@ -1,5 +1,8 @@
 "use client";
 
+// React
+import { useRouter } from "next/navigation";
+
 // Layout Components
 import Navbar from "@/components/Navbar";
 
@@ -12,7 +15,17 @@ import { ChangePassword, ProtectedRoute, useLogout } from "@/features/auth";
 import { UserDetails } from "@/features/user";
 
 const AdminProfile = () => {
+  const router = useRouter();
   const { handleLogout, logoutPending } = useLogout();
+
+  const onLogout = async () => {
+    try {
+      await handleLogout();
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+  };
 
   return (
     <ProtectedRoute allowedRoles={["admin", "super_admin"]}>
@@ -26,7 +39,7 @@ const AdminProfile = () => {
             />
             <Button
               variant="danger"
-              onClick={handleLogout}
+              onClick={onLogout}
               disabled={logoutPending}
             >
               Logout

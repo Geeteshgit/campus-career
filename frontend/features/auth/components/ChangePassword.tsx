@@ -1,44 +1,41 @@
 "use client";
 
-// React
-import React, { useState } from "react";
+// External Libraries
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 // Shared UI Components
 import Button from "@/shared/ui/Button";
 import FormLabel from "@/shared/ui/FormLabel";
 import Input from "@/shared/ui/Input";
+import ErrorMessage from "@/shared/ui/ErrorMessage";
+
+// Types
+import type { ChangePasswordFormData } from "../schemas/change-password.schema";
 
 // Local Imports
 import { useLogout } from "../hooks/useLogout";
 import { useChangePasswordMutation } from "../api/auth.queries";
-
-// Features
-
-type ChangePasswordData = {
-  oldPassword: string;
-  newPassword: string;
-  confirmPassword: string;
-};
+import { changePasswordSchema } from "../schemas/change-password.schema";
 
 const ChangePassword = () => {
-  const [passwordFormData, setPasswordFormData] = useState<ChangePasswordData>({
-    oldPassword: "",
-    newPassword: "",
-    confirmPassword: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<ChangePasswordFormData>({
+    resolver: zodResolver(changePasswordSchema),
+    defaultValues: {
+      oldPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    },
   });
 
-  const { handleLogout, logoutPending } = useLogout();
-  const { changePassword, isPending: updatePending } = useChangePasswordMutation();
+  const { handleLogout } = useLogout();
+  const { changePassword } = useChangePasswordMutation();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setPasswordFormData({ ...passwordFormData, [name]: value });
-  };
-
-  const handlePasswordChange = async (data: ChangePasswordData) => {
-    if (data.newPassword !== data.confirmPassword)
-      return alert("Passwords do not match!");
-
+  const onSubmit = async (data: ChangePasswordFormData) => {
     try {
       await changePassword({
         oldPassword: data.oldPassword,
@@ -53,7 +50,10 @@ const ChangePassword = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 mt-4 bg-neutral-50/50 p-6 rounded-xl border border-neutral-200">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col gap-6 mt-4 bg-neutral-50/50 p-6 rounded-xl border border-neutral-200"
+    >
       <h3 className="text-xl font-semibold text-neutral-800">
         Change Password
       </h3>
@@ -62,50 +62,40 @@ const ChangePassword = () => {
       <div>
         <FormLabel>Current Password</FormLabel>
         <Input
-          name="oldPassword"
           type="password"
           placeholder="Enter current password"
-          value={passwordFormData.oldPassword}
-          onChange={handleChange}
-          required={true}
+          {...register("oldPassword")}
         />
+        <ErrorMessage message={errors.oldPassword?.message} />
       </div>
 
       {/* New Password */}
       <div>
         <FormLabel>New Password</FormLabel>
         <Input
-          name="newPassword"
           type="password"
           placeholder="Enter new password"
-          value={passwordFormData.newPassword}
-          onChange={handleChange}
-          required={true}
+          {...register("newPassword")}
         />
+        <ErrorMessage message={errors.newPassword?.message} />
       </div>
 
       {/* Confirm Password */}
       <div>
         <FormLabel>Confirm New Password</FormLabel>
         <Input
-          name="confirmPassword"
           type="password"
           placeholder="Re-enter new password"
-          value={passwordFormData.confirmPassword}
-          onChange={handleChange}
-          required={true}
+          {...register("confirmPassword")}
         />
+        <ErrorMessage message={errors.confirmPassword?.message} />
       </div>
 
       {/* Save Button */}
-      <Button
-        variant="primary"
-        onClick={() => handlePasswordChange(passwordFormData)}
-        disabled={updatePending || logoutPending}
-      >
+      <Button variant="primary" type="submit" disabled={isSubmitting}>
         Change Password
       </Button>
-    </div>
+    </form>
   );
 };
 
