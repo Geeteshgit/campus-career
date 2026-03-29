@@ -1,40 +1,65 @@
 "use client";
 
 // React
-import React, { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+// External Libraries
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+// Lib
+import { connectSocket, initSocket } from "@/lib/socket";
+
+// Types
+import type { LoginFormData } from "../schemas/login.schema";
 
 // Shared UI Components
 import FormLabel from "@/shared/ui/FormLabel";
 import Input from "@/shared/ui/Input";
 import Button from "@/shared/ui/Button";
+import ErrorMessage from "@/shared/ui/ErrorMessage";
 
 // Local Imports
 import { useLogin } from "../hooks/useLogin";
-import { LoginPayload } from "../types/auth.types";
+import { loginSchema } from "../schemas/login.schema";
 
 type LoginFormProps = {
   onForgotPasswordClick: () => void;
 };
 
-const LoginForm = ({
-  onForgotPasswordClick,
-}: LoginFormProps) => {
-  const { handleLogin, loginPending } = useLogin();
+const LoginForm = ({ onForgotPasswordClick }: LoginFormProps) => {
+  const router = useRouter();
 
-  const [loginData, setloginData] = useState<LoginPayload>({
-    email: "",
-    password: "",
+  const { handleLogin } = useLogin();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setloginData({ ...loginData, [name]: value });
-  };
-
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    await handleLogin(loginData);
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      const user = await handleLogin(data);
+      initSocket();
+      connectSocket();
+      
+      if (user.role === "student") {
+        router.push("/student/postings");
+      } else if (user.role === "admin" || user.role === "super_admin") {
+        router.push("/admin/dashboard");
+      } else {
+        router.push("/login");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   };
 
   return (
@@ -60,46 +85,35 @@ const LoginForm = ({
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           <div>
             <FormLabel>Email</FormLabel>
-            <Input
-              name="email"
-              type="email"
-              placeholder="Enter your email"
-              value={loginData.email}
-              onChange={handleChange}
-            />
+            <Input placeholder="Enter your email" {...register("email")} />
+            <ErrorMessage message={errors.email?.message} />
           </div>
 
           <div>
             <FormLabel>Password</FormLabel>
             <Input
-              name="password"
               type="password"
               placeholder="Enter your password"
-              value={loginData.password}
-              onChange={handleChange}
+              {...register("password")}
             />
+            <ErrorMessage message={errors.password?.message} />
           </div>
 
           <Button
             variant="primary"
             type="submit"
             className="w-full"
-            disabled={loginPending}
+            disabled={isSubmitting}
           >
             Login
           </Button>
 
-          <div className="text-center">
-            <Button
-              variant="link"
-              onClick={onForgotPasswordClick}
-            >
-              Forgot password?
-            </Button>
-          </div>
+          <Button variant="link" onClick={onForgotPasswordClick}>
+            Forgot password?
+          </Button>
         </form>
       </div>
     </main>
