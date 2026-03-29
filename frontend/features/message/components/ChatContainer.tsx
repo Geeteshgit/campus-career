@@ -20,12 +20,11 @@ const ChatContainer = () => {
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const queryClient = useQueryClient();
   const {
-    data: messagesData,
-    isPending: messagesLoading,
-    isError: messagesError,
-    error: messagesErrorObj,
+    messages,
+    messagesLoading,
+    messagesError,
+    messagesErrorObj,
   } = useMessages();
-  const messages: Message[] = messagesData?.messages;
 
   const user = useAuthStore((state) => state.user);
   const userId = user?.id;
