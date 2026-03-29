@@ -1,30 +1,33 @@
-"use client";
+// External Libraries
+import { useFormContext } from "react-hook-form";
 
 // Shared UI Components
 import Button from "@/shared/ui/Button";
 import Input from "@/shared/ui/Input";
+import ErrorMessage from "@/shared/ui/ErrorMessage";
 
 // Features
 import { usePasswordReset } from "@/features/auth";
 
 type VerifyOtpStepProps = {
-  email: string;
-  otp: string;
-  onOtpChange: (otp: string) => void;
   onSuccess: () => void;
   onError: (message: string) => void;
 };
 
-const VerifyOtpStep = ({
-  email,
-  otp,
-  onOtpChange,
-  onSuccess,
-  onError,
-}: VerifyOtpStepProps) => {
+const VerifyOtpStep = ({ onSuccess, onError }: VerifyOtpStepProps) => {
+  const {
+    register,
+    trigger,
+    getValues,
+    formState: { errors },
+  } = useFormContext();
   const { handleVerifyOtp, verifyOtpPending } = usePasswordReset();
 
   const verifyOtp = async () => {
+    const isValid = await trigger("otp");
+    if (!isValid) return;
+
+    const { email, otp } = getValues();
     try {
       await handleVerifyOtp(email, otp);
       onSuccess();
@@ -37,11 +40,10 @@ const VerifyOtpStep = ({
   return (
     <>
       <Input
-        name="otp"
         placeholder="Enter OTP"
-        value={otp}
-        onChange={(e) => onOtpChange(e.target.value)}
+        {...register("otp")}
       />
+      <ErrorMessage message={errors.otp?.message as string} />
       <Button
         variant="primary"
         className="w-full mt-3"

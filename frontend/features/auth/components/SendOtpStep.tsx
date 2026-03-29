@@ -1,27 +1,32 @@
-"use client";
+// External Libraries
+import { useFormContext } from "react-hook-form";
 
 // Shared UI Components
 import Button from "@/shared/ui/Button";
 import Input from "@/shared/ui/Input";
+import ErrorMessage from "@/shared/ui/ErrorMessage";
 
 // Features
 import { usePasswordReset } from "@/features/auth";
 
 type SendOtpStepProps = {
-  email: string;
-  onEmailChange: (email: string) => void;
   onSuccess: () => void;
-  message: string;
-}
+};
 
-const SendOtpStep = ({
-  email,
-  onEmailChange,
-  onSuccess,
-}: SendOtpStepProps) => {
+const SendOtpStep = ({ onSuccess }: SendOtpStepProps) => {
+  const {
+    register,
+    trigger,
+    getValues,
+    formState: { errors },
+  } = useFormContext();
   const { handleSendOtp, sendOtpPending } = usePasswordReset();
 
   const sendOtp = async () => {
+    const isValid = await trigger("email");
+    if (!isValid) return;
+
+    const email = getValues("email");
     try {
       await handleSendOtp(email);
       onSuccess();
@@ -33,11 +38,10 @@ const SendOtpStep = ({
   return (
     <>
       <Input
-        name="email"
         placeholder="Enter your email"
-        value={email}
-        onChange={(e) => onEmailChange(e.target.value)}
+        {...register("email")}
       />
+      <ErrorMessage message={errors.email?.message as string} />
       <Button
         variant="primary"
         className="w-full mt-3"
