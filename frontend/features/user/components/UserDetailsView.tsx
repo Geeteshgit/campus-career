@@ -1,20 +1,16 @@
-"use client";
-
 // Shared UI Components
 import Button from "@/shared/ui/Button";
 
 // Local Imports
 import type { User } from "../types/user.types";
+import InfoRow from "@/shared/ui/InfoRow";
 
 type UserDetailsViewProps = {
   data: User;
   onEdit: () => void;
 };
 
-const UserDetailsView = ({
-  data,
-  onEdit,
-}: UserDetailsViewProps) => {
+const UserDetailsView = ({ data, onEdit }: UserDetailsViewProps) => {
   return (
     <div className="flex flex-col gap-6 pb-6 border-b border-neutral-200">
       <div className="flex items-center justify-between">
@@ -27,27 +23,11 @@ const UserDetailsView = ({
       </div>
 
       <div className="flex flex-col md:flex-row gap-6">
-        <div className="w-full">
-          <p className="text-sm text-neutral-500">Name</p>
-          <p className="text-base text-neutral-900 font-medium">
-            {data.name ?? ""}
-          </p>
-        </div>
-
-        <div className="w-full">
-          <p className="text-sm text-neutral-500">Email</p>
-          <p className="text-base text-neutral-900 font-medium">
-            {data.email ?? ""}
-          </p>
-        </div>
+        <InfoRow label="Name" value={data.name ?? ""} />
+        <InfoRow label="Email" value={data.email ?? ""} />
       </div>
 
-      <div>
-        <p className="text-sm text-neutral-500">Phone Number</p>
-        <p className="text-base text-neutral-900 font-medium">
-          {data.phone ?? ""}
-        </p>
-      </div>
+      <InfoRow label="Phone Number" value={data.phone ?? ""} />
     </div>
   );
 };

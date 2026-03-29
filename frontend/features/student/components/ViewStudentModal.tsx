@@ -1,10 +1,6 @@
-"use client";
-
-// React
-import React from "react";
-
 // Shared UI Components
 import CloseButton from "@/shared/ui/CloseButton";
+import InfoRow from "@/shared/ui/InfoRow";
 
 type ViewStudentModalProps = {
   title: string;
@@ -20,28 +16,13 @@ type ViewStudentModalProps = {
     cgpa: number;
   };
   onClose: () => void;
-}
+};
 
 const ViewStudentModal = ({
   title,
   student,
   onClose,
 }: ViewStudentModalProps) => {
-  const InfoRow = ({
-    label,
-    value,
-  }: {
-    label: string;
-    value: React.ReactNode;
-  }) => (
-    <div className="flex flex-col gap-1">
-      <span className="text-sm font-medium text-neutral-500">{label}</span>
-      <span className="font-semibold text-neutral-900">
-        {value || "—"}
-      </span>
-    </div>
-  );
-
   return (
     <div
       className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
@@ -52,9 +33,7 @@ const ViewStudentModal = ({
         onClick={(e) => e.stopPropagation()}
       >
         <CloseButton onClick={onClose} />
-
         <h2 className="text-xl font-bold text-neutral-900">{title}</h2>
-
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <InfoRow label="Name" value={student.name} />
           <InfoRow label="Email" value={student.email} />

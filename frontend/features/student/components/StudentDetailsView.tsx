@@ -1,16 +1,14 @@
 // Shared UI Components
 import Button from "@/shared/ui/Button";
 import { Student } from "../types/student.types";
+import InfoRow from "@/shared/ui/InfoRow";
 
 type StudentDetailsViewProps = {
   data: Student;
   onEdit: () => void;
 };
 
-const StudentDetailsView = ({
-  data,
-  onEdit,
-}: StudentDetailsViewProps) => {
+const StudentDetailsView = ({ data, onEdit }: StudentDetailsViewProps) => {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
@@ -23,50 +21,27 @@ const StudentDetailsView = ({
       </div>
 
       <div className="flex flex-col md:flex-row gap-6">
-        <div className="w-full">
-          <p className="text-sm text-neutral-500">Enrollment Number</p>
-          <p className="text-base text-neutral-900 font-medium">
-            {data?.enrollmentNumber ?? ""}
-          </p>
-        </div>
-
-        <div className="w-full">
-          <p className="text-sm text-neutral-500">Program</p>
-          <p className="text-base text-neutral-900 font-medium">{data?.program ?? ""}</p>
-        </div>
+        <InfoRow
+          label="Enrollment Number"
+          value={data?.enrollmentNumber ?? ""}
+        />
+        <InfoRow label="Program" value={data?.program ?? ""} />
       </div>
 
       <div className="flex flex-col md:flex-row gap-6">
-        <div className="w-full">
-          <p className="text-sm text-neutral-500">Year</p>
-          <p className="text-base text-neutral-900 font-medium">{data?.year ?? ""}</p>
-        </div>
-        <div className="w-full">
-          <p className="text-sm text-neutral-500">Batch</p>
-          <p className="text-base text-neutral-900 font-medium">{data?.batch ?? ""}</p>
-        </div>
+        <InfoRow label="Year" value={data?.year ?? ""} />
+        <InfoRow label="Batch" value={data?.batch ?? ""} />
       </div>
 
       <div className="flex flex-col md:flex-row gap-6">
-        <div className="w-full">
-          <p className="text-sm text-neutral-500">Specialization</p>
-          <p className="text-base text-neutral-900 font-medium">
-            {data?.specialization ?? ""}
-          </p>
-        </div>
-
-        <div className="w-full">
-          <p className="text-sm text-neutral-500">CGPA</p>
-          <p className="text-base text-neutral-900 font-medium">{data?.cgpa ?? 0}</p>
-        </div>
+        <InfoRow label="Specialization" value={data?.specialization ?? ""} />
+        <InfoRow label="CGPA" value={data?.cgpa ?? 0} />
       </div>
 
-      <div>
-        <p className="text-sm text-neutral-500">Skills</p>
-        <p className="text-base text-neutral-900 font-medium whitespace-pre-wrap">
-          {Array.isArray(data?.skills) ? data.skills.join(", ") : ""}
-        </p>
-      </div>
+      <InfoRow
+        label="Skills"
+        value={Array.isArray(data?.skills) ? data.skills.join(", ") : ""}
+      />
     </div>
   );
 };

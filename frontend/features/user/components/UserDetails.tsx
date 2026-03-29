@@ -48,7 +48,7 @@ const UserDetails = () => {
             isSaving={updatePending}
           />
         ) : (
-          <UserDetailsView key={user._id} data={user} onEdit={handleStartEdit} />
+          <UserDetailsView data={user} onEdit={handleStartEdit} />
         ))}
     </AsyncState>
   );
