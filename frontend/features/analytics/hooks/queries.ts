@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getPlatformAnalytics } from "./analytics.api";
+import { getPlatformAnalytics } from "../api/analytics.api";
 
 const STALE_TIME = 1000 * 60 * 10; // 10 minutes
 

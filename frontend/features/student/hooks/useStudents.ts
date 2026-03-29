@@ -1,83 +1,82 @@
-"use client";
-
-import {
-	useAllStudentsQuery,
-	useInfiniteStudentsQuery,
-	useMyStudentProfileQuery,
-	useStudentByUserIdQuery,
-	useUpdateMyStudentProfileMutation,
-	useUploadStudentResumeMutation,
-} from "../api/students.queries";
 import { useMemo } from "react";
-import { PaginationParams } from "../api/students.api";
 import { PopulatedStudent } from "../types/student.types";
+import { PaginationParams } from "../api/students.api";
+import {
+  useAllStudentsQuery,
+  useInfiniteStudentsQuery,
+  useMyStudentProfileQuery,
+  useStudentByUserIdQuery,
+} from "./queries";
+import {
+  useUpdateMyStudentProfileMutation,
+  useUploadStudentResumeMutation,
+} from "./mutations";
 
 export const useMyStudentProfile = () => {
-	return useMyStudentProfileQuery();
+  return useMyStudentProfileQuery();
 };
 
 export const useAllStudents = (params?: PaginationParams) => {
-	return useAllStudentsQuery(params);
+  return useAllStudentsQuery(params);
 };
 
 export const useStudentByUserId = (userId: string) => {
-	return useStudentByUserIdQuery(userId);
+  return useStudentByUserIdQuery(userId);
 };
 
 type StudentsListParams = {
-	selectedProgram: string;
-	selectedYear: string;
-	search: string;
+  selectedProgram: string;
+  selectedYear: string;
+  search: string;
 };
 
 export const useStudents = ({
-	selectedProgram,
-	selectedYear,
-	search,
+  selectedProgram,
+  selectedYear,
+  search,
 }: StudentsListParams) => {
-	const {
-		data: studentsData,
-		isPending: studentsLoading,
-		isFetching: studentsFetching,
-		isError: studentsError,
-		error: studentsErrorObj,
-		hasNextPage,
-		fetchNextPage,
-	} = useInfiniteStudentsQuery({
-		program: selectedProgram,
-		year: selectedYear,
-		search,
-	});
+  const {
+    data: studentsData,
+    isPending: studentsLoading,
+    isFetching: studentsFetching,
+    isError: studentsError,
+    error: studentsErrorObj,
+    hasNextPage,
+    fetchNextPage,
+  } = useInfiniteStudentsQuery({
+    program: selectedProgram,
+    year: selectedYear,
+    search,
+  });
 
-	const students = useMemo(() => {
-		return (
-			studentsData?.pages.flatMap(
-				(pageData) => (pageData?.students as PopulatedStudent[]) ?? [],
-			) ?? []
-		);
-	}, [studentsData]);
+  const students = useMemo(() => {
+    return (
+      studentsData?.pages.flatMap(
+        (pageData) => (pageData?.students as PopulatedStudent[]) ?? [],
+      ) ?? []
+    );
+  }, [studentsData]);
 
-	const handleShowMore = () => {
-		if (!hasNextPage || studentsFetching) return;
-		void fetchNextPage();
-	};
+  const handleShowMore = () => {
+    if (!hasNextPage || studentsFetching) return;
+    void fetchNextPage();
+  };
 
-	return {
-		students,
-		hasMore: Boolean(hasNextPage),
-		handleShowMore,
-		studentsLoading,
-		studentsFetching,
-		studentsError,
-		studentsErrorObj,
-	};
+  return {
+    students,
+    hasMore: Boolean(hasNextPage),
+    handleShowMore,
+    studentsLoading,
+    studentsFetching,
+    studentsError,
+    studentsErrorObj,
+  };
 };
 
 export const useUpdateMyStudentProfile = () => {
-	return useUpdateMyStudentProfileMutation();
+  return useUpdateMyStudentProfileMutation();
 };
 
 export const useUploadStudentResume = () => {
-	return useUploadStudentResumeMutation();
+  return useUploadStudentResumeMutation();
 };
-

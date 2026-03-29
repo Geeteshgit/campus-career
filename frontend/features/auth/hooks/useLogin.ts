@@ -1,6 +1,6 @@
-import { useLoginMutation } from "../api/auth.queries";
 import { useAuthStore } from "../auth.store";
 import { LoginFormData } from "../schemas/login.schema";
+import { useLoginMutation } from "./mutations";
 
 export const useLogin = () => {
   const loginStore = useAuthStore((state) => state.login);

@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import {
   Job,
@@ -11,7 +9,7 @@ import {
   useCreateJobMutation,
   useDeleteJobMutation,
   useUpdateJobMutation,
-} from "../api/jobs.queries";
+} from "./mutations";
 
 export const useJobManagement = () => {
   const [jobModalOpen, setJobModalOpen] = useState<boolean>(false);

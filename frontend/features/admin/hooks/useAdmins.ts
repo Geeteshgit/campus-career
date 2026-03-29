@@ -1,7 +1,5 @@
-"use client";
-
-import { useAdminsQuery } from "../api/admins.queries";
 import { Admin } from "../types/admin.types";
+import { useAdminsQuery } from "./queries";
 
 export const useAdmins = (searchTerm: string) => {
   const {

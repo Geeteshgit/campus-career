@@ -3,9 +3,6 @@ export * from './hooks/useJobs';
 export * from './hooks/useJobManagement';
 export * from './hooks/useJobFilters';
 
-// Queries
-export * from './api/jobs.queries';
-
 // Components
 export { default as JobModal } from './components/JobModal';
 export { default as AdminPostingsContainer } from './components/AdminPostingsContainer';

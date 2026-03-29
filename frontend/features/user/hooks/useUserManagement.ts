@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useUpdateMyAccountMutation } from "../api/users.queries";
+import { useUpdateMyAccountMutation } from "./mutations";
 import { UpdateUserPayload } from "../types/user.types";
 
 export const useUpdateMyAccount = () => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useMeQuery } from "../api/auth.queries";
+import { useMeQuery } from "./queries";
 import { useAuthStore } from "../auth.store";
 
 export const useAuthInit = () => {

@@ -3,6 +3,9 @@
 // React
 import { useState } from "react";
 
+// External Libraries
+import clsx from "clsx";
+
 // Layout Components
 import Navbar from "@/components/Navbar";
 
@@ -74,7 +77,12 @@ const AdminManagement = () => {
           </div>
 
           <div className="flex flex-col gap-2">
-            <div className="grid grid-cols-5 gap-3 rounded-xl bg-blue-50 p-4">
+            <div
+              className={clsx(
+                "grid gap-3 rounded-xl bg-blue-50 p-4",
+                role === "super_admin" ? "grid-cols-5" : "grid-cols-4",
+              )}
+            >
               <p className="text-sm font-semibold text-neutral-600">Name</p>
               <p className="text-sm font-semibold text-neutral-600">Email</p>
               <p className="text-sm font-semibold text-neutral-600 text-center">
@@ -83,9 +91,11 @@ const AdminManagement = () => {
               <p className="text-sm font-semibold text-neutral-600 text-center">
                 Role
               </p>
-              <p className="text-sm font-semibold text-neutral-600 text-center">
-                Actions
-              </p>
+              {role === "super_admin" && (
+                <p className="text-sm font-semibold text-neutral-600 text-center">
+                  Actions
+                </p>
+              )}
             </div>
             <AsyncState
               isLoading={adminsLoading}

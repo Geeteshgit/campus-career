@@ -4,7 +4,7 @@
 import Button from "@/shared/ui/Button";
 
 // Local Imports
-import { User } from "../types/user.types";
+import type { User } from "../types/user.types";
 
 type UserDetailsViewProps = {
   data: User;

@@ -1,5 +1,5 @@
 import { useAuthStore } from "../auth.store";
-import { useLogoutMutation } from "../api/auth.queries";
+import { useLogoutMutation } from "./mutations";
 import { disconnectSocket } from "@/lib/socket";
 
 export const useLogout = () => {

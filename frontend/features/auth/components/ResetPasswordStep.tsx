@@ -1,5 +1,7 @@
 "use client";
 
+import axios from "axios";
+
 // Shared UI Components
 import Button from "@/shared/ui/Button";
 import Input from "@/shared/ui/Input";
@@ -15,7 +17,7 @@ type ResetPasswordStepProps = {
   onConfirmPasswordChange: (password: string) => void;
   onSuccess: () => void;
   onError: (message: string) => void;
-}
+};
 
 const ResetPasswordStep = ({
   email,
@@ -34,7 +36,12 @@ const ResetPasswordStep = ({
       onSuccess();
     } catch (err: unknown) {
       console.error("Password reset failed:", err);
-      onError("Failed to reset password");
+
+      const message = axios.isAxiosError(err)
+        ? err.response?.data?.message || "Failed to reset password"
+        : "Failed to reset password";
+
+      onError(message);
     }
   };
 

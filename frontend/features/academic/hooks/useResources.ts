@@ -1,9 +1,7 @@
-"use client";
-
 import {
   useResourcesQuery,
   useStudentResourcesQuery,
-} from "../api/resources.queries";
+} from "./queries/resources";
 import { Resource } from "../types/resource.types";
 
 export const useResources = () => {

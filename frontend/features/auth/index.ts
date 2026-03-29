@@ -8,7 +8,7 @@ export * from './hooks/useLogout';
 export * from './hooks/usePasswordReset';
 
 // Queries
-export * from './api/auth.queries';
+export * from './hooks/queries';
 
 // Components
 export { default as ProtectedRoute } from './components/ProtectedRoute';

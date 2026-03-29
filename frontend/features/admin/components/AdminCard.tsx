@@ -15,7 +15,7 @@ type AdminCardProps = {
   onEdit: (admin: Admin) => void;
   onDelete: (admin: Admin) => void;
   deletePending?: boolean;
-}
+};
 
 const AdminCard = ({
   admin,
@@ -28,7 +28,12 @@ const AdminCard = ({
 
   return (
     <div className="bg-white hover:bg-blue-50 border border-neutral-200 rounded-xl p-4 shadow-sm transition flex flex-col gap-4">
-      <div className="grid grid-cols-5 gap-3 w-full items-center">
+      <div
+        className={clsx(
+          "grid gap-3 w-full items-center",
+          role === "super_admin" ? "grid-cols-5" : "grid-cols-4",
+        )}
+      >
         <p className="font-semibold text-neutral-900 truncate">{admin.name}</p>
         <p className="font-semibold text-neutral-900 truncate">{admin.email}</p>
         <p className="font-semibold text-neutral-900 truncate text-center">
@@ -48,7 +53,7 @@ const AdminCard = ({
             <span
               className={clsx("text-xl text-red-500 transition duration-300", {
                 "cursor-not-allowed": deletePending,
-                "cursor-pointer hover:scale-105": !deletePending
+                "cursor-pointer hover:scale-105": !deletePending,
               })}
               onClick={() => !deletePending && onDelete(admin)}
             >

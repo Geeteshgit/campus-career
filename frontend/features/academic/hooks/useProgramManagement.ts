@@ -1,11 +1,9 @@
-"use client";
-
 import { useState } from "react";
+import { CreateProgramPayload } from "../types/program.types";
 import {
   useCreateProgramMutation,
   useDeleteProgramMutation,
-} from "../api/programs.queries";
-import { CreateProgramPayload } from "../types/program.types";
+} from "./mutations/programs";
 
 export const useProgramManagement = () => {
   const [newProgram, setNewProgram] = useState<string>("");
@@ -42,7 +40,7 @@ export const useProgramManagement = () => {
 
     createPending,
     deletePending,
-    
+
     newProgram,
     setNewProgram,
   };

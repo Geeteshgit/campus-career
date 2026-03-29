@@ -1,7 +1,5 @@
-"use client";
-
 import { useQuery } from "@tanstack/react-query";
-import { getMessages } from "./messages.api";
+import { getMessages } from "../api/messages.api";
 
 export const useMessagesQuery = () => {
   return useQuery({

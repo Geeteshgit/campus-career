@@ -1,21 +1,23 @@
-"use client";
-
 import { useState } from "react";
-import {
-  useCreateResourceMutation,
-  useUpdateResourceMutation,
-  useDeleteResourceMutation,
-} from "../api/resources.queries";
 import {
   CreateResourcePayload,
   Resource,
   UpdateResourcePayload,
 } from "../types/resource.types";
+import {
+  useCreateResourceMutation,
+  useDeleteResourceMutation,
+  useUpdateResourceMutation,
+} from "./mutations/resources";
 
 export const useResourceManagement = () => {
-  const [addResourceModalOpen, setAddResourceModalOpen] = useState<boolean>(false);
-  const [editResourceModalOpen, setEditResourceModalOpen] = useState<boolean>(false);
-  const [selectedResource, setselectedResource] = useState<Resource | null>(null);
+  const [addResourceModalOpen, setAddResourceModalOpen] =
+    useState<boolean>(false);
+  const [editResourceModalOpen, setEditResourceModalOpen] =
+    useState<boolean>(false);
+  const [selectedResource, setselectedResource] = useState<Resource | null>(
+    null,
+  );
 
   const { createResource, isPending: createPending } =
     useCreateResourceMutation();

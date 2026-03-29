@@ -1,23 +1,5 @@
-"use client";
-
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  getPrograms,
-  createProgram,
-  deleteProgram
-} from "./programs.api";
-
-const STALE_TIME = 1000 * 60 * 10; // 10 minutes
-const CACHE_TIME = 1000 * 60 * 30; // 30 minutes
-
-export const useProgramsQuery = () => {
-  return useQuery({
-    queryKey: ["programs"],
-    queryFn: getPrograms,
-    staleTime: STALE_TIME,
-    gcTime: CACHE_TIME,
-  });
-};
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createProgram, deleteProgram } from "../../api/programs.api";
 
 export const useCreateProgramMutation = () => {
   const queryClient = useQueryClient();

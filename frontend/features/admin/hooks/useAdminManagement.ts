@@ -1,12 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Admin, CreateAdminPayload, UpdateAdminPayload } from "../types/admin.types";
+import {
+  Admin,
+  CreateAdminPayload,
+  UpdateAdminPayload,
+} from "../types/admin.types";
 import {
   useCreateAdminMutation,
   useDeleteAdminMutation,
   useUpdateAdminMutation,
-} from "../api/admins.queries";
+} from "./mutations";
 
 export const useAdminManagement = (role: string) => {
   const [addAdminModalOpen, setAddAdminModalOpen] = useState<boolean>(false);
@@ -20,7 +24,7 @@ export const useAdminManagement = (role: string) => {
   const handleCreateAdmin = async (data: CreateAdminPayload) => {
     try {
       const payload =
-        role === "super_admin" ? data : { ...data, role: "admin" };
+        role === "super_admin" ? data : { ...data, role: "admin" as const };
 
       await createAdmin(payload);
       setAddAdminModalOpen(false);

@@ -1,6 +1,4 @@
-"use client";
-
-import { useMessagesQuery } from "../api/messages.queries";
+import { useMessagesQuery } from "../hooks/queries";
 
 export const useMessages = () => {
   return useMessagesQuery();

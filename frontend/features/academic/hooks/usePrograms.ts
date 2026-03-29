@@ -1,6 +1,4 @@
-"use client";
-
-import { useProgramsQuery } from "../api/programs.queries";
+import { useProgramsQuery } from "./queries/programs";
 import { Program } from "../types/program.types";
 
 export const usePrograms = () => {

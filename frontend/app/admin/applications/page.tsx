@@ -22,33 +22,28 @@ import {
   Job,
   JobFormData,
   JobModal,
-  UpdateJobPayload,
-  useAllJobsQuery,
-  useDeleteJobMutation,
-  useUpdateJobMutation,
+  useAllJobs,
+  useJobManagement,
 } from "@/features/job";
 
 const ApplicationsAdminPage = () => {
   const user = useAuthStore((state) => state.user);
   const isAdmin = user?.role !== "student";
 
+  const { jobs, jobsLoading, jobsError, jobsErrorObj } = useAllJobs();
   const {
-    data: jobsData,
-    isPending: jobsLoading,
-    isError: jobsError,
-    error: jobsErrorObj,
-  } = useAllJobsQuery();
-  const { updateJob, isPending: updatePending } = useUpdateJobMutation();
-  const { deleteJob, isPending: deletePending } = useDeleteJobMutation();
-
-  const jobs: Job[] = jobsData?.jobs ?? [];
-
-  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-
-  const [jobModalOpen, setJobModalOpen] = useState<boolean>(false);
-  const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
-
-  const [editingJob, setEditingJob] = useState<Job | null>(null);
+    handleUpdateJob,
+    updatePending,
+    handleDeleteJob,
+    deletePending,
+    handleEditJob,
+    handleJobClick,
+    selectedJob,
+    jobModalOpen,
+    editJobModalOpen,
+    setJobModalOpen,
+    setEditJobModalOpen,
+  } = useJobManagement();
 
   const [filter, setFilter] = useState<"All" | "Full-Time" | "Internship">(
     "All",
@@ -56,44 +51,8 @@ const ApplicationsAdminPage = () => {
 
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  const handleEditClick = (job: Job) => {
-    setEditingJob(job);
-    setEditModalOpen(true);
-  };
-
-  const handleSaveEdit = async (updatedData: JobFormData) => {
-    if (!editingJob) return;
-
-    try {
-      const finalData: UpdateJobPayload = {
-        ...updatedData,
-        requirements: updatedData.requirements?.split("\n") || [],
-      };
-
-      await updateJob({ id: editingJob._id, payload: finalData });
-
-      setEditModalOpen(false);
-      setJobModalOpen(false);
-      setEditingJob(null);
-    } catch (err) {
-      console.error("Job update error:", err);
-    }
-  };
-
-  const handleDelete = async (job: Job) => {
-    try {
-      await deleteJob(job._id);
-
-      setJobModalOpen(false);
-      setSelectedJob(null);
-    } catch (err) {
-      console.error("Job delete error:", err);
-    }
-  };
-
-  const openJobModal = (job: Job) => {
-    setSelectedJob(job);
-    setJobModalOpen(true);
+  const handleSaveEdit = (data: Record<string, unknown>) => {
+    return handleUpdateJob(data as JobFormData);
   };
 
   const filteredByType: Job[] =
@@ -148,7 +107,7 @@ const ApplicationsAdminPage = () => {
                   job={job}
                   isAdmin={isAdmin}
                   onDownload={downloadApplicantsCSV}
-                  onOpenModal={openJobModal}
+                  onOpenModal={handleJobClick}
                 />
               ))}
             </div>
@@ -160,22 +119,22 @@ const ApplicationsAdminPage = () => {
             job={selectedJob}
             isAdmin={isAdmin}
             onOpenChange={setJobModalOpen}
-            onEdit={handleEditClick}
-            onDelete={handleDelete}
+            onEdit={handleEditJob}
+            onDelete={handleDeleteJob}
             isPending={deletePending}
           />
         )}
 
-        {editModalOpen && editingJob && (
+        {editJobModalOpen && selectedJob && (
           <FormModal
             title="Edit Job Posting"
             fields={editJobFieldsConfig}
             initialValues={{
-              ...editingJob,
-              deadline: editingJob.deadline?.split("T")[0],
-              requirements: editingJob.requirements.join("\n"),
+              ...selectedJob,
+              deadline: selectedJob.deadline?.split("T")[0],
+              requirements: selectedJob.requirements.join("\n"),
             }}
-            onClose={() => setEditModalOpen(false)}
+            onClose={() => setEditJobModalOpen(false)}
             onSave={handleSaveEdit}
             isPending={updatePending}
           />

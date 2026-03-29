@@ -1,11 +1,6 @@
-"use client";
-
-import {
-  useApplyToJobMutation,
-  useApplicantsForJobQuery,
-  useMyApplicationsQuery,
-} from "../api/applications.queries";
 import { CreateApplicationPayload } from "../types/application.types";
+import { useApplicantsForJobQuery, useMyApplicationsQuery } from "./queries";
+import { useApplyToJobMutation } from "./mutations";
 
 export const useMyApplications = () => {
   return useMyApplicationsQuery();
@@ -16,8 +11,11 @@ export const useApplicantsForJob = (jobId: string) => {
 };
 
 export const useApplyToJob = () => {
-  const { applyToJob, isPending: applyPending, ...rest } =
-    useApplyToJobMutation();
+  const {
+    applyToJob,
+    isPending: applyPending,
+    ...rest
+  } = useApplyToJobMutation();
 
   const handleApplyToJob = async (
     jobId: string,

@@ -28,7 +28,7 @@ export const verifyResetOtp = async (payload: {
 
 export const resetPassword = async (payload: {
   email: string;
-  password: string;
+  newPassword: string;
   confirmNewPassword: string;
 }) => {
   const { data } = await usersApi.post("/auth/reset-password", payload);

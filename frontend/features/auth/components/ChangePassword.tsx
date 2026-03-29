@@ -15,7 +15,7 @@ import type { ChangePasswordFormData } from "../schemas/change-password.schema";
 
 // Local Imports
 import { useLogout } from "../hooks/useLogout";
-import { useChangePasswordMutation } from "../api/auth.queries";
+import { useChangePasswordMutation } from "../hooks/mutations";
 import { changePasswordSchema } from "../schemas/change-password.schema";
 
 const ChangePassword = () => {

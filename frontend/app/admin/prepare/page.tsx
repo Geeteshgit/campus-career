@@ -89,7 +89,7 @@ const PrepareAdminPage = ()=> {
             {isAdmin && (
               <Button
                 variant="primary"
-                onClick={() => true}
+                onClick={() => setAddResourceModalOpen(true)}
                 disabled={createPending}
               >
                 Add Resource

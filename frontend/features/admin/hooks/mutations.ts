@@ -1,29 +1,10 @@
-"use client";
-
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  getAllAdmins,
-  getAdminById,
   createAdmin,
   updateAdminById,
   deleteAdminById
-} from "./admins.api";
+} from "../api/admins.api";
 import { UpdateAdminPayload } from "../types/admin.types";
-
-export const useAdminsQuery = () => {
-  return useQuery({
-    queryKey: ["admins"],
-    queryFn: getAllAdmins,
-  });
-};
-
-export const useAdminQuery = (id: string) => {
-  return useQuery({
-    queryKey: ["admins", id],
-    queryFn: () => getAdminById(id),
-    enabled: !!id
-  });
-};
 
 export const useCreateAdminMutation = () => {
   const queryClient = useQueryClient();

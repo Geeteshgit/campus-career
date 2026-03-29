@@ -1,10 +1,8 @@
-"use client";
-
 import {
   useForgotPasswordMutation,
   useResetPasswordMutation,
   useVerifyResetOtpMutation,
-} from "../api/auth.queries";
+} from "./mutations";
 
 export const usePasswordReset = () => {
   const { forgotPassword, isPending: sendOtpPending } =
@@ -29,7 +27,7 @@ export const usePasswordReset = () => {
   ) => {
     return resetPassword({
       email,
-      password: newPassword,
+      newPassword,
       confirmNewPassword,
     });
   };

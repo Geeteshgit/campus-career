@@ -1,18 +1,16 @@
-"use client";
-
+import { Job, RecommendedJobsStudentPayload } from "../types/job.types";
 import {
   useAllJobsQuery,
   useInactiveJobsQuery,
   useRecommendedJobsQuery,
-} from "../api/jobs.queries";
-import { Job, RecommendedJobsStudentPayload } from "../types/job.types";
+} from "./queries";
 
 export const useAllJobs = () => {
   const {
     data: jobsData,
     isPending: jobsLoading,
     isError: jobsError,
-    error: jobsErrorObject,
+    error: jobsErrorObj,
   } = useAllJobsQuery();
 
   const jobs: Job[] = jobsData?.jobs ?? [];
@@ -25,7 +23,7 @@ export const useAllJobs = () => {
     inactiveJobs,
     jobsLoading,
     jobsError,
-    jobsErrorObject,
+    jobsErrorObj,
   };
 };
 
@@ -47,9 +45,7 @@ export const useInactiveJobs = () => {
   };
 };
 
-export const useRecommendedJobs = (
-  payload: RecommendedJobsStudentPayload,
-) => {
+export const useRecommendedJobs = (payload: RecommendedJobsStudentPayload) => {
   const {
     data: recommendedJobsData,
     isPending: recommendedJobsLoading,

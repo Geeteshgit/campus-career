@@ -1,6 +1,4 @@
-"use client";
-
-import { usePlatformAnalyticsQuery } from "../api/analytics.queries";
+import { usePlatformAnalyticsQuery } from "./queries";
 
 export const useAnalytics = () => {
   const {
