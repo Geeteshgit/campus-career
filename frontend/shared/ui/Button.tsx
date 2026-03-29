@@ -36,7 +36,7 @@ const Button = ({
       type={type}
       disabled={disabled}
       className={clsx(
-        "text-sm sm:text-base px-4 py-2 font-semibold rounded-lg transition duration-300",
+        "text-sm sm:text-base px-4 py-2 font-semibold rounded-lg transition duration-200",
         isSolidVariant && "text-white",
         variant === "link" && "p-0",
         variantStyles[variant].base,
