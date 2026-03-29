@@ -8,8 +8,11 @@ import Button from "@/shared/ui/Button";
 import FormLabel from "@/shared/ui/FormLabel";
 import Input from "@/shared/ui/Input";
 
+// Local Imports
+import { useLogout } from "../hooks/useLogout";
+import { useChangePasswordMutation } from "../api/auth.queries";
+
 // Features
-import { useChangePasswordMutation, useLogout } from "@/features/auth";
 
 type ChangePasswordData = {
   oldPassword: string;
@@ -17,7 +20,7 @@ type ChangePasswordData = {
   confirmPassword: string;
 };
 
-const ProfileChangePassword = () => {
+const ChangePassword = () => {
   const [passwordFormData, setPasswordFormData] = useState<ChangePasswordData>({
     oldPassword: "",
     newPassword: "",
@@ -106,4 +109,4 @@ const ProfileChangePassword = () => {
   );
 };
 
-export default ProfileChangePassword;
+export default ChangePassword;

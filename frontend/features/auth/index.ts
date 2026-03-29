@@ -11,9 +11,10 @@ export * from './hooks/usePasswordReset';
 export * from './api/auth.queries';
 
 // Components
+export { default as ProtectedRoute } from './components/ProtectedRoute';
 export { default as ForgotPasswordModal } from './components/ForgotPasswordModal';
 export { default as LoginForm } from './components/LoginForm';
-export { default as ProtectedRoute } from './components/ProtectedRoute';
+export { default as ChangePassword } from './components/ChangePassword';
 
 // Types
 export * from './types/auth.types';

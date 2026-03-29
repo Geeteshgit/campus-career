@@ -1,5 +1,3 @@
-"use client";
-
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "../auth.store";
 import { useLogoutMutation } from "../api/auth.queries";

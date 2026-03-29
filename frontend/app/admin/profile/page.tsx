@@ -8,8 +8,8 @@ import Button from "@/shared/ui/Button";
 import PageHeader from "@/shared/ui/PageHeader";
 
 // Features
-import { ProtectedRoute, useLogout } from "@/features/auth";
-import { ProfileChangePassword, UserDetails } from "@/features/user";
+import { ChangePassword, ProtectedRoute, useLogout } from "@/features/auth";
+import { UserDetails } from "@/features/user";
 
 const AdminProfile = () => {
   const { handleLogout, logoutPending } = useLogout();
@@ -35,7 +35,7 @@ const AdminProfile = () => {
 
           <div className="bg-neutral-50 border border-neutral-300 rounded-xl p-6 flex flex-col gap-6">
             <UserDetails />
-            <ProfileChangePassword />
+            <ChangePassword />
           </div>
         </main>
       </>
