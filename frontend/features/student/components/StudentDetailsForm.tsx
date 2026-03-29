@@ -1,4 +1,10 @@
-"use client";
+// External Libraries
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+// Types
+import type { Student } from "../types/student.types";
+import type { UpdateStudentFormData } from "../schemas/student.schema";
 
 // Shared UI Components
 import FormLabel from "@/shared/ui/FormLabel";
@@ -6,46 +12,50 @@ import Input from "@/shared/ui/Input";
 import TextArea from "@/shared/ui/TextArea";
 import Button from "@/shared/ui/Button";
 import FileUploadField from "@/shared/ui/FileUploadField";
+import ErrorMessage from "@/shared/ui/ErrorMessage";
+
+// Local Imports
+import { updateStudentSchema } from "../schemas/student.schema";
 
 type StudentDetailsFormProps = {
-  enrollmentNumber: string;
-  program: string;
-  year: string;
-  batch: string;
-  specialization: string;
-  cgpa: string;
-  skills: string;
+  data: Student;
   resume: File | null;
   isSaving: boolean;
   isUploadingResume: boolean;
-  onCgpaChange: (value: string) => void;
-  onSkillsChange: (value: string) => void;
   onResumeChange: (file: File | null) => void;
-  onSave: () => void;
+  onSave: (data: UpdateStudentFormData) => Promise<void>;
   onCancel: () => void;
   onUploadResume: () => void;
 };
 
 const StudentDetailsForm = ({
-  enrollmentNumber,
-  program,
-  year,
-  batch,
-  specialization,
-  cgpa,
-  skills,
+  data,
   resume,
   isSaving,
   isUploadingResume,
-  onCgpaChange,
-  onSkillsChange,
   onResumeChange,
   onSave,
   onCancel,
   onUploadResume,
 }: StudentDetailsFormProps) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<UpdateStudentFormData>({
+    resolver: zodResolver(updateStudentSchema),
+    defaultValues: {
+      cgpa: data?.cgpa ?? 0,
+      skills: Array.isArray(data?.skills) ? data.skills.join(", ") : "",
+    },
+  });
+
+  const onSubmit = async (formData: UpdateStudentFormData) => {
+    await onSave(formData);
+  };
+
   return (
-    <div className="flex flex-col gap-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
       <h2 className="text-lg font-semibold text-neutral-800">
         Edit Academic Details
       </h2>
@@ -53,51 +63,46 @@ const StudentDetailsForm = ({
       <div className="flex flex-col md:flex-row gap-6">
         <div className="w-full">
           <FormLabel>Enrollment Number</FormLabel>
-          <Input readOnly value={enrollmentNumber} />
+          <Input readOnly value={data?.enrollmentNumber ?? ""} />
         </div>
 
         <div className="w-full">
           <FormLabel>Program</FormLabel>
-          <Input readOnly value={program} />
+          <Input readOnly value={data?.program ?? ""} />
         </div>
       </div>
 
       <div className="flex flex-col md:flex-row gap-6">
         <div className="w-full">
           <FormLabel>Year</FormLabel>
-          <Input readOnly value={year} />
+          <Input readOnly value={data?.year ?? ""} />
         </div>
         <div className="w-full">
           <FormLabel>Batch</FormLabel>
-          <Input readOnly value={batch} />
+          <Input readOnly value={data?.batch ?? ""} />
         </div>
       </div>
 
       <div className="flex flex-col md:flex-row gap-6">
         <div className="w-full">
           <FormLabel>Specialization</FormLabel>
-          <Input readOnly value={specialization} />
+          <Input readOnly value={data?.specialization ?? ""} />
         </div>
 
         <div className="w-full">
           <FormLabel>CGPA</FormLabel>
           <Input
-            name="cgpa"
             placeholder="CGPA"
-            value={cgpa}
-            onChange={(e) => onCgpaChange(e.target.value)}
+            {...register("cgpa", { valueAsNumber: true })}
           />
+          <ErrorMessage message={errors.cgpa?.message} />
         </div>
       </div>
 
       <div>
         <FormLabel>Skills</FormLabel>
-        <TextArea
-          name="skills"
-          value={skills}
-          placeholder="Add your skills..."
-          onChange={(e) => onSkillsChange(e.target.value)}
-        />
+        <TextArea placeholder="Add your skills..." {...register("skills")} />
+        <ErrorMessage message={errors.skills?.message} />
       </div>
 
       <div className="flex flex-col pt-4 border-t border-neutral-200">
@@ -123,7 +128,11 @@ const StudentDetailsForm = ({
       </div>
 
       <div className="flex items-center gap-3">
-        <Button variant="primary" onClick={onSave} disabled={isSaving}>
+        <Button
+          variant="primary"
+          type="submit"
+          disabled={isSaving || isSubmitting}
+        >
           Save
         </Button>
         <Button
@@ -134,7 +143,7 @@ const StudentDetailsForm = ({
           Cancel
         </Button>
       </div>
-    </div>
+    </form>
   );
 };
 

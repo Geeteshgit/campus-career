@@ -6,6 +6,9 @@ import { useState } from "react";
 // Shared UI Components
 import AsyncState from "@/shared/ui/AsyncState";
 
+// Types
+import type { UpdateStudentFormData } from "../schemas/student.schema";
+
 // Local Imports
 import {
   useMyStudentProfile,
@@ -16,50 +19,41 @@ import StudentDetailsView from "./StudentDetailsView";
 import StudentDetailsForm from "./StudentDetailsForm";
 
 const StudentDetails = () => {
-  const {
-    data: studentData,
-    isPending: studentLoading,
-    isError: studentError,
-    error: studentErrorObj,
-  } = useMyStudentProfile();
-
-  const student = studentData?.student;
-
+  const { student, studentLoading, studentError, studentErrorObj } =
+    useMyStudentProfile();
   const { updateMyStudentProfile, isPending: updateStudentPending } =
     useUpdateMyStudentProfile();
   const { uploadStudentResume, isPending: uploadPending } =
     useUploadStudentResume();
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [cgpa, setCgpa] = useState<string>("");
-  const [skills, setSkills] = useState<string>("");
   const [resume, setResume] = useState<File | null>(null);
 
   const handleEditStart = () => {
-    setCgpa(student?.cgpa !== undefined && student?.cgpa !== null ? String(student.cgpa) : "");
-    setSkills(Array.isArray(student?.skills) ? student.skills.join(", ") : "");
     setResume(null);
     setIsEditing(true);
   };
 
   const handleEditCancel = () => {
-    setCgpa(student?.cgpa !== undefined && student?.cgpa !== null ? String(student.cgpa) : "");
-    setSkills(Array.isArray(student?.skills) ? student.skills.join(", ") : "");
     setResume(null);
     setIsEditing(false);
   };
 
-  const handleAcademicInfoSave = async () => {
+  const handleAcademicInfoSave = async (formData: UpdateStudentFormData) => {
     try {
       const parsedSkills =
-        typeof skills === "string"
-          ? skills
+        typeof formData.skills === "string"
+          ? formData.skills
               .split(",")
               .map((s) => s.trim())
               .filter(Boolean)
           : [];
 
-      const parsedCgpa = cgpa.trim() === "" ? undefined : Number(cgpa);
+      const parsedCgpa = formData.cgpa
+        ? String(formData.cgpa).trim() === ""
+          ? undefined
+          : Number(formData.cgpa)
+        : undefined;
       if (parsedCgpa !== undefined && Number.isNaN(parsedCgpa)) {
         alert("Please enter a valid CGPA.");
         return;
@@ -107,34 +101,17 @@ const StudentDetails = () => {
         {student &&
           (isEditing ? (
             <StudentDetailsForm
-              enrollmentNumber={student.enrollmentNumber ?? ""}
-              program={student.program ?? ""}
-              year={student.year ?? ""}
-              batch={student.batch ?? ""}
-              specialization={student.specialization ?? ""}
-              cgpa={cgpa}
-              skills={skills}
+              data={student}
               resume={resume}
               isSaving={updateStudentPending}
               isUploadingResume={uploadPending}
-              onCgpaChange={setCgpa}
-              onSkillsChange={setSkills}
               onResumeChange={setResume}
               onSave={handleAcademicInfoSave}
               onCancel={handleEditCancel}
               onUploadResume={handleResumeUpload}
             />
           ) : (
-            <StudentDetailsView
-              enrollmentNumber={student.enrollmentNumber ?? ""}
-              program={student.program ?? ""}
-              year={student.year ?? ""}
-              batch={student.batch ?? ""}
-              specialization={student.specialization ?? ""}
-              cgpa={student.cgpa !== undefined && student.cgpa !== null ? String(student.cgpa) : ""}
-              skills={Array.isArray(student.skills) ? student.skills.join(", ") : ""}
-              onEdit={handleEditStart}
-            />
+            <StudentDetailsView data={student} onEdit={handleEditStart} />
           ))}
       </AsyncState>
     </>

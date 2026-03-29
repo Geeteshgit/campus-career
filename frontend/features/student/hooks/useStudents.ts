@@ -13,7 +13,20 @@ import {
 } from "./mutations";
 
 export const useMyStudentProfile = () => {
-  return useMyStudentProfileQuery();
+  const {
+    data: studentData,
+    isPending: studentLoading,
+    isError: studentError,
+    error: studentErrorObj,
+  } = useMyStudentProfileQuery();
+  const student = studentData?.student;
+
+  return {
+    student,
+    studentLoading,
+    studentError,
+    studentErrorObj,
+  };
 };
 
 export const useAllStudents = (params?: PaginationParams) => {

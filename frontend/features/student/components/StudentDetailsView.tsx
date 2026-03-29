@@ -1,27 +1,14 @@
-"use client";
-
 // Shared UI Components
 import Button from "@/shared/ui/Button";
+import { Student } from "../types/student.types";
 
 type StudentDetailsViewProps = {
-  enrollmentNumber: string;
-  program: string;
-  year: string;
-  batch: string;
-  specialization: string;
-  cgpa: string;
-  skills: string;
+  data: Student;
   onEdit: () => void;
 };
 
 const StudentDetailsView = ({
-  enrollmentNumber,
-  program,
-  year,
-  batch,
-  specialization,
-  cgpa,
-  skills,
+  data,
   onEdit,
 }: StudentDetailsViewProps) => {
   return (
@@ -39,24 +26,24 @@ const StudentDetailsView = ({
         <div className="w-full">
           <p className="text-sm text-neutral-500">Enrollment Number</p>
           <p className="text-base text-neutral-900 font-medium">
-            {enrollmentNumber}
+            {data?.enrollmentNumber ?? ""}
           </p>
         </div>
 
         <div className="w-full">
           <p className="text-sm text-neutral-500">Program</p>
-          <p className="text-base text-neutral-900 font-medium">{program}</p>
+          <p className="text-base text-neutral-900 font-medium">{data?.program ?? ""}</p>
         </div>
       </div>
 
       <div className="flex flex-col md:flex-row gap-6">
         <div className="w-full">
           <p className="text-sm text-neutral-500">Year</p>
-          <p className="text-base text-neutral-900 font-medium">{year}</p>
+          <p className="text-base text-neutral-900 font-medium">{data?.year ?? ""}</p>
         </div>
         <div className="w-full">
           <p className="text-sm text-neutral-500">Batch</p>
-          <p className="text-base text-neutral-900 font-medium">{batch}</p>
+          <p className="text-base text-neutral-900 font-medium">{data?.batch ?? ""}</p>
         </div>
       </div>
 
@@ -64,20 +51,20 @@ const StudentDetailsView = ({
         <div className="w-full">
           <p className="text-sm text-neutral-500">Specialization</p>
           <p className="text-base text-neutral-900 font-medium">
-            {specialization}
+            {data?.specialization ?? ""}
           </p>
         </div>
 
         <div className="w-full">
           <p className="text-sm text-neutral-500">CGPA</p>
-          <p className="text-base text-neutral-900 font-medium">{cgpa}</p>
+          <p className="text-base text-neutral-900 font-medium">{data?.cgpa ?? 0}</p>
         </div>
       </div>
 
       <div>
         <p className="text-sm text-neutral-500">Skills</p>
         <p className="text-base text-neutral-900 font-medium whitespace-pre-wrap">
-          {skills}
+          {Array.isArray(data?.skills) ? data.skills.join(", ") : ""}
         </p>
       </div>
     </div>
