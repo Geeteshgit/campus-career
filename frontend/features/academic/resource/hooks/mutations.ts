@@ -3,8 +3,8 @@ import {
   createResource,
   deleteResource,
   updateResource,
-} from "../../api/resources.api";
-import { UpdateResourcePayload } from "../../types/resource.types";
+} from "../api/resources.api";
+import { UpdateResourcePayload } from "../types/resource.types";
 
 export const useCreateResourceMutation = () => {
   const queryClient = useQueryClient();

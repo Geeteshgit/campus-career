@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createProgram, deleteProgram } from "../../api/programs.api";
+import { createProgram, deleteProgram } from "../api/programs.api";
 
 export const useCreateProgramMutation = () => {
   const queryClient = useQueryClient();

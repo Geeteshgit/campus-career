@@ -3,7 +3,7 @@ import { CreateProgramPayload } from "../types/program.types";
 import {
   useCreateProgramMutation,
   useDeleteProgramMutation,
-} from "./mutations/programs";
+} from "./mutations";
 
 export const useProgramManagement = () => {
   const [newProgram, setNewProgram] = useState<string>("");

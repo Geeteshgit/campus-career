@@ -8,7 +8,7 @@ import {
   useCreateResourceMutation,
   useDeleteResourceMutation,
   useUpdateResourceMutation,
-} from "./mutations/resources";
+} from "./mutations";
 
 export const useResourceManagement = () => {
   const [addResourceModalOpen, setAddResourceModalOpen] =

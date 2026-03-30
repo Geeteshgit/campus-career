@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   getResources,
   getStudentResources,
-} from "../../api/resources.api";
+} from "../api/resources.api";
 
 export const useResourcesQuery = () => {
   return useQuery({
