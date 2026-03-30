@@ -11,7 +11,7 @@ import PageHeader from "@/shared/ui/PageHeader";
 
 // Features
 import { ProtectedRoute } from "@/features/auth";
-import { useProgramManagement, usePrograms } from "@/features/academic";
+import { useProgramManagement, usePrograms } from "@/features/academic/program";
 
 const ConfigurationsPage = () => {
   const { programs, programsLoading, programsError, programsErrorObj } =

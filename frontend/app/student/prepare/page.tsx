@@ -9,7 +9,7 @@ import AsyncState from "@/shared/ui/AsyncState";
 
 // Features
 import { ProtectedRoute } from "@/features/auth";
-import { useStudentResources } from "@/features/academic";
+import { useStudentResources } from "@/features/academic/resource";
 import { useMyStudentProfile } from "@/features/student";
 
 const Prepare = () => {

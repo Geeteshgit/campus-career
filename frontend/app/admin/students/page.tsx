@@ -20,6 +20,9 @@ import { useDebounce } from "@/shared/hooks/useDebounce";
 // Shared Types
 import { FieldConfig } from "@/shared/types/modal.types";
 
+// Shared Constants
+import { years } from "@/shared/constants/academics.constants";
+
 // Features
 import { ProtectedRoute } from "@/features/auth";
 import {
@@ -29,7 +32,7 @@ import {
   useStudentManagement,
   ViewStudentModal,
 } from "@/features/student";
-import { usePrograms, years } from "@/features/academic";
+import { usePrograms } from "@/features/academic/program";
 
 const StudentManagement = () => {
   const [selectedProgram, setSelectedProgram] = useState<string>("All");
