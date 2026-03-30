@@ -1,7 +1,6 @@
 "use client";
 
 // React
-import { useState } from "react";
 import Link from "next/link";
 
 // Layout Components
@@ -24,29 +23,20 @@ import {
   StudentPostingsContainer,
   useInactiveJobs,
   useJobFilters,
+  useJobManagement,
   useRecommendedJobs,
 } from "@/features/job";
 
 const Postings = () => {
-  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-  const [jobModalOpen, setJobModalOpen] = useState<boolean>(false);
-
   const userState = useAuthStore((state) => state.user);
   const isAdmin = userState?.role !== "student";
 
-  const {
-    data: userData,
-    isPending: userDataLoading,
-    isError: userDataError,
-    error: userDataErrorObj,
-  } = useMeQuery();
-
+  const { data: userData } = useMeQuery();
   const user = userData?.user;
-  const { data: studentData } = useMyStudentProfile();
-  const student = studentData?.student;
-
+  const { jobModalOpen, setJobModalOpen, selectedJob, handleJobClick } =
+    useJobManagement();
+  const { student } = useMyStudentProfile();
   const { handleApplyToJob } = useApplyToJob();
-
   const {
     inactiveJobs,
     inactiveJobsLoading,
@@ -94,11 +84,6 @@ const Postings = () => {
     } catch (err) {
       console.error("Apply error:", err);
     }
-  };
-
-  const handleJobClick = (job: Job) => {
-    setSelectedJob(job);
-    setJobModalOpen(true);
   };
 
   return (
