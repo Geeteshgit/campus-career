@@ -10,10 +10,11 @@ import AsyncState from "@/shared/ui/AsyncState";
 // Features
 import { ProtectedRoute } from "@/features/auth";
 import { useStudentResources } from "@/features/academic";
+import { useMyStudentProfile } from "@/features/student";
 
 const Prepare = () => {
-
-  const studentProgram = "B.Tech CSE"
+  const { student } = useMyStudentProfile();
+  const studentProgram = student?.program;
 
   const { resources, resourcesLoading, resourcesError, resourcesErrorObj } =
     useStudentResources(studentProgram);
