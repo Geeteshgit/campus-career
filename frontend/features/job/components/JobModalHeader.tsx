@@ -1,10 +1,5 @@
-"use client";
-
 // External Libraries
 import clsx from "clsx";
-
-// Shared UI Components
-import CloseButton from "@/shared/ui/CloseButton";
 
 // Features
 import { Job } from "@/features/job";
@@ -12,13 +7,11 @@ import { Job } from "@/features/job";
 type JobModalHeaderProps = {
   job: Job;
   isActive: boolean;
-  onClose: () => void;
 }
 
 const JobModalHeader = ({
   job,
   isActive,
-  onClose,
 }: JobModalHeaderProps) => {
   const formattedDate = job.createdAt
     ? new Date(job.createdAt).toLocaleDateString("en-GB", {
@@ -29,8 +22,6 @@ const JobModalHeader = ({
     : "N/A";
   return (
     <div className="flex flex-col gap-2 border-b border-neutral-300 pb-4 relative">
-      <CloseButton onClick={onClose} />
-
       <h2 className="text-2xl font-bold text-neutral-900">{job.role}</h2>
       <p className="text-lg font-semibold text-blue-500">{job.company}</p>
       <p className="text-sm text-neutral-600">

@@ -1,20 +1,27 @@
-"use client";
-
-// Features
-import { Job } from "@/features/job";
+// Shared UI Components
+import AsyncState from "@/shared/ui/AsyncState";
 
 // Local Imports
 import AdminJobCard from "./AdminJobCard";
 
+// Features
+import { Job } from "@/features/job";
+
 type AdminPostingsContainerProps = {
   title: string;
   jobs: Job[];
+  jobsLoading: boolean;
+  jobsError: boolean;
+  jobsErrorObj: Error | null;
   onJobClick: (job: Job) => void;
 };
 
 const AdminPostingsContainer = ({
   title,
   jobs,
+  jobsLoading,
+  jobsError,
+  jobsErrorObj,
   onJobClick,
 }: AdminPostingsContainerProps) => {
   return (
@@ -34,15 +41,25 @@ const AdminPostingsContainer = ({
             Deadline
           </p>
         </div>
-        <div className="flex flex-col gap-1">
-          {jobs.map((job) => (
-            <AdminJobCard
-              key={job._id}
-              job={job}
-              onClick={() => onJobClick(job)}
-            />
-          ))}
-        </div>
+        <AsyncState
+          isLoading={jobsLoading}
+          isError={jobsError}
+          error={jobsErrorObj}
+          isEmpty={jobs.length === 0}
+          loadingText="Loading job postings"
+          errorText="Failed to load job postings"
+          emptyText="No job postings found"
+        >
+          <div className="flex flex-col gap-1">
+            {jobs.map((job) => (
+              <AdminJobCard
+                key={job._id}
+                job={job}
+                onClick={() => onJobClick(job)}
+              />
+            ))}
+          </div>
+        </AsyncState>
       </div>
     </section>
   );

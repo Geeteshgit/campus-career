@@ -62,36 +62,45 @@ const StudentDetailsForm = ({
 
       <div className="flex flex-col md:flex-row gap-6">
         <div className="w-full">
-          <FormLabel>Enrollment Number</FormLabel>
-          <Input readOnly value={data?.enrollmentNumber ?? ""} />
-        </div>
-
-        <div className="w-full">
-          <FormLabel>Program</FormLabel>
-          <Input readOnly value={data?.program ?? ""} />
-        </div>
-      </div>
-
-      <div className="flex flex-col md:flex-row gap-6">
-        <div className="w-full">
-          <FormLabel>Year</FormLabel>
-          <Input readOnly value={data?.year ?? ""} />
-        </div>
-        <div className="w-full">
-          <FormLabel>Batch</FormLabel>
-          <Input readOnly value={data?.batch ?? ""} />
-        </div>
-      </div>
-
-      <div className="flex flex-col md:flex-row gap-6">
-        <div className="w-full">
-          <FormLabel>Specialization</FormLabel>
-          <Input readOnly value={data?.specialization ?? ""} />
-        </div>
-
-        <div className="w-full">
-          <FormLabel>CGPA</FormLabel>
+          <FormLabel htmlFor="enrollmentNumber" label="Enrollment Number" />
           <Input
+            id="enrollmentNumber"
+            readOnly
+            value={data?.enrollmentNumber ?? ""}
+          />
+        </div>
+
+        <div className="w-full">
+          <FormLabel htmlFor="program" label="Program" />
+          <Input id="program" readOnly value={data?.program ?? ""} />
+        </div>
+      </div>
+
+      <div className="flex flex-col md:flex-row gap-6">
+        <div className="w-full">
+          <FormLabel htmlFor="year" label="Year" />
+          <Input id="year" readOnly value={data?.year ?? ""} />
+        </div>
+        <div className="w-full">
+          <FormLabel htmlFor="batch" label="Batch" />
+          <Input id="batch" readOnly value={data?.batch ?? ""} />
+        </div>
+      </div>
+
+      <div className="flex flex-col md:flex-row gap-6">
+        <div className="w-full">
+          <FormLabel htmlFor="specialization" label="Specialization" />
+          <Input
+            id="specialization"
+            readOnly
+            value={data?.specialization ?? ""}
+          />
+        </div>
+
+        <div className="w-full">
+          <FormLabel htmlFor="cgpa" label="CGPA" />
+          <Input
+            id="cgpa"
             placeholder="CGPA"
             {...register("cgpa", { valueAsNumber: true })}
           />
@@ -100,16 +109,20 @@ const StudentDetailsForm = ({
       </div>
 
       <div>
-        <FormLabel>Skills</FormLabel>
-        <TextArea placeholder="Add your skills..." {...register("skills")} />
+        <FormLabel htmlFor="skills" label="Skills" />
+        <TextArea
+          id="skills"
+          placeholder="Add your skills..."
+          {...register("skills")}
+        />
         <ErrorMessage message={errors.skills?.message} />
       </div>
 
       <div className="flex flex-col pt-4 border-t border-neutral-200">
-        <FormLabel>Resume Upload</FormLabel>
+        <FormLabel htmlFor="resume" label="Resume Upload" />
         <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-end">
           <div className="flex-1">
-            <FileUploadField file={resume} onChange={onResumeChange} />
+            <FileUploadField id="resume" file={resume} onFileChange={onResumeChange} />
           </div>
           <div>
             <Button

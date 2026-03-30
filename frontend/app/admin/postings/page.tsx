@@ -1,10 +1,8 @@
 "use client";
-
 // Layout Components
 import Navbar from "@/components/Navbar";
 
 // Shared UI Components
-import AsyncState from "@/shared/ui/AsyncState";
 import FilterButtons from "@/shared/ui/FilterButtons";
 import FormModal from "@/shared/ui/FormModal";
 import PageHeader from "@/shared/ui/PageHeader";
@@ -28,7 +26,7 @@ const Postings = () => {
   const user = useAuthStore((state) => state.user);
   const isAdmin = user?.role !== "student";
 
-  const { jobs, jobsLoading, jobsError, jobsErrorObject } = useAllJobs();
+  const { jobs, jobsLoading, jobsError, jobsErrorObj } = useAllJobs();
 
   const {
     handleCreateJob,
@@ -89,30 +87,22 @@ const Postings = () => {
               placeholder="Search by company, role, or location..."
             />
           </div>
-
-          <AsyncState
-            isLoading={jobsLoading}
-            isError={jobsError}
-            error={jobsErrorObject}
-            isEmpty={jobs.length === 0}
-            loadingText="Loading job postings"
-            errorText="Failed to load job postings"
-            emptyText="No job postings found"
-          >
-            <>
-              <AdminPostingsContainer
-                title="Active Postings"
-                jobs={activeJobs}
-                onJobClick={handleJobClick}
-              />
-
-              <AdminPostingsContainer
-                title="Inactive Postings"
-                jobs={inactiveJobs}
-                onJobClick={handleJobClick}
-              />
-            </>
-          </AsyncState>
+          <AdminPostingsContainer
+            title="Active Postings"
+            jobs={activeJobs}
+            jobsLoading={jobsLoading}
+            jobsError={jobsError}
+            jobsErrorObj={jobsErrorObj}
+            onJobClick={handleJobClick}
+          />
+          <AdminPostingsContainer
+            title="Inactive Postings"
+            jobs={inactiveJobs}
+            jobsLoading={jobsLoading}
+            jobsError={jobsError}
+            jobsErrorObj={jobsErrorObj}
+            onJobClick={handleJobClick}
+          />
         </main>
 
         {jobModalOpen && selectedJob && (

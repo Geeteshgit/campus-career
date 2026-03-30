@@ -1,7 +1,10 @@
 "use client";
 
 // Features
-import { Job } from "@/features/job";
+import type { Job } from "@/features/job";
+
+// Shared UI Components
+import Modal from "@/shared/ui/Modal";
 
 // Local Imports
 import JobModalDetails from "./JobModalDetails";
@@ -16,7 +19,7 @@ type JobModalProps = {
   onEdit?: (job: Job) => void;
   onApply?: (job: Job) => void;
   isPending?: boolean;
-}
+};
 
 const JobModal = ({
   job,
@@ -27,9 +30,7 @@ const JobModal = ({
   onApply,
   isPending = false,
 }: JobModalProps) => {
-
   if (!job) return null;
-  
   const handleEditClick = () => {
     if (onEdit) onEdit(job);
   };
@@ -39,31 +40,26 @@ const JobModal = ({
   };
 
   return (
-    <>
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
-        onClick={() => onOpenChange(false)}
-      >
-        <div
-          onClick={(e) => e.stopPropagation()}
-          className="bg-white rounded-xl shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 flex flex-col gap-6 relative"
-        >
-          <JobModalHeader job={job} isActive={job.status === "Active"} onClose={() => onOpenChange(false)} />
+    <Modal open={!!job} onOpenChange={onOpenChange}>
+      <div className="flex flex-col gap-6">
+        <JobModalHeader
+          job={job}
+          isActive={job.status === "Active"}
+        />
 
-          <JobModalDetails job={job} />
+        <JobModalDetails job={job} />
 
-          <JobModalFooter
-            job={job}
-            isActive={job.status === "Active"}
-            isAdmin={isAdmin}
-            onEdit={handleEditClick}
-            onDelete={handleDeleteClick}
-            onApply={onApply}
-            isPending={isPending}
-          />
-        </div>
+        <JobModalFooter
+          job={job}
+          isActive={job.status === "Active"}
+          isAdmin={isAdmin}
+          onEdit={handleEditClick}
+          onDelete={handleDeleteClick}
+          onApply={onApply}
+          isPending={isPending}
+        />
       </div>
-    </>
+    </Modal>
   );
 };
 
