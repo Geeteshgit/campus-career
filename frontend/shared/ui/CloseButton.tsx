@@ -16,7 +16,7 @@ const CloseButton = ({
       onClick={onClick}
       aria-label="Close"
       className={clsx(
-        "absolute top-4 right-4 text-neutral-600 hover:text-neutral-900 transition cursor-pointer",
+        "absolute top-4 right-4 text-neutral-600 hover:text-neutral-900 transition cursor-pointer z-1",
         className,
       )}
     >
