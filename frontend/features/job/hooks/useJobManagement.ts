@@ -1,10 +1,6 @@
 import { useState } from "react";
-import {
-  Job,
-  CreateJobPayload,
-  JobFormData,
-  UpdateJobPayload,
-} from "../types/job.types";
+import type { Job } from "../types/job.types";
+import type { JobFormData, JobPayload } from "../schemas/job.schema";
 import {
   useCreateJobMutation,
   useDeleteJobMutation,
@@ -21,13 +17,17 @@ export const useJobManagement = () => {
   const { updateJob, isPending: updatePending } = useUpdateJobMutation();
   const { deleteJob, isPending: deletePending } = useDeleteJobMutation();
 
+  const parseRequirements = (requirements: string): string[] =>
+    requirements
+      .split("\n")
+      .map((r) => r.trim())
+      .filter(Boolean);
+
   const handleCreateJob = async (formData: JobFormData) => {
     try {
-      const jobData: CreateJobPayload = {
+      const jobData: JobPayload = {
         ...formData,
-        requirements: formData.requirements
-          ? formData.requirements.split("\n")
-          : [],
+        requirements: parseRequirements(formData.requirements),
       };
 
       await createJob(jobData);
@@ -41,9 +41,9 @@ export const useJobManagement = () => {
     if (!selectedJob) return;
 
     try {
-      const finalData: UpdateJobPayload = {
+      const finalData: JobPayload = {
         ...updatedData,
-        requirements: updatedData.requirements?.split("\n") || [],
+        requirements: parseRequirements(updatedData.requirements),
       };
 
       await updateJob({ id: selectedJob._id, payload: finalData });

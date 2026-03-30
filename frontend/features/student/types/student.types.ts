@@ -17,7 +17,3 @@ export interface Student {
 export type PopulatedStudent = Omit<Student, "userId"> & {
   userId: User;
 };
-
-export type CreateStudentPayload = Omit<Student, "_id" | "userId" | "createdAt" | "updatedAt">;
-
-export type UpdateStudentPayload = Partial<CreateStudentPayload>;

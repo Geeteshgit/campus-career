@@ -40,7 +40,7 @@ const JobModal = ({
   };
 
   return (
-    <Modal open={!!job} onOpenChange={onOpenChange}>
+    <Modal open={!!job} onOpenChange={onOpenChange} className="max-w-2xl!">
       <div className="flex flex-col gap-6">
         <JobModalHeader
           job={job}

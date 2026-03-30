@@ -1,9 +1,6 @@
 import { useState } from "react";
-import {
-  CreateStudentPayload,
-  PopulatedStudent,
-  UpdateStudentPayload,
-} from "../types/student.types";
+import type { PopulatedStudent } from "../types/student.types";
+import type { StudentFormData } from "../schemas/student.schema";
 import {
   useBulkCreateStudentsMutation,
   useCreateStudentMutation,
@@ -28,7 +25,7 @@ export const useStudentManagement = () => {
   const { bulkCreateStudents, isPending: bulkUploadPending } =
     useBulkCreateStudentsMutation();
 
-  const handleCreateStudent = async (payload: CreateStudentPayload) => {
+  const handleCreateStudent = async (payload: StudentFormData) => {
     try {
       await createStudent(payload);
       setAddStudentModalOpen(false);
@@ -37,7 +34,7 @@ export const useStudentManagement = () => {
     }
   };
 
-  const handleUpdateStudent = async (payload: UpdateStudentPayload) => {
+  const handleUpdateStudent = async (payload: StudentFormData) => {
     if (!selectedStudent) return;
 
     try {

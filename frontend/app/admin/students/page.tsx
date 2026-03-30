@@ -8,7 +8,6 @@ import Navbar from "@/components/Navbar";
 
 // Shared UI Components
 import FilterButtons from "@/shared/ui/FilterButtons";
-import FormModal from "@/shared/ui/FormModal";
 import PageHeader from "@/shared/ui/PageHeader";
 import SearchBar from "@/shared/ui/SearchBar";
 import Button from "@/shared/ui/Button";
@@ -17,20 +16,17 @@ import AsyncState from "@/shared/ui/AsyncState";
 // Shared Hooks
 import { useDebounce } from "@/shared/hooks/useDebounce";
 
-// Shared Types
-import { FieldConfig } from "@/shared/types/modal.types";
-
 // Shared Constants
 import { years } from "@/shared/constants/academics.constants";
 
 // Features
 import { ProtectedRoute } from "@/features/auth";
 import {
-  CreateStudentPayload,
   StudentCard,
   useStudents,
   useStudentManagement,
   ViewStudentModal,
+  StudentFormModal,
 } from "@/features/student";
 import { usePrograms } from "@/features/academic/program";
 
@@ -75,40 +71,6 @@ const StudentManagement = () => {
     openViewStudentModal,
     openEditStudentModal,
   } = useStudentManagement();
-
-  const studentFields: FieldConfig[] = [
-    { name: "name", placeholder: "Student Name", type: "text" },
-    {
-      name: "enrollmentNumber",
-      placeholder: "Enrollment Number",
-      type: "text",
-    },
-    { name: "email", placeholder: "Email", type: "email" },
-    {
-      name: "program",
-      placeholder: "Select Program",
-      type: "select",
-      options: programNames,
-    },
-    {
-      name: "year",
-      placeholder: "Select Year",
-      type: "select",
-      options: years,
-    },
-    {
-      name: "batch",
-      placeholder: "Batch",
-      type: "text",
-    },
-    {
-      name: "specialization",
-      placeholder: "Specialization",
-      type: "text",
-    },
-    { name: "phone", placeholder: "Phone Number", type: "text" },
-    { name: "cgpa", placeholder: "CGPA", type: "number" },
-  ];
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -236,32 +198,41 @@ const StudentManagement = () => {
         </main>
 
         {addStudentModalOpen && (
-          <FormModal
-            title="Add New Student"
-            fields={studentFields}
-            onClose={() => setAddStudentModalOpen(false)}
-            onSave={(values) =>
-              handleCreateStudent(values as CreateStudentPayload)
-            }
+          <StudentFormModal 
+          mode="create" 
+          defaultValues={{
+            name: "",
+            enrollmentNumber: "",
+            email: "",
+            phone: "",
+            program: "",
+            year: "",
+            batch: "",
+            specialization: "",
+            cgpa: 1,
+          }}
+          open={addStudentModalOpen}
+          onOpenChange={setAddStudentModalOpen}
+          onSubmit={handleCreateStudent} 
           />
         )}
         {editModalOpen && selectedStudent && (
-          <FormModal
-            title="Edit Student"
-            fields={studentFields}
-            initialValues={{
+          <StudentFormModal
+            mode="edit"
+            defaultValues={{
               name: selectedStudent.userId.name,
+              enrollmentNumber: selectedStudent.enrollmentNumber,
               email: selectedStudent.userId.email,
               phone: selectedStudent.userId.phone,
-              enrollmentNumber: selectedStudent.enrollmentNumber,
               program: selectedStudent.program,
               year: selectedStudent.year,
               batch: selectedStudent.batch,
               specialization: selectedStudent.specialization,
               cgpa: selectedStudent.cgpa,
             }}
-            onClose={() => setEditModalOpen(false)}
-            onSave={handleUpdateStudent}
+            open={editModalOpen}
+            onOpenChange={setEditModalOpen}
+            onSubmit={handleUpdateStudent}
           />
         )}
         {viewStudentModalOpen && selectedStudent && (

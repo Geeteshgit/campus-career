@@ -9,7 +9,6 @@ import Navbar from "@/components/Navbar";
 // Shared UI Components
 import AsyncState from "@/shared/ui/AsyncState";
 import FilterButtons from "@/shared/ui/FilterButtons";
-import FormModal from "@/shared/ui/FormModal";
 import PageHeader from "@/shared/ui/PageHeader";
 import SearchBar from "@/shared/ui/SearchBar";
 
@@ -18,9 +17,8 @@ import { ProtectedRoute, useAuthStore } from "@/features/auth";
 import { JobApplicationsCard } from "@/features/application";
 import { downloadApplicantsCSV } from "@/features/application/utils/downloadApplicantsCSV";
 import {
-  editJobFieldsConfig,
   Job,
-  JobFormData,
+  JobFormModal,
   JobModal,
   useAllJobs,
   useJobManagement,
@@ -33,7 +31,6 @@ const ApplicationsAdminPage = () => {
   const { jobs, jobsLoading, jobsError, jobsErrorObj } = useAllJobs();
   const {
     handleUpdateJob,
-    updatePending,
     handleDeleteJob,
     deletePending,
     handleEditJob,
@@ -50,10 +47,6 @@ const ApplicationsAdminPage = () => {
   );
 
   const [searchTerm, setSearchTerm] = useState<string>("");
-
-  const handleSaveEdit = (data: Record<string, unknown>) => {
-    return handleUpdateJob(data as JobFormData);
-  };
 
   const filteredByType: Job[] =
     filter === "All" ? jobs : jobs.filter((job) => job.type === filter);
@@ -126,17 +119,24 @@ const ApplicationsAdminPage = () => {
         )}
 
         {editJobModalOpen && selectedJob && (
-          <FormModal
-            title="Edit Job Posting"
-            fields={editJobFieldsConfig}
-            initialValues={{
-              ...selectedJob,
+          <JobFormModal
+            mode="edit"
+            defaultValues={{
+              company: selectedJob.company,
+              role: selectedJob.role,
+              location: selectedJob.location,
+              package: selectedJob.package,
               deadline: selectedJob.deadline?.split("T")[0],
+              positions: selectedJob.positions,
+              type: selectedJob.type,
+              description: selectedJob.description,
               requirements: selectedJob.requirements.join("\n"),
+              eligibility: selectedJob.eligibility,
+              status: "Active",
             }}
-            onClose={() => setEditJobModalOpen(false)}
-            onSave={handleSaveEdit}
-            isPending={updatePending}
+            open={editJobModalOpen}
+            onOpenChange={setEditJobModalOpen}
+            onSubmit={handleUpdateJob}
           />
         )}
       </>

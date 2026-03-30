@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 // Types
 import type { Student } from "../types/student.types";
-import type { UpdateStudentFormData } from "../schemas/student.schema";
+import type { StudentSelfUpdateFormData } from "../schemas/student.schema";
 
 // Shared UI Components
 import FormLabel from "@/shared/ui/FormLabel";
@@ -15,7 +15,7 @@ import FileUploadField from "@/shared/ui/FileUploadField";
 import ErrorMessage from "@/shared/ui/ErrorMessage";
 
 // Local Imports
-import { updateStudentSchema } from "../schemas/student.schema";
+import { studentSelfUpdateSchema } from "../schemas/student.schema";
 
 type StudentDetailsFormProps = {
   data: Student;
@@ -23,7 +23,7 @@ type StudentDetailsFormProps = {
   isSaving: boolean;
   isUploadingResume: boolean;
   onResumeChange: (file: File | null) => void;
-  onSave: (data: UpdateStudentFormData) => Promise<void>;
+  onSave: (data: StudentSelfUpdateFormData) => Promise<void>;
   onCancel: () => void;
   onUploadResume: () => void;
 };
@@ -42,15 +42,15 @@ const StudentDetailsForm = ({
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<UpdateStudentFormData>({
-    resolver: zodResolver(updateStudentSchema),
+  } = useForm<StudentSelfUpdateFormData>({
+    resolver: zodResolver(studentSelfUpdateSchema),
     defaultValues: {
       cgpa: data?.cgpa ?? 0,
       skills: Array.isArray(data?.skills) ? data.skills.join(", ") : "",
     },
   });
 
-  const onSubmit = async (formData: UpdateStudentFormData) => {
+  const onSubmit = async (formData: StudentSelfUpdateFormData) => {
     await onSave(formData);
   };
 

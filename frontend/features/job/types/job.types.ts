@@ -18,14 +18,6 @@ export interface Job {
   updatedAt: string;
 }
 
-export type CreateJobPayload = Omit<Job, "_id" | "createdAt" | "updatedAt">;
-
-export type UpdateJobPayload = Partial<CreateJobPayload>;
-
-export type JobFormData = Omit<CreateJobPayload, "requirements"> & {
-  requirements: string;
-};
-
 export type RecommendedJobsStudentPayload = Omit<
   Student,
   "_id" | "userId" | "enrollmentNumber" | "batch" | "createdAt" | "updatedAt"

@@ -7,9 +7,7 @@ export * from './hooks/useJobFilters';
 export { default as JobModal } from './components/JobModal';
 export { default as AdminPostingsContainer } from './components/AdminPostingsContainer';
 export { default as StudentPostingsContainer } from './components/StudentPostingsContainer';
+export { default as JobFormModal } from './components/JobFormModal';
 
 // Types
 export * from './types/job.types';
-
-// Constants
-export * from './constants/job.constants';

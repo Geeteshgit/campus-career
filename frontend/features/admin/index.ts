@@ -9,6 +9,3 @@ export { default as AdminFormModal } from './components/AdminFormModal';
 
 // Types
 export * from './types/admin.types';
-
-// Constants
-export * from './constants/admin.constants';

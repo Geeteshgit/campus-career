@@ -7,7 +7,7 @@ import { useState } from "react";
 import AsyncState from "@/shared/ui/AsyncState";
 
 // Types
-import type { UpdateStudentFormData } from "../schemas/student.schema";
+import type { StudentSelfUpdateFormData } from "../schemas/student.schema";
 
 // Local Imports
 import {
@@ -39,7 +39,7 @@ const StudentDetails = () => {
     setIsEditing(false);
   };
 
-  const handleAcademicInfoSave = async (formData: UpdateStudentFormData) => {
+  const handleAcademicInfoSave = async (formData: StudentSelfUpdateFormData) => {
     try {
       const parsedSkills =
         typeof formData.skills === "string"
