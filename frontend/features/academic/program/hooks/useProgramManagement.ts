@@ -1,33 +1,27 @@
-import { useState } from "react";
-import { CreateProgramPayload } from "../types/program.types";
+import { CreateProgramPayload, Program } from "../types/program.types";
 import {
   useCreateProgramMutation,
   useDeleteProgramMutation,
 } from "./mutations";
 
 export const useProgramManagement = () => {
-  const [newProgram, setNewProgram] = useState<string>("");
-
   const { createProgram, isPending: createPending } =
     useCreateProgramMutation();
   const { deleteProgram, isPending: deletePending } =
     useDeleteProgramMutation();
 
   const handleCreateProgram = async (payload: CreateProgramPayload) => {
-    if (!newProgram.trim()) return;
-
     try {
       await createProgram(payload);
-      setNewProgram("");
     } catch (err) {
       console.error("Failed to add program:", err);
       alert("Could not add program");
     }
   };
 
-  const handleDeleteProgram = async (programId: string) => {
+  const handleDeleteProgram = async (program: Program) => {
     try {
-      await deleteProgram(programId);
+      await deleteProgram(program._id);
     } catch (err) {
       console.error("Failed to delete program:", err);
       alert("Could not delete program");
@@ -40,8 +34,5 @@ export const useProgramManagement = () => {
 
     createPending,
     deletePending,
-
-    newProgram,
-    setNewProgram,
   };
 };
