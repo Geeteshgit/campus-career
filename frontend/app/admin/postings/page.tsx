@@ -30,7 +30,7 @@ const Postings = () => {
   const {
     inactiveJobs,
     inactiveJobsLoading,
-    inactiveJobsError,
+    inactiveJobsError, 
     inactiveJobsErrorObj,
   } = useInactiveJobs();
 
