@@ -102,7 +102,7 @@ const PrepareAdminPage = () => {
         </AsyncState>
 
         <div className="flex flex-col gap-2">
-          <div className={"grid grid-cols-4 gap-3 rounded-xl bg-blue-50 p-4"}>
+          <div className="grid grid-cols-4 gap-3 rounded-xl bg-blue-50 p-4">
             <p className="text-sm font-semibold text-neutral-600">Title</p>
             <p className="col-span-2 text-sm font-semibold text-neutral-600">URL</p>
             <p className="text-sm font-semibold text-neutral-600 text-center">
