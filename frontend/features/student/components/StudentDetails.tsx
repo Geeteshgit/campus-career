@@ -2,6 +2,7 @@
 
 // React
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 // Shared UI Components
 import AsyncState from "@/shared/ui/AsyncState";
@@ -57,7 +58,7 @@ const StudentDetails = () => {
           : Number(formData.cgpa)
         : undefined;
       if (parsedCgpa !== undefined && Number.isNaN(parsedCgpa)) {
-        alert("Please enter a valid CGPA.");
+        toast.error("Please enter a valid CGPA.");
         return;
       }
 
@@ -65,27 +66,27 @@ const StudentDetails = () => {
         cgpa: parsedCgpa,
         skills: parsedSkills,
       });
-      alert("Academic details updated!");
       setIsEditing(false);
+      toast.success("Profile updated successfully");
     } catch (err) {
       console.error(err);
-      alert("Failed to update academic details");
+      toast.error("Failed to update profile");
     }
   };
 
   const handleResumeUpload = async () => {
     if (!resume) {
-      alert("Please select a resume PDF to upload first.");
+      toast.error("Please select a resume PDF to upload first.");
       return;
     }
 
     try {
       await uploadStudentResume(resume);
-      alert("Resume uploaded and skills updated successfully!");
+      toast.success("Resume uploaded successfully");
       setResume(null);
     } catch (err) {
       console.error(err);
-      alert("Failed to upload resume and extract skills");
+      toast.error("Failed to upload resume");
     }
   };
 
@@ -96,7 +97,6 @@ const StudentDetails = () => {
         isError={studentError}
         error={studentErrorObj}
         isEmpty={!student}
-        loadingText="Loading student details"
         errorText="Failed to load student details"
         emptyText="No student details found"
       >

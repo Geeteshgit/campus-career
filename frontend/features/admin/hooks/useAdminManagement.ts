@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import toast from "react-hot-toast";
 import {
   Admin,
   CreateAdminPayload,
@@ -28,8 +29,10 @@ export const useAdminManagement = (role: string) => {
 
       await createAdmin(payload);
       setAddAdminModalOpen(false);
+      toast.success("Admin created successfully");
     } catch (err) {
       console.error("Failed to add admin:", err);
+      toast.error("Failed to create admin");
     }
   };
 
@@ -39,16 +42,20 @@ export const useAdminManagement = (role: string) => {
     try {
       await updateAdmin({ id: selectedAdmin._id, payload: data });
       setEditAdminModalOpen(false);
+      toast.success("Admin updated successfully");
     } catch (err) {
       console.error("Failed to update admin:", err);
+      toast.error("Failed to update admin");
     }
   };
 
   const handleDeleteAdmin = async (admin: Admin) => {
     try {
       await deleteAdmin(admin._id);
+      toast.success("Admin deleted successfully");
     } catch (err) {
       console.error("Failed to delete admin:", err);
+      toast.error("Failed to delete admin");
     }
   };
 

@@ -1,5 +1,8 @@
 "use client";
 
+// External Libraries
+import { toast } from "react-hot-toast";
+
 // Layout Components
 import Navbar from "@/components/Navbar";
 
@@ -21,8 +24,10 @@ const StudentProfile = () => {
     try {
       await handleLogout();
       router.push("/login");
+      toast.success("Logged out successfully");
     } catch (error) {
       console.error("Logout failed", error);
+      toast.error("Failed to logout");
     }
   };
 

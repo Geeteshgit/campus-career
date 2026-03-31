@@ -5,8 +5,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 // External Libraries
+import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
 
 // Lib
 import { connectSocket, initSocket } from "@/lib/socket";
@@ -49,7 +51,7 @@ const LoginForm = ({ onForgotPasswordClick }: LoginFormProps) => {
       const user = await handleLogin(data);
       initSocket();
       connectSocket();
-      
+
       if (user.role === "student") {
         router.push("/student/postings");
       } else if (user.role === "admin" || user.role === "super_admin") {
@@ -58,7 +60,13 @@ const LoginForm = ({ onForgotPasswordClick }: LoginFormProps) => {
         router.push("/login");
       }
     } catch (error) {
-      console.error("Login failed:", error);
+      console.log("Login failed", error);
+      if (isAxiosError(error)) {
+        const message = error.response?.data?.message || error.message;
+        toast.error(message);
+      } else {
+        toast.error("Login failed");
+      }
     }
   };
 
@@ -88,7 +96,11 @@ const LoginForm = ({ onForgotPasswordClick }: LoginFormProps) => {
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           <div>
             <FormLabel htmlFor="email" label="Email" />
-            <Input id="email" placeholder="Enter your email" {...register("email")} />
+            <Input
+              id="email"
+              placeholder="Enter your email"
+              {...register("email")}
+            />
             <ErrorMessage message={errors.email?.message} />
           </div>
 

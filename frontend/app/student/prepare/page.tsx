@@ -36,7 +36,6 @@ const Prepare = () => {
             isError={resourcesError}
             error={resourcesErrorObj}
             isEmpty={resources.length === 0}
-            loadingText="Loading resources..."
             errorText="Failed to load resources"
             emptyText={`No resources found for ${studentProgram}.`}
           >

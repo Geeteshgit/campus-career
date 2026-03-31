@@ -120,7 +120,6 @@ const StudentManagement = () => {
             isError={programsError}
             error={programsErrorObj}
             isEmpty={programs.length === 0}
-            loadingText="Loading programs..."
             errorText="Failed to load programs"
             emptyText="No programs found"
           >
@@ -174,7 +173,6 @@ const StudentManagement = () => {
               isError={studentsError}
               error={studentsErrorObj}
               isEmpty={students.length === 0}
-              loadingText="Loading students..."
               errorText="Failed to load students"
               emptyText="No students found"
             >

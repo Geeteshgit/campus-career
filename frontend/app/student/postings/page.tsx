@@ -78,8 +78,6 @@ const Postings = () => {
         cgpa: student?.cgpa ?? 0,
       });
 
-      alert("Applied successfully!");
-
       setJobModalOpen(false);
     } catch (err) {
       console.error("Apply error:", err);
@@ -120,7 +118,6 @@ const Postings = () => {
           isError={recommendedJobsError}
           error={recommendedJobsErrorObj}
           isEmpty={recommendedJobs.length === 0}
-          loadingText="Loading recommended job postings"
           errorText="Failed to load recommended job postings"
           emptyText="No recommended job postings found"
         >
@@ -135,7 +132,6 @@ const Postings = () => {
           isError={inactiveJobsError}
           error={inactiveJobsErrorObj}
           isEmpty={inactiveJobs.length === 0}
-          loadingText="Loading job postings"
           errorText="Failed to load job postings"
           emptyText="No job postings found"
         >

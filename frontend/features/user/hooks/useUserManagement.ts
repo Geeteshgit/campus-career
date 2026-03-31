@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { useUpdateMyAccountMutation } from "./mutations";
 import { UpdateUserPayload } from "../types/user.types";
 
@@ -16,8 +17,10 @@ export const useUpdateMyAccount = () => {
     try {
       await updateMyAccount(payload);
       setIsEditing(false);
+      toast.success("Account updated successfully");
     } catch (err) {
       console.error("Failed to update account details", err);
+      toast.error("Failed to update account");
     }
   };
   return {

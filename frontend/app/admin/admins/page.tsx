@@ -94,7 +94,6 @@ const AdminManagement = () => {
             isError={adminsError}
             error={adminsErrorObj}
             isEmpty={filteredAdmins.length === 0}
-            loadingText="Loading admins"
             errorText="Failed to load admins"
             emptyText="No admins found"
           >

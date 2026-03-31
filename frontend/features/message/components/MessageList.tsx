@@ -56,7 +56,6 @@ const MessageList = ({
         isError={messagesError}
         error={messagesErrorObj}
         isEmpty={!messages?.length}
-        loadingText="Loading messages..."
         errorText="Failed to load messages"
         emptyText="No messages yet."
       >

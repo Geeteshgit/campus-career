@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import {
   CreateResourcePayload,
   Resource,
@@ -30,8 +31,10 @@ export const useResourceManagement = () => {
     try {
       await createResource(data);
       setAddResourceModalOpen(false);
+      toast.success("Resource created successfully");
     } catch (err) {
       console.error("Create resource error:", err);
+      toast.error("Failed to create resource");
     }
   };
 
@@ -46,18 +49,20 @@ export const useResourceManagement = () => {
 
       setselectedResource(null);
       setEditResourceModalOpen(false);
+      toast.success("Resource updated successfully");
     } catch (err) {
       console.error("Update resource error:", err);
+      toast.error("Failed to update resource");
     }
   };
 
   const handleDeleteResource = async (resource: Resource) => {
-    if (!confirm("Are you sure you want to delete this resource?")) return;
-
     try {
       await deleteResource(resource._id);
+      toast.success("Resource deleted successfully");
     } catch (err) {
       console.error("Delete resource error:", err);
+      toast.error("Failed to delete resource");
     }
   };
 

@@ -18,6 +18,7 @@ import ResetPasswordStep from "./ResetPasswordStep";
 import SendOtpStep from "./SendOtpStep";
 import VerifyOtpStep from "./VerifyOtpStep";
 import { forgotPasswordSchema } from "../schemas/forgot-password.schema";
+import toast from "react-hot-toast";
 
 type ForgotPasswordModalProps = {
   isOpen: boolean;
@@ -91,8 +92,8 @@ const ForgotPasswordModal = ({ isOpen, onClose }: ForgotPasswordModalProps) => {
           {step === 3 && (
             <ResetPasswordStep
               onSuccess={() => {
-                setMessage("Password reset successful");
-                setTimeout(handleClose, 1500);
+                toast.success("Password reset successfully");
+                handleClose();
               }}
               onError={handleError}
             />

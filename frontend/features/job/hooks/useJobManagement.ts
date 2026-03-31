@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import type { Job } from "../types/job.types";
 import type { JobFormData, JobPayload } from "../schemas/job.schema";
 import {
@@ -32,8 +33,10 @@ export const useJobManagement = () => {
 
       await createJob(jobData);
       setAddJobModalOpen(false);
+      toast.success("Job created successfully");
     } catch (err) {
       console.error("Job create error:", err);
+      toast.error("Failed to create job");
     }
   };
 
@@ -51,8 +54,10 @@ export const useJobManagement = () => {
       setEditJobModalOpen(false);
       setJobModalOpen(false);
       setSelectedJob(null);
+      toast.success("Job updated successfully");
     } catch (err) {
       console.error("Job update error:", err);
+      toast.error("Failed to update job");
     }
   };
 
@@ -61,8 +66,10 @@ export const useJobManagement = () => {
       await deleteJob(job._id);
       setJobModalOpen(false);
       setSelectedJob(null);
+      toast.success("Job deleted successfully");
     } catch (err) {
       console.error("Job delete error:", err);
+      toast.error("Failed to delete job");
     }
   };
 

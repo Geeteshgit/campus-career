@@ -46,7 +46,6 @@ const AdminPostingsContainer = ({
           isError={jobsError}
           error={jobsErrorObj}
           isEmpty={jobs.length === 0}
-          loadingText="Loading job postings"
           errorText="Failed to load job postings"
           emptyText="No job postings found"
         >

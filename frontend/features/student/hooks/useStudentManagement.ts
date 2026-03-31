@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import type { PopulatedStudent } from "../types/student.types";
 import type { StudentFormData } from "../schemas/student.schema";
 import {
@@ -29,8 +30,10 @@ export const useStudentManagement = () => {
     try {
       await createStudent(payload);
       setAddStudentModalOpen(false);
-    } catch (err) {
-      console.error("Failed to add student", err);
+      toast.success("Student created successfully");
+    } catch (error) {
+      console.error("Failed to create student", error);
+      toast.error("Failed to create student");
     }
   };
 
@@ -40,28 +43,30 @@ export const useStudentManagement = () => {
     try {
       await updateStudent({ id: selectedStudent._id, payload });
       setEditModalOpen(false);
+      toast.success("Student updated successfully");
     } catch (err) {
       console.error("Failed to update student", err);
-      alert("Failed to update student");
+      toast.error("Failed to update student");
     }
   };
 
   const handleDeleteStudent = async (student: PopulatedStudent) => {
     try {
       await deleteStudent(student._id);
+      toast.success("Student deleted successfully");
     } catch (err) {
       console.error("Failed to delete student", err);
-      alert("Failed to delete student");
+      toast.error("Failed to delete student");
     }
   };
 
   const handleCreateBulkStudents = async (file: File) => {
     try {
       await bulkCreateStudents(file);
-      alert("Students uploaded successfully");
+      toast.success("Students created successfully");
     } catch (err) {
       console.error("Bulk upload failed:", err);
-      alert("Upload failed");
+      toast.error("Failed to create students");
     }
   };
 

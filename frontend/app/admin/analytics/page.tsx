@@ -38,7 +38,6 @@ const Analytics = () => {
             isError={analyticsError}
             error={analyticsErrorObj}
             isEmpty={false}
-            loadingText="Loading analytics"
             errorText="Failed to load analytics"
             emptyText="No analytics found"
           >

@@ -89,7 +89,6 @@ const ApplicationsAdminPage = () => {
             isError={jobsError}
             error={jobsErrorObj}
             isEmpty={filteredJobs.length === 0}
-            loadingText="Loading job postings"
             errorText="Failed to load job postings"
             emptyText="No job postings found"
           >

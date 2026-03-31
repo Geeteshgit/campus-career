@@ -3,6 +3,7 @@
 // External Libraries
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
 
 // Shared UI Components
 import Button from "@/shared/ui/Button";
@@ -42,10 +43,10 @@ const ChangePassword = () => {
         newPassword: data.newPassword,
       });
       await handleLogout();
-      alert("Password updated successfully!");
+      toast.success("Password changed successfully");
     } catch (err) {
       console.error(err);
-      alert("Failed to update password");
+      toast.error("Failed to change password");
     }
   };
 

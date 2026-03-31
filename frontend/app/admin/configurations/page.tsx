@@ -80,7 +80,6 @@ const ConfigurationsPage = () => {
               isError={programsError}
               error={programsErrorObj}
               isEmpty={programs.length === 0}
-              loadingText="Loading programs..."
               errorText="Failed to load programs"
               emptyText="No programs found"
             >

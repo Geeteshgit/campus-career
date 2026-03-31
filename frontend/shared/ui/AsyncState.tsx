@@ -1,5 +1,6 @@
 // React
 import React from "react";
+import AsyncLoader from "./AsyncLoader";
 
 type AsyncStateProps = {
   isLoading: boolean;
@@ -17,7 +18,6 @@ const AsyncState = ({
   isError,
   error,
   isEmpty = false,
-  loadingText = "Loading...",
   errorText = "Failed to load data",
   emptyText = "No data found",
   children,
@@ -27,7 +27,7 @@ const AsyncState = ({
   }
 
   if (isLoading) {
-    return <p className="text-center py-10 text-neutral-500">{loadingText}</p>;
+    return <AsyncLoader />
   }
 
   if (isError) {

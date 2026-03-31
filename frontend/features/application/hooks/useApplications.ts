@@ -1,4 +1,5 @@
 import { CreateApplicationPayload } from "../types/application.types";
+import toast from "react-hot-toast";
 import { useApplicantsForJobQuery, useMyApplicationsQuery } from "./queries";
 import { useApplyToJobMutation } from "./mutations";
 
@@ -21,7 +22,14 @@ export const useApplyToJob = () => {
     jobId: string,
     payload: CreateApplicationPayload,
   ) => {
-    return applyToJob({ jobId, payload });
+    try {
+      const response = await applyToJob({ jobId, payload });
+      toast.success("Applied successfully");
+      return response;
+    } catch (error) {
+      toast.error("Failed to save");
+      throw error;
+    }
   };
 
   return {

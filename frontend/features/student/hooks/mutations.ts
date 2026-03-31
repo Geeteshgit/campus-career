@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Student, UpdateStudentPayload } from "../types/student.types";
+import { Student } from "../types/student.types";
 import {
   bulkCreateStudents,
   createStudent,
@@ -8,6 +8,7 @@ import {
   updateStudent,
   uploadStudentResume,
 } from "../api/students.api";
+import type { StudentFormData } from "../schemas/student.schema";
 
 export const useUpdateMyStudentProfileMutation = () => {
   const queryClient = useQueryClient();
@@ -90,7 +91,7 @@ export const useUpdateStudentMutation = () => {
       payload,
     }: {
       id: string;
-      payload: UpdateStudentPayload;
+      payload: StudentFormData;
     }) => updateStudent(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["students"] });

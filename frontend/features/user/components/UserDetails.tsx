@@ -36,7 +36,6 @@ const UserDetails = () => {
         isError={userDataError}
         error={userDataErrorObj}
         isEmpty={!user}
-        loadingText="Loading user details"
         errorText="Failed to load user details"
         emptyText="No user details found"
       >

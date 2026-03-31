@@ -90,12 +90,11 @@ const ApplicationsPage = () => {
             isLoading={applicationsLoading}
             isError={applicationsError}
             error={applicationsErrorObj}
-            isEmpty={applications.length === 0}
-            loadingText="Loading job postings"
+            isEmpty={filteredJobs.length === 0}
             errorText="Failed to load job postings"
             emptyText="No job postings found"
           >
-            <div className="flex flex-col bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden">
+            <div className="flex flex-col gap-1">
               {filteredJobs.map((job) => (
                 <JobApplicationsCard
                   key={job._id}

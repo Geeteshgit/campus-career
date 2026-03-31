@@ -1,4 +1,5 @@
 import { CreateProgramPayload, Program } from "../types/program.types";
+import toast from "react-hot-toast";
 import {
   useCreateProgramMutation,
   useDeleteProgramMutation,
@@ -13,18 +14,20 @@ export const useProgramManagement = () => {
   const handleCreateProgram = async (payload: CreateProgramPayload) => {
     try {
       await createProgram(payload);
+      toast.success("Program created successfully");
     } catch (err) {
       console.error("Failed to add program:", err);
-      alert("Could not add program");
+      toast.error("Failed to create program");
     }
   };
 
   const handleDeleteProgram = async (program: Program) => {
     try {
       await deleteProgram(program._id);
+      toast.success("Program deleted successfully");
     } catch (err) {
       console.error("Failed to delete program:", err);
-      alert("Could not delete program");
+      toast.error("Failed to delete program");
     }
   };
 

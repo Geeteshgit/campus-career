@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { UpdateJobPayload } from "../types/job.types";
 import { createJob, deleteJob, updateJob } from "../api/jobs.api";
+import type { JobPayload } from "../schemas/job.schema";
 
 export const useCreateJobMutation = () => {
   const queryClient = useQueryClient();
@@ -22,7 +22,7 @@ export const useUpdateJobMutation = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: ({ id, payload }: { id: string; payload: UpdateJobPayload }) =>
+    mutationFn: ({ id, payload }: { id: string; payload: JobPayload }) =>
       updateJob(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["jobs"] });

@@ -82,7 +82,6 @@ const PrepareAdminPage = () => {
           isError={programsError}
           error={programsErrorObj}
           isEmpty={programs.length === 0}
-          loadingText="Loading programs..."
           errorText="Failed to load programs"
           emptyText="No programs found"
         >
@@ -120,7 +119,6 @@ const PrepareAdminPage = () => {
             isError={resourcesError}
             error={resourcesErrorObj}
             isEmpty={filteredResources.length === 0}
-            loadingText="Loading resources..."
             errorText="Failed to load resources"
             emptyText="No resources found"
           >
