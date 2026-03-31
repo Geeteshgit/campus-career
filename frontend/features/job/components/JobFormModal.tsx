@@ -93,7 +93,7 @@ const JobFormModal = ({
             <Input
               id="positions"
               type="number"
-              {...register("positions")}
+              {...register("positions", { valueAsNumber: true })}
               placeholder="Available Positions"
             />
             <ErrorMessage message={errors.positions?.message} />

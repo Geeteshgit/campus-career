@@ -11,8 +11,8 @@ type StudentDetailsViewProps = {
 const StudentDetailsView = ({ data, onEdit }: StudentDetailsViewProps) => {
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-neutral-800">
+      <div className="flex justify-between">
+        <h2 className="text-xl font-semibold text-neutral-800">
           Academic Details
         </h2>
         <Button variant="primary" onClick={onEdit}>

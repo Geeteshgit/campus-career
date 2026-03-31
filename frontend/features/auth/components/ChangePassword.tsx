@@ -52,46 +52,44 @@ const ChangePassword = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-6 mt-4 bg-neutral-50/50 p-6 rounded-xl border border-neutral-200"
+      className="flex flex-col gap-6 bg-neutral-50 p-6 rounded-xl border border-neutral-300"
     >
-      <h3 className="text-xl font-semibold text-neutral-800">
+      <h2 className="text-xl font-semibold text-neutral-800">
         Change Password
-      </h3>
-
-      {/* Current Password */}
-      <div>
-        <FormLabel>Current Password</FormLabel>
-        <Input
-          type="password"
-          placeholder="Enter current password"
-          {...register("oldPassword")}
-        />
-        <ErrorMessage message={errors.oldPassword?.message} />
+      </h2>
+      <div className="flex flex-col gap-3">
+        <div>
+          <FormLabel htmlFor="oldPassword" label="Current Password" />
+          <Input
+            id="oldPassword"
+            type="password"
+            placeholder="Enter current password"
+            {...register("oldPassword")}
+          />
+          <ErrorMessage message={errors.oldPassword?.message} />
+        </div>
+        <div>
+          <FormLabel htmlFor="newPassword" label="New Password" />
+          <Input
+            id="newPassword"
+            type="password"
+            placeholder="Enter new password"
+            {...register("newPassword")}
+          />
+          <ErrorMessage message={errors.newPassword?.message} />
+        </div>
+        <div>
+          <FormLabel htmlFor="confirmPassword" label="Confirm New Password" />
+          <Input
+            id="confirmPassword"
+            type="password"
+            placeholder="Re-enter new password"
+            {...register("confirmPassword")}
+          />
+          <ErrorMessage message={errors.confirmPassword?.message} />
+        </div>
       </div>
 
-      {/* New Password */}
-      <div>
-        <FormLabel>New Password</FormLabel>
-        <Input
-          type="password"
-          placeholder="Enter new password"
-          {...register("newPassword")}
-        />
-        <ErrorMessage message={errors.newPassword?.message} />
-      </div>
-
-      {/* Confirm Password */}
-      <div>
-        <FormLabel>Confirm New Password</FormLabel>
-        <Input
-          type="password"
-          placeholder="Re-enter new password"
-          {...register("confirmPassword")}
-        />
-        <ErrorMessage message={errors.confirmPassword?.message} />
-      </div>
-
-      {/* Save Button */}
       <Button variant="primary" type="submit" disabled={isSubmitting}>
         Change Password
       </Button>

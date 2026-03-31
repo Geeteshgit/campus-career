@@ -31,7 +31,7 @@ const AdminProfile = () => {
     <ProtectedRoute allowedRoles={["admin", "super_admin"]}>
       <>
         <Navbar />
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-white flex flex-col gap-8">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 bg-white flex flex-col gap-6">
           <div className="flex items-center justify-between">
             <PageHeader
               title="Admin Profile"
@@ -45,11 +45,8 @@ const AdminProfile = () => {
               Logout
             </Button>
           </div>
-
-          <div className="bg-neutral-50 border border-neutral-300 rounded-xl p-6 flex flex-col gap-6">
-            <UserDetails />
-            <ChangePassword />
-          </div>
+          <UserDetails />
+          <ChangePassword />
         </main>
       </>
     </ProtectedRoute>

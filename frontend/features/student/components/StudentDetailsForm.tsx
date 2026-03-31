@@ -56,7 +56,7 @@ const StudentDetailsForm = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
-      <h2 className="text-lg font-semibold text-neutral-800">
+      <h2 className="text-xl font-semibold text-neutral-800">
         Edit Academic Details
       </h2>
 

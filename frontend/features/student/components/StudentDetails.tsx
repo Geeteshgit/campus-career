@@ -39,7 +39,9 @@ const StudentDetails = () => {
     setIsEditing(false);
   };
 
-  const handleAcademicInfoSave = async (formData: StudentSelfUpdateFormData) => {
+  const handleAcademicInfoSave = async (
+    formData: StudentSelfUpdateFormData,
+  ) => {
     try {
       const parsedSkills =
         typeof formData.skills === "string"
@@ -88,7 +90,7 @@ const StudentDetails = () => {
   };
 
   return (
-    <>
+    <div className="bg-neutral-50 border border-neutral-300 rounded-xl p-6">
       <AsyncState
         isLoading={studentLoading}
         isError={studentError}
@@ -114,7 +116,7 @@ const StudentDetails = () => {
             <StudentDetailsView data={student} onEdit={handleEditStart} />
           ))}
       </AsyncState>
-    </>
+    </div>
   );
 };
 

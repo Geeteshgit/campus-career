@@ -44,27 +44,27 @@ const UserDetailsForm = ({
   };
   return (
     <form
-      className="flex flex-col gap-6 pb-6 border-b border-neutral-200"
+      className="flex flex-col gap-6"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <h2 className="text-lg font-semibold text-neutral-800">
+      <h2 className="text-xl font-semibold text-neutral-800">
         Edit Personal Details
       </h2>
       <div className="flex flex-col md:flex-row gap-6">
         <div className="w-full">
-          <FormLabel>Name</FormLabel>
-          <Input readOnly value={data?.name ?? ""} />
+          <FormLabel htmlFor="name" label="Name" />
+          <Input id="name" readOnly value={data?.name ?? ""} />
         </div>
 
         <div className="w-full">
-          <FormLabel>Email</FormLabel>
-          <Input readOnly value={data?.email ?? ""} />
+          <FormLabel htmlFor="email" label="Email" />
+          <Input id="email" readOnly value={data?.email ?? ""} />
         </div>
       </div>
 
       <div>
-        <FormLabel>Phone Number</FormLabel>
-        <Input placeholder="Phone Number" {...register("phone")} />
+        <FormLabel htmlFor="phone" label="Phone Number" />
+        <Input id="phone" placeholder="Phone Number" {...register("phone")} />
         <ErrorMessage message={errors.phone?.message} />
       </div>
 

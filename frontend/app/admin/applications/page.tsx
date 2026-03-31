@@ -88,22 +88,22 @@ const ApplicationsAdminPage = () => {
             isLoading={jobsLoading}
             isError={jobsError}
             error={jobsErrorObj}
-            isEmpty={jobs.length === 0}
+            isEmpty={filteredJobs.length === 0}
             loadingText="Loading job postings"
             errorText="Failed to load job postings"
             emptyText="No job postings found"
           >
-            <div className="flex flex-col bg-white border border-neutral-200 rounded-xl shadow-sm overflow-hidden">
-              {filteredJobs.map((job) => (
-                <JobApplicationsCard
-                  key={job._id}
-                  job={job}
-                  isAdmin={isAdmin}
-                  onDownload={downloadApplicantsCSV}
-                  onOpenModal={handleJobClick}
-                />
-              ))}
-            </div>
+            <div className="flex flex-col gap-1">
+                {filteredJobs.map((job) => (
+                  <JobApplicationsCard
+                    key={job._id}
+                    job={job}
+                    isAdmin={isAdmin}
+                    onDownload={downloadApplicantsCSV}
+                    onOpenModal={handleJobClick}
+                  />
+                ))}
+              </div>
           </AsyncState>
         </main>
 
