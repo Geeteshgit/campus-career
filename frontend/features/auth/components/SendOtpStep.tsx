@@ -5,6 +5,7 @@ import { useFormContext } from "react-hook-form";
 import Button from "@/shared/ui/Button";
 import Input from "@/shared/ui/Input";
 import ErrorMessage from "@/shared/ui/ErrorMessage";
+import FormLabel from "@/shared/ui/FormLabel";
 
 // Features
 import { usePasswordReset } from "@/features/auth";
@@ -37,7 +38,9 @@ const SendOtpStep = ({ onSuccess }: SendOtpStepProps) => {
 
   return (
     <>
+      <FormLabel htmlFor="forgot-email" label="Email" />
       <Input
+        id="forgot-email"
         placeholder="Enter your email"
         {...register("email")}
       />

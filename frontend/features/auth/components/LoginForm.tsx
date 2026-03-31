@@ -87,14 +87,15 @@ const LoginForm = ({ onForgotPasswordClick }: LoginFormProps) => {
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           <div>
-            <FormLabel>Email</FormLabel>
-            <Input placeholder="Enter your email" {...register("email")} />
+            <FormLabel htmlFor="email" label="Email" />
+            <Input id="email" placeholder="Enter your email" {...register("email")} />
             <ErrorMessage message={errors.email?.message} />
           </div>
 
           <div>
-            <FormLabel>Password</FormLabel>
+            <FormLabel htmlFor="password" label="Password" />
             <Input
+              id="password"
               type="password"
               placeholder="Enter your password"
               {...register("password")}

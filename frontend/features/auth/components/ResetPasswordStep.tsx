@@ -7,6 +7,7 @@ import { useFormContext } from "react-hook-form";
 import Button from "@/shared/ui/Button";
 import Input from "@/shared/ui/Input";
 import ErrorMessage from "@/shared/ui/ErrorMessage";
+import FormLabel from "@/shared/ui/FormLabel";
 
 // Features
 import { usePasswordReset } from "@/features/auth";
@@ -43,7 +44,9 @@ const ResetPasswordStep = ({ onSuccess, onError }: ResetPasswordStepProps) => {
     <>
       <div className="flex flex-col gap-2">
         <div>
+          <FormLabel htmlFor="newPassword" label="New Password" />
           <Input
+            id="newPassword"
             type="password"
             placeholder="New password"
             {...register("newPassword")}
@@ -51,7 +54,9 @@ const ResetPasswordStep = ({ onSuccess, onError }: ResetPasswordStepProps) => {
           <ErrorMessage message={errors.newPassword?.message as string} />
         </div>
         <div>
+          <FormLabel htmlFor="confirmNewPassword" label="Confirm New Password" />
           <Input
+            id="confirmNewPassword"
             type="password"
             placeholder="Confirm new password"
             {...register("confirmNewPassword")}

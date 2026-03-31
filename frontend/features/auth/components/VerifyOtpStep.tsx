@@ -5,6 +5,7 @@ import { useFormContext } from "react-hook-form";
 import Button from "@/shared/ui/Button";
 import Input from "@/shared/ui/Input";
 import ErrorMessage from "@/shared/ui/ErrorMessage";
+import FormLabel from "@/shared/ui/FormLabel";
 
 // Features
 import { usePasswordReset } from "@/features/auth";
@@ -39,7 +40,9 @@ const VerifyOtpStep = ({ onSuccess, onError }: VerifyOtpStepProps) => {
 
   return (
     <>
+      <FormLabel htmlFor="otp" label="OTP" />
       <Input
+        id="otp"
         placeholder="Enter OTP"
         {...register("otp")}
       />
