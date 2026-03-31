@@ -12,20 +12,27 @@ import Button from "@/shared/ui/Button";
 // Features
 import { ProtectedRoute, useAuthStore } from "@/features/auth";
 import {
-  Job,
   JobModal,
   AdminPostingsContainer,
-  useAllJobs,
   useJobManagement,
   useJobFilters,
   JobFormModal,
+  useActiveJobs,
+  useInactiveJobs,
 } from "@/features/job";
 
 const Postings = () => {
   const user = useAuthStore((state) => state.user);
   const isAdmin = user?.role !== "student";
 
-  const { jobs, jobsLoading, jobsError, jobsErrorObj } = useAllJobs();
+  const { activeJobs, activeJobsLoading, activeJobsError, activeJobsErrorObj } =
+    useActiveJobs();
+  const {
+    inactiveJobs,
+    inactiveJobsLoading,
+    inactiveJobsError,
+    inactiveJobsErrorObj,
+  } = useInactiveJobs();
 
   const {
     handleCreateJob,
@@ -46,14 +53,8 @@ const Postings = () => {
   const { applyFilters, filter, setFilter, searchTerm, setSearchTerm } =
     useJobFilters();
 
-  const filteredJobs = applyFilters(jobs);
-
-  const activeJobs: Job[] = filteredJobs.filter(
-    (job) => job.status === "Active",
-  );
-  const inactiveJobs: Job[] = filteredJobs.filter(
-    (job) => job.status === "Inactive",
-  );
+  const filteredActiveJobs = applyFilters(activeJobs);
+  const filteredInactiveJobs = applyFilters(inactiveJobs);
 
   return (
     <ProtectedRoute allowedRoles={["admin", "super_admin"]}>
@@ -85,18 +86,18 @@ const Postings = () => {
         </div>
         <AdminPostingsContainer
           title="Active Postings"
-          jobs={activeJobs}
-          jobsLoading={jobsLoading}
-          jobsError={jobsError}
-          jobsErrorObj={jobsErrorObj}
+          jobs={filteredActiveJobs}
+          jobsLoading={activeJobsLoading}
+          jobsError={activeJobsError}
+          jobsErrorObj={activeJobsErrorObj}
           onJobClick={handleJobClick}
         />
         <AdminPostingsContainer
           title="Inactive Postings"
-          jobs={inactiveJobs}
-          jobsLoading={jobsLoading}
-          jobsError={jobsError}
-          jobsErrorObj={jobsErrorObj}
+          jobs={filteredInactiveJobs}
+          jobsLoading={inactiveJobsLoading}
+          jobsError={inactiveJobsError}
+          jobsErrorObj={inactiveJobsErrorObj}
           onJobClick={handleJobClick}
         />
       </main>

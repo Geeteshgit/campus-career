@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import {
   getAllJobs,
+  getActiveJobs,
   getInactiveJobs,
   getRecommendedJobs,
 } from "../api/jobs.api";
@@ -13,6 +14,13 @@ export const useAllJobsQuery = () => {
   });
 };
 
+export const useActiveJobsQuery = () => {
+  return useQuery({
+    queryKey: ["jobs", "active"],
+    queryFn: getActiveJobs,
+  });
+};
+
 export const useInactiveJobsQuery = () => {
   return useQuery({
     queryKey: ["jobs", "inactive"],
@@ -20,13 +28,15 @@ export const useInactiveJobsQuery = () => {
   });
 };
 
-export const useRecommendedJobsQuery = (studentData: RecommendedJobsStudentPayload) => {
+export const useRecommendedJobsQuery = (
+  studentData: RecommendedJobsStudentPayload,
+) => {
   const hasRecommendationInputs = Boolean(
     studentData?.program &&
-      studentData?.year &&
-      studentData?.specialization &&
-      typeof studentData?.cgpa === "number" &&
-      Array.isArray(studentData?.skills),
+    studentData?.year &&
+    studentData?.specialization &&
+    typeof studentData?.cgpa === "number" &&
+    Array.isArray(studentData?.skills),
   );
 
   return useQuery({

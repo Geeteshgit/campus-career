@@ -14,7 +14,7 @@ import SearchBar from "@/shared/ui/SearchBar";
 import Button from "@/shared/ui/Button";
 
 // Types
-import { Resource } from "@/features/academic/resource";
+import type { Resource } from "@/features/academic/resource";
 
 // Features
 import { ProtectedRoute } from "@/features/auth";
@@ -23,6 +23,7 @@ import {
   useResourceManagement,
   useResources,
   ResourceFormModal,
+  ResourceCard,
 } from "@/features/academic/resource";
 
 const PrepareAdminPage = () => {
@@ -100,55 +101,36 @@ const PrepareAdminPage = () => {
           </div>
         </AsyncState>
 
-        <AsyncState
-          isLoading={resourcesLoading}
-          isError={resourcesError}
-          error={resourcesErrorObj}
-          isEmpty={filteredResources.length === 0}
-          loadingText="Loading resources..."
-          errorText="Failed to load resources"
-          emptyText="No resources found"
-        >
-          <div className="flex flex-col gap-4">
-            {filteredResources.map((item) => (
-              <div
-                key={item._id}
-                className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 border border-neutral-200 rounded-lg hover:bg-blue-50 transition"
-              >
-                <div>
-                  <p className="font-semibold text-neutral-900">{item.title}</p>
-
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    className="text-blue-600 underline break-all"
-                  >
-                    {item.url}
-                  </a>
-                </div>
-
-                <div className="flex gap-2 justify-end">
-                  <Button
-                    variant="primary"
-                    onClick={() => {
-                      handleEditResource(item);
-                    }}
-                  >
-                    Edit
-                  </Button>
-
-                  <Button
-                    variant="danger"
-                    onClick={() => handleDeleteResource(item._id)}
-                    disabled={deletePending}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </div>
-            ))}
+        <div className="flex flex-col gap-2">
+          <div className={"grid grid-cols-4 gap-3 rounded-xl bg-blue-50 p-4"}>
+            <p className="text-sm font-semibold text-neutral-600">Title</p>
+            <p className="col-span-2 text-sm font-semibold text-neutral-600">URL</p>
+            <p className="text-sm font-semibold text-neutral-600 text-center">
+              Actions
+            </p>
           </div>
-        </AsyncState>
+          <AsyncState
+            isLoading={resourcesLoading}
+            isError={resourcesError}
+            error={resourcesErrorObj}
+            isEmpty={filteredResources.length === 0}
+            loadingText="Loading resources..."
+            errorText="Failed to load resources"
+            emptyText="No resources found"
+          >
+            <div className="flex flex-col gap-1">
+              {filteredResources.map((resource) => (
+                <ResourceCard
+                  key={resource._id}
+                  resource={resource}
+                  onEdit={handleEditResource}
+                  onDelete={handleDeleteResource}
+                  deletePending={deletePending}
+                />
+              ))}
+            </div>
+          </AsyncState>
+        </div>
       </main>
 
       {addResourceModalOpen && (

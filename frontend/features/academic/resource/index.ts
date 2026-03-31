@@ -6,4 +6,5 @@ export * from './hooks/useResourceManagement';
 export * from './types/resource.types';
 
 // Components
+export { default as ResourceCard } from './components/ResourceCard';
 export { default as ResourceFormModal } from './components/ResourceFormModal';

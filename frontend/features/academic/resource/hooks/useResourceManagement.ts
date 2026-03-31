@@ -51,11 +51,11 @@ export const useResourceManagement = () => {
     }
   };
 
-  const handleDeleteResource = async (id: string) => {
+  const handleDeleteResource = async (resource: Resource) => {
     if (!confirm("Are you sure you want to delete this resource?")) return;
 
     try {
-      deleteResource(id);
+      await deleteResource(resource._id);
     } catch (err) {
       console.error("Delete resource error:", err);
     }

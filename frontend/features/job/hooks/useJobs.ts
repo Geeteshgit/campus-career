@@ -1,6 +1,7 @@
-import { Job, RecommendedJobsStudentPayload } from "../types/job.types";
+import type { Job, RecommendedJobsStudentPayload } from "../types/job.types";
 import {
   useAllJobsQuery,
+  useActiveJobsQuery,
   useInactiveJobsQuery,
   useRecommendedJobsQuery,
 } from "./queries";
@@ -24,6 +25,24 @@ export const useAllJobs = () => {
     jobsLoading,
     jobsError,
     jobsErrorObj,
+  };
+};
+
+export const useActiveJobs = () => {
+  const {
+    data: activeJobsData,
+    isPending: activeJobsLoading,
+    isError: activeJobsError,
+    error: activeJobsErrorObj,
+  } = useActiveJobsQuery();
+
+  const activeJobs: Job[] = activeJobsData?.jobs ?? [];
+
+  return {
+    activeJobs,
+    activeJobsLoading,
+    activeJobsError,
+    activeJobsErrorObj,
   };
 };
 

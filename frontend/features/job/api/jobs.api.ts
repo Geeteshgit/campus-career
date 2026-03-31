@@ -12,6 +12,11 @@ export const createJob = async (payload: JobPayload) => {
   return data;
 };
 
+export const getActiveJobs = async () => {
+  const { data } = await jobsApi.get("/jobs/active");
+  return data;
+}
+
 export const getInactiveJobs = async () => {
   const { data } = await jobsApi.get("/jobs/inactive");
   return data;
