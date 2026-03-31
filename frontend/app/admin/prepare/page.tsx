@@ -8,7 +8,6 @@ import Navbar from "@/components/Navbar";
 
 // Shared UI Components
 import AsyncState from "@/shared/ui/AsyncState";
-import FilterButtons from "@/shared/ui/FilterButtons";
 import PageHeader from "@/shared/ui/PageHeader";
 import SearchBar from "@/shared/ui/SearchBar";
 import Button from "@/shared/ui/Button";
@@ -25,6 +24,7 @@ import {
   ResourceFormModal,
   ResourceCard,
 } from "@/features/academic/resource";
+import FilterDropdown from "@/shared/ui/FilterDropdown";
 
 const PrepareAdminPage = () => {
   const [activeProgram, setActiveProgram] = useState<string>();
@@ -87,11 +87,15 @@ const PrepareAdminPage = () => {
           emptyText="No programs found"
         >
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-            <FilterButtons
-              filters={programNames}
-              activeFilter={defaultProgram}
-              onFilterChange={(f) => setActiveProgram(f as string)}
-            />
+            <div className="flex items-center gap-2">
+              <span>Program:</span>
+              <FilterDropdown
+                filters={programNames}
+                activeFilter={defaultProgram}
+                onFilterChange={(f) => setActiveProgram(f as string)}
+                className="py-1!"
+              />
+            </div>
 
             <SearchBar
               value={searchTerm}
@@ -104,7 +108,9 @@ const PrepareAdminPage = () => {
         <div className="flex flex-col gap-2">
           <div className="grid grid-cols-4 gap-3 rounded-xl bg-blue-50 p-4">
             <p className="text-sm font-semibold text-neutral-600">Title</p>
-            <p className="col-span-2 text-sm font-semibold text-neutral-600">URL</p>
+            <p className="col-span-2 text-sm font-semibold text-neutral-600">
+              URL
+            </p>
             <p className="text-sm font-semibold text-neutral-600 text-center">
               Actions
             </p>

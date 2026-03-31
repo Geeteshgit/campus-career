@@ -7,11 +7,11 @@ import React, { useRef, useState } from "react";
 import Navbar from "@/components/Navbar";
 
 // Shared UI Components
-import FilterButtons from "@/shared/ui/FilterButtons";
 import PageHeader from "@/shared/ui/PageHeader";
 import SearchBar from "@/shared/ui/SearchBar";
 import Button from "@/shared/ui/Button";
 import AsyncState from "@/shared/ui/AsyncState";
+import FilterDropdown from "@/shared/ui/FilterDropdown";
 
 // Shared Hooks
 import { useDebounce } from "@/shared/hooks/useDebounce";
@@ -49,7 +49,6 @@ const StudentManagement = () => {
     studentsErrorObj,
     hasMore,
     handleShowMore,
-
   } = useStudents({
     selectedProgram,
     selectedYear,
@@ -126,17 +125,25 @@ const StudentManagement = () => {
             emptyText="No programs found"
           >
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-              <div className="flex flex-col gap-2">
-                <FilterButtons
-                  filters={["All", ...programNames]}
-                  activeFilter={selectedProgram}
-                  onFilterChange={setSelectedProgram}
-                />
-                <FilterButtons
-                  filters={["All", ...years]}
-                  activeFilter={selectedYear}
-                  onFilterChange={setSelectedYear}
-                />
+              <div className="flex gap-6">
+                <div className="flex items-center gap-2">
+                  <span>Program:</span>
+                  <FilterDropdown
+                    filters={["All", ...programNames]}
+                    activeFilter={selectedProgram}
+                    onFilterChange={setSelectedProgram}
+                    className="py-1!"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span>Year:</span>
+                  <FilterDropdown
+                    filters={["All", ...years]}
+                    activeFilter={selectedYear}
+                    onFilterChange={setSelectedYear}
+                    className="py-1!"
+                  />
+                </div>
               </div>
               <SearchBar
                 value={searchTerm}
@@ -198,22 +205,22 @@ const StudentManagement = () => {
         </main>
 
         {addStudentModalOpen && (
-          <StudentFormModal 
-          mode="create" 
-          defaultValues={{
-            name: "",
-            enrollmentNumber: "",
-            email: "",
-            phone: "",
-            program: "",
-            year: "",
-            batch: "",
-            specialization: "",
-            cgpa: 1,
-          }}
-          open={addStudentModalOpen}
-          onOpenChange={setAddStudentModalOpen}
-          onSubmit={handleCreateStudent} 
+          <StudentFormModal
+            mode="create"
+            defaultValues={{
+              name: "",
+              enrollmentNumber: "",
+              email: "",
+              phone: "",
+              program: "",
+              year: "",
+              batch: "",
+              specialization: "",
+              cgpa: 1,
+            }}
+            open={addStudentModalOpen}
+            onOpenChange={setAddStudentModalOpen}
+            onSubmit={handleCreateStudent}
           />
         )}
         {editModalOpen && selectedStudent && (

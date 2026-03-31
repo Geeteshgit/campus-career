@@ -4,11 +4,13 @@ import { SelectHTMLAttributes } from "react";
 
 type SelectProps = {
   options: string[];
+  children?: React.ReactNode;
 } & SelectHTMLAttributes<HTMLSelectElement>;
 
 const Select = ({
   options,
   className,
+  children,
   ...props
 }: SelectProps) => {
   return (
@@ -19,6 +21,7 @@ const Select = ({
       )}
       {...props}
     >
+      {children}
       {options.map((option, index) => (
         <option key={index} value={option}>
           {option}
