@@ -20,7 +20,7 @@ import { usePrograms } from "@/features/academic/program";
 import { studentFormSchema } from "../schemas/student.schema";
 import { years } from "@/shared/constants/academics.constants";
 
-type AdminFormModalProps = {
+type StudentFormModalProps = {
   mode: "create" | "edit";
   defaultValues: StudentFormData;
   onSubmit: (data: StudentFormData) => Promise<void>;
@@ -28,13 +28,13 @@ type AdminFormModalProps = {
   onOpenChange: (open: boolean) => void;
 };
 
-const AdminFormModal = ({
+const StudentFormModal = ({
   mode,
   defaultValues,
   onSubmit,
   open,
   onOpenChange,
-}: AdminFormModalProps) => {
+}: StudentFormModalProps) => {
   const {
     register,
     handleSubmit,
@@ -77,13 +77,14 @@ const AdminFormModal = ({
             <Select
               id="program"
               options={programs.map((program) => program.name)}
+              placeholder="Select a program"
               {...register("program")}
             />
             <ErrorMessage message={errors.program?.message} />
           </div>
           <div>
             <FormLabel htmlFor="year" label="Year" />
-            <Select id="year" options={years} {...register("year")} />
+            <Select id="year" options={years} placeholder="Select a year" {...register("year")} />
             <ErrorMessage message={errors.year?.message} />
           </div>
           <div>
@@ -119,4 +120,4 @@ const AdminFormModal = ({
   );
 };
 
-export default AdminFormModal;
+export default StudentFormModal;

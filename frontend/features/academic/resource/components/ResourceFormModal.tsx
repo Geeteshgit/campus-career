@@ -69,6 +69,7 @@ const ResourceFormModal = ({
             <Select
               id="program"
               options={programs.map((program) => program.name)}
+              placeholder="Select a program"
               {...register("program")}
             />
             <ErrorMessage message={errors.program?.message} />
