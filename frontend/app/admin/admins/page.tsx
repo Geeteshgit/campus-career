@@ -72,11 +72,11 @@ const AdminManagement = () => {
           <div
             className={clsx(
               "grid gap-3 rounded-xl bg-blue-50 p-4",
-              role === "super_admin" ? "grid-cols-5" : "grid-cols-4",
+              role === "super_admin" ? "grid-cols-6" : "grid-cols-5",
             )}
           >
             <p className="text-sm font-semibold text-neutral-600">Name</p>
-            <p className="text-sm font-semibold text-neutral-600">Email</p>
+            <p className="col-span-2 text-sm font-semibold text-neutral-600">Email</p>
             <p className="text-sm font-semibold text-neutral-600 text-center">
               Phone
             </p>

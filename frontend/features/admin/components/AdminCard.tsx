@@ -31,11 +31,11 @@ const AdminCard = ({
       <div
         className={clsx(
           "grid gap-3 w-full items-center",
-          role === "super_admin" ? "grid-cols-5" : "grid-cols-4",
+          role === "super_admin" ? "grid-cols-6" : "grid-cols-5",
         )}
       >
         <p className="font-semibold text-neutral-900 truncate">{admin.name}</p>
-        <p className="font-semibold text-neutral-900 truncate">{admin.email}</p>
+        <p className="col-span-2 font-semibold text-neutral-900 truncate">{admin.email}</p>
         <p className="font-semibold text-neutral-900 truncate text-center">
           {admin.phone}
         </p>
