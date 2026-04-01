@@ -1,10 +1,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
-import {
-  CreateResourcePayload,
-  Resource,
-  UpdateResourcePayload,
-} from "../types/resource.types";
+import type { Resource } from "../types/resource.types";
+import type { ResourceFormData } from "../schemas/resource.schema";
 import {
   useCreateResourceMutation,
   useDeleteResourceMutation,
@@ -27,7 +24,7 @@ export const useResourceManagement = () => {
   const { deleteResource, isPending: deletePending } =
     useDeleteResourceMutation();
 
-  const handleCreateResource = async (data: CreateResourcePayload) => {
+  const handleCreateResource = async (data: ResourceFormData) => {
     try {
       await createResource(data);
       setAddResourceModalOpen(false);
@@ -38,7 +35,7 @@ export const useResourceManagement = () => {
     }
   };
 
-  const handleUpdateResource = async (data: UpdateResourcePayload) => {
+  const handleUpdateResource = async (data: ResourceFormData) => {
     if (!selectedResource) return;
 
     try {

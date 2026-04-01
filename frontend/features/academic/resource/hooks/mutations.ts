@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { ResourceFormData } from "../schemas/resource.schema";
 import {
   createResource,
   deleteResource,
   updateResource,
 } from "../api/resources.api";
-import { UpdateResourcePayload } from "../types/resource.types";
 
 export const useCreateResourceMutation = () => {
   const queryClient = useQueryClient();
@@ -31,7 +31,7 @@ export const useUpdateResourceMutation = () => {
       payload,
     }: {
       id: string;
-      payload: UpdateResourcePayload;
+      payload: ResourceFormData;
     }) => updateResource(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["resources"] });

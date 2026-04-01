@@ -6,7 +6,3 @@ export interface Resource {
     createdAt: string;
     updatedAt: string;
 }
-
-export type CreateResourcePayload = Omit<Resource, "_id" | "createdAt" | "updatedAt">;
-
-export type UpdateResourcePayload = Partial<CreateResourcePayload>;

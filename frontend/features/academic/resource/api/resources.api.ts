@@ -1,5 +1,5 @@
 import { academicsApi } from "@/lib/axios";
-import { CreateResourcePayload, UpdateResourcePayload } from "../types/resource.types";
+import type { ResourceFormData } from "../schemas/resource.schema";
 
 export const getResources = async () => {
   const { data } = await academicsApi.get("/resources/admin");
@@ -13,12 +13,12 @@ export const getStudentResources = async (studentProgram: string) => {
   return data;
 };
 
-export const createResource = async (payload: CreateResourcePayload) => {
+export const createResource = async (payload: ResourceFormData) => {
   const { data } = await academicsApi.post("/resources", payload);
   return data;
 };
 
-export const updateResource = async (id: string, payload: UpdateResourcePayload) => {
+export const updateResource = async (id: string, payload: ResourceFormData) => {
   const { data } = await academicsApi.put(`/resources/${id}`, payload);
   return data;
 };

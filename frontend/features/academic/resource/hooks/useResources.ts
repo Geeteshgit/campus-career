@@ -1,8 +1,8 @@
+import type { Resource } from "../types/resource.types";
 import {
   useResourcesQuery,
   useStudentResourcesQuery,
 } from "./queries";
-import { Resource } from "../types/resource.types";
 
 export const useResources = () => {
   const {
