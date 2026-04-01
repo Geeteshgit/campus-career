@@ -17,4 +17,4 @@ export { default as LoginForm } from './components/LoginForm';
 export { default as ChangePassword } from './components/ChangePassword';
 
 // Types
-export * from './types/auth.types';
+export type { Role } from './types/auth.types';

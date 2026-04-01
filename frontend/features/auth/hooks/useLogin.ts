@@ -1,5 +1,5 @@
 import { useAuthStore } from "../auth.store";
-import { LoginFormData } from "../schemas/login.schema";
+import type { LoginFormData } from "../schemas/login.schema";
 import { useLoginMutation } from "./mutations";
 
 export const useLogin = () => {

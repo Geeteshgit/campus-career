@@ -5,14 +5,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 
+// Types
+import type { ChangePasswordFormData } from "../schemas/change-password.schema";
+
 // Shared UI Components
 import Button from "@/shared/ui/Button";
 import FormLabel from "@/shared/ui/FormLabel";
 import Input from "@/shared/ui/Input";
 import ErrorMessage from "@/shared/ui/ErrorMessage";
-
-// Types
-import type { ChangePasswordFormData } from "../schemas/change-password.schema";
 
 // Local Imports
 import { useLogout } from "../hooks/useLogout";
