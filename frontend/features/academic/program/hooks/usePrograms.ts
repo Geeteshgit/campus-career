@@ -1,5 +1,5 @@
+import type { Program } from "../types/program.types";
 import { useProgramsQuery } from "./queries";
-import { Program } from "../types/program.types";
 
 export const usePrograms = () => {
   const {

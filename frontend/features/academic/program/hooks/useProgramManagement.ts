@@ -1,5 +1,5 @@
-import { CreateProgramPayload, Program } from "../types/program.types";
 import toast from "react-hot-toast";
+import type { CreateProgramPayload, Program } from "../types/program.types";
 import {
   useCreateProgramMutation,
   useDeleteProgramMutation,

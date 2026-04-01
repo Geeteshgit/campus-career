@@ -1,5 +1,5 @@
 import { academicsApi } from "@/lib/axios";
-import { CreateProgramPayload } from "../types/program.types";
+import type { CreateProgramPayload } from "../types/program.types";
 
 export const getPrograms = async () => {
   const { data } = await academicsApi.get("/academics/programs");
