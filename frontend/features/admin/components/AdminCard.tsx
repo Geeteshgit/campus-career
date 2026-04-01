@@ -1,19 +1,17 @@
-"use client";
-
 // External Libraries
 import clsx from "clsx";
 import { FiEdit2 } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
-// Features
-import { Role } from "@/features/auth";
-import { Admin } from "@/features/admin";
+// Types
+import type { Role } from "@/features/auth";
+import type { Admin } from "@/features/admin";
 
 type AdminCardProps = {
   admin: Admin;
   role: Role;
   onEdit: (admin: Admin) => void;
-  onDelete: (admin: Admin) => void;
+  onDelete: (admin: Admin) => Promise<void>;
   deletePending?: boolean;
 };
 

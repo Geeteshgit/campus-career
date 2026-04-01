@@ -1,4 +1,4 @@
-import { Admin } from "../types/admin.types";
+import type { Admin } from "../types/admin.types";
 import { useAdminsQuery } from "./queries";
 
 export const useAdmins = (searchTerm: string) => {

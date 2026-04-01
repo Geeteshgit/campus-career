@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { AdminFormData } from "../schemas/admin.schema";
 import {
   createAdmin,
   updateAdminById,
   deleteAdminById
 } from "../api/admins.api";
-import { UpdateAdminPayload } from "../types/admin.types";
 
 export const useCreateAdminMutation = () => {
   const queryClient = useQueryClient();
@@ -26,7 +26,7 @@ export const useUpdateAdminMutation = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: ({ id, payload }: { id: string; payload: UpdateAdminPayload }) =>
+    mutationFn: ({ id, payload }: { id: string; payload: AdminFormData }) =>
       updateAdminById(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admins"] });

@@ -9,7 +9,3 @@ export interface Admin {
   createdAt: string;
   updatedAt: string;
 };
-
-export type CreateAdminPayload = Omit<Admin, "_id" | "createdAt" | "updatedAt">;
-
-export type UpdateAdminPayload = Partial<CreateAdminPayload>;

@@ -1,5 +1,5 @@
 import { usersApi } from "@/lib/axios";
-import { CreateAdminPayload, UpdateAdminPayload } from "../types/admin.types";
+import type { AdminFormData } from "../schemas/admin.schema";
 
 export const getAllAdmins = async () => {
   const { data } = await usersApi.get("/admins");
@@ -11,12 +11,12 @@ export const getAdminById = async (id: string) => {
   return data;
 };
 
-export const createAdmin = async (payload: CreateAdminPayload) => {
+export const createAdmin = async (payload: AdminFormData) => {
   const { data } = await usersApi.post("/admins", payload);
   return data;
 };
 
-export const updateAdminById = async (id: string, payload: UpdateAdminPayload) => {
+export const updateAdminById = async (id: string, payload: AdminFormData) => {
   const { data } = await usersApi.put(`/admins/${id}`, payload);
   return data;
 };

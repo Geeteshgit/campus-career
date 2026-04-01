@@ -2,11 +2,8 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
-import {
-  Admin,
-  CreateAdminPayload,
-  UpdateAdminPayload,
-} from "../types/admin.types";
+import type { Admin } from "../types/admin.types";
+import type { AdminFormData } from "../schemas/admin.schema";
 import {
   useCreateAdminMutation,
   useDeleteAdminMutation,
@@ -22,7 +19,7 @@ export const useAdminManagement = (role: string) => {
   const { updateAdmin, isPending: updatePending } = useUpdateAdminMutation();
   const { deleteAdmin, isPending: deletePending } = useDeleteAdminMutation();
 
-  const handleCreateAdmin = async (data: CreateAdminPayload) => {
+  const handleCreateAdmin = async (data: AdminFormData) => {
     try {
       const payload =
         role === "super_admin" ? data : { ...data, role: "admin" as const };
@@ -36,7 +33,7 @@ export const useAdminManagement = (role: string) => {
     }
   };
 
-  const handleUpdateAdmin = async (data: UpdateAdminPayload) => {
+  const handleUpdateAdmin = async (data: AdminFormData) => {
     if (!selectedAdmin) return;
 
     try {
