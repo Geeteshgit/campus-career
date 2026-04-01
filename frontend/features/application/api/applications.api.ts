@@ -1,5 +1,5 @@
 import { jobsApi } from "@/lib/axios";
-import { CreateApplicationPayload } from "../types/application.types";
+import type { CreateApplicationPayload } from "../types/application.types";
 
 export const getMyApplications = async () => {
   const { data } = await jobsApi.get("/applications");

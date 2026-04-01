@@ -1,14 +1,12 @@
-"use client";
-
 // External Libraries
 import clsx from "clsx";
 import { FiDownload } from "react-icons/fi";
 
+// Types
+import type { Job } from "@/features/job";
+
 // Shared UI Components
 import Button from "@/shared/ui/Button";
-
-// Features
-import { Job } from "@/features/job";
 
 type JobApplicationsCardProps = {
   job: Job;

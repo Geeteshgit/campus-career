@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CreateApplicationPayload } from "../types/application.types";
+import type { CreateApplicationPayload } from "../types/application.types";
 import { applyToJob } from "../api/applications.api";
 
 export const useApplyToJobMutation = () => {

@@ -1,5 +1,5 @@
-import { CreateApplicationPayload } from "../types/application.types";
 import toast from "react-hot-toast";
+import type { CreateApplicationPayload } from "../types/application.types";
 import { useApplicantsForJobQuery, useMyApplicationsQuery } from "./queries";
 import { useApplyToJobMutation } from "./mutations";
 

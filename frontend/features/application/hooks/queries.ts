@@ -8,6 +8,8 @@ export const useMyApplicationsQuery = () => {
   return useQuery({
     queryKey: ["applications", "me"],
     queryFn: getMyApplications,
+    staleTime: 1000 * 60 * 10, // 10 minutes
+    gcTime: 1000 * 60 * 60,   // 1 hour
   });
 };
 
@@ -16,5 +18,7 @@ export const useApplicantsForJobQuery = (jobId: string) => {
     queryKey: ["applications", "job", jobId],
     queryFn: () => getApplicantsForJob(jobId),
     enabled: !!jobId,
+    staleTime: 1000 * 60, // 1 minute
+    gcTime: 1000 * 60 * 5, // 5 minutes
   });
 };
