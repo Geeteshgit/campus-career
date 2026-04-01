@@ -1,12 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { getPlatformAnalytics } from "../api/analytics.api";
 
-const STALE_TIME = 1000 * 60 * 10; // 10 minutes
+const staleTime = 1000 * 60 * 2; // 2 minutes
+const cacheTime = 1000 * 60 * 10; // 10 minutes
 
 export const usePlatformAnalyticsQuery = () => {
   return useQuery({
-    queryKey: ["analytics", "platform"],
+    queryKey: ["analytics"],
     queryFn: getPlatformAnalytics,
-    staleTime: STALE_TIME,
+    staleTime: staleTime,
+    gcTime: cacheTime,
   });
 };
